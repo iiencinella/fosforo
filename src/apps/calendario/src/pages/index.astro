@@ -1,0 +1,380 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import {
+  CalendarConfigError,
+  CalendarInputError,
+  getCalendarHealth,
+  getDayByDate,
+  getMonthCalendar,
+  parseDateParam,
+  parseMonthParams,
+} from "@/lib/calendar";
+import SectionIntro from "@repo/ui/astro/SectionIntro.astro";
+import ActionLinkList from "@repo/ui/astro/ActionLinkList.astro";
+import InfoPanel from "@repo/ui/astro/InfoPanel.astro";
+
+const searchParams = Astro.url.searchParams;
+
+let selectedDate = parseDateParam(searchParams.get("date"));
+let monthDate = parseMonthParams(
+  searchParams.get("year"),
+  searchParams.get("month"),
+  selectedDate,
+);
+
+if (
+  monthDate.getUTCFullYear() !== selectedDate.getUTCFullYear() ||
+  monthDate.getUTCMonth() !== selectedDate.getUTCMonth()
+) {
+  selectedDate = new Date(
+    Date.UTC(monthDate.getUTCFullYear(), monthDate.getUTCMonth(), 1),
+  );
+}
+
+let day = null;
+let month = null;
+let health = null;
+let pageError: string | null = null;
+
+try {
+  [day, month, health] = await Promise.all([
+    getDayByDate(selectedDate),
+    getMonthCalendar(monthDate, selectedDate),
+    getCalendarHealth(),
+  ]);
+} catch (error) {
+  if (error instanceof CalendarInputError || error instanceof CalendarConfigError) {
+    pageError = error.message;
+  } else {
+    pageError = "No pudimos resolver el calendario en este momento. Intenta nuevamente en unos instantes.";
+  }
+}
+
+const apiLinks = [
+  {
+    href: `/api/calendar/day?date=${searchParams.get("date") ?? new Date().toISOString().slice(0, 10)}`,
+    label: "GET /api/calendar/day",
+    code: true,
+  },
+  {
+    href: `/api/calendar/month?year=${monthDate.getUTCFullYear()}&month=${String(monthDate.getUTCMonth() + 1).padStart(2, "0")}`,
+    label: "GET /api/calendar/month",
+    code: true,
+  },
+  {
+    href: "/api/health",
+    label: "GET /api/health",
+    code: true,
+  },
+];
+
+const isMissingDay = !pageError && !day;
+const title = day
+  ? `${day.celebrationTitle} · Calendario Fósforo`
+  : "Calendario Litúrgico · Fósforo";
+const description = day
+  ? `${day.celebrationTitle}. ${day.summary}`
+  : "Consulta la jornada litúrgica del día y navega el calendario mensual del ecosistema Fósforo.";
+---
+
+<BaseLayout title={title} description={description}>
+  <SiteHeader />
+
+  <main class="calendar-app">
+    <section class="calendar-hero-compact" id="today">
+      <div class="page">
+        <div class="calendar-hero-compact__content">
+          <span class="calendar-kicker">Calendario litúrgico · Fase 1</span>
+          <h1 class="calendar-title">Una referencia diaria para que el ecosistema camine con una misma jornada.</h1>
+          <p class="calendar-subtitle">
+            Consulta el día actual, navega por mes y usa la misma base litúrgica que alimenta otras experiencias de Fósforo.
+          </p>
+
+          <div class="calendar-meta-bar">
+            <span class="pill">Rito romano</span>
+            <span class="pill">Región AR</span>
+            {
+              health ? <span class="pill">Cobertura {health.firstDate} → {health.lastDate}</span> : null
+            }
+            {
+              health && !health.hasExactToday ? <span class="pill">Fallback 2025 activo</span> : null
+            }
+            {
+              health ? <span class="pill">Perfiles {health.totalProfiles}</span> : null
+            }
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section calendar-main" id="calendar">
+      <div class="page calendar-shell">
+        <article class="calendar-panel">
+          {
+            pageError ? (
+              <article class="card calendar-status-card calendar-error-card">
+                <p class="calendar-panel-label">Calendario mensual</p>
+                <h2 class="card-title">Sin vista mensual disponible</h2>
+                <p class="app-desc">{pageError}</p>
+              </article>
+            ) : month ? (
+              <>
+                <div class="calendar-toolbar">
+                  <div class="calendar-toolbar-title">
+                    <h2>{month.monthLabel}</h2>
+                    <p>{month.totalResolvedDays} días resueltos con la base litúrgica actual.</p>
+                  </div>
+
+                  <div class="calendar-controls">
+                    <a href={month.previousMonthHref} aria-label="Mes anterior">←</a>
+                    <div class="calendar-month-context">
+                      <strong>{month.monthLabel}</strong>
+                      <span>Fecha activa: {month.selectedDate}</span>
+                    </div>
+                    <a href={month.nextMonthHref} aria-label="Mes siguiente">→</a>
+                  </div>
+                </div>
+
+                <div class="calendar-legend" aria-label="Resumen y leyenda del mes">
+                  <div class="calendar-legend-summary">
+                    <span class="calendar-legend-pill">Rangos: {month.metadataSummary.rankedDays}</span>
+                    <span class="calendar-legend-pill">Marianas: {month.metadataSummary.marianDays}</span>
+                    <span class="calendar-legend-pill">Argentina: {month.metadataSummary.argentinaDays}</span>
+                  </div>
+                  <div class="calendar-legend-guide">
+                    <span><strong>Rango</strong> indica solemnidad, fiesta o memoria cargada.</span>
+                    <span><strong>AR</strong> marca celebraciones propias o reforzadas para Argentina.</span>
+                    <span><strong>Mariana</strong> destaca jornadas dedicadas a la Virgen.</span>
+                  </div>
+                </div>
+
+                <div class="calendar-grid" aria-label="Vista mensual del calendario litúrgico">
+                  <span class="calendar-weekday">Lun</span>
+                  <span class="calendar-weekday">Mar</span>
+                  <span class="calendar-weekday">Mié</span>
+                  <span class="calendar-weekday">Jue</span>
+                  <span class="calendar-weekday">Vie</span>
+                  <span class="calendar-weekday">Sáb</span>
+                  <span class="calendar-weekday">Dom</span>
+
+                  {
+                    month.days.map((dayItem) =>
+                      dayItem ? (
+                    dayItem.href ? (
+                          <a
+                            class={`calendar-day liturgical-${dayItem.liturgicalColor}${dayItem.isSelected ? " is-selected" : ""}${dayItem.isToday ? " is-today" : ""}${!dayItem.hasData ? " is-without-data" : ""}`}
+                            href={dayItem.href}
+                          >
+                            <span class="day-date">{dayItem.dayNumber}</span>
+                            <span class="day-title">{dayItem.celebrationTitle}</span>
+                            {
+                              dayItem.rankLabel || dayItem.isArgentina || dayItem.isMarian ? (
+                                <span class="calendar-day-flags">
+                                  {dayItem.rankLabel ? <span>{dayItem.rankLabel}</span> : null}
+                                  {dayItem.isArgentina ? <span>AR</span> : null}
+                                  {dayItem.isMarian ? <span>Mariana</span> : null}
+                                </span>
+                              ) : null
+                            }
+                            <span class={`season-chip ${dayItem.liturgicalColor === "blanco" ? "season-christmas" : "season-ordinary"}`}>
+                              <span class="season-dot"></span>
+                              {dayItem.liturgicalSeason}
+                            </span>
+                          </a>
+                        ) : (
+                          <div class="calendar-day is-without-data" aria-hidden="true">
+                            <span class="day-date">{dayItem.dayNumber}</span>
+                            <span class="day-title">Sin datos</span>
+                          </div>
+                        )
+                      ) : (
+                        <div class="calendar-day is-outside" aria-hidden="true"></div>
+                      ),
+                    )
+                  }
+                </div>
+              </>
+            ) : null
+          }
+        </article>
+
+        <aside class="calendar-panel calendar-aside">
+          {
+            pageError ? (
+              <article class="card calendar-status-card calendar-error-card">
+                <p class="calendar-panel-label">Detalle</p>
+                <h2 class="card-title">No pudimos abrir la jornada</h2>
+                <p class="app-desc">{pageError}</p>
+              </article>
+            ) : isMissingDay ? (
+              <article class="card calendar-status-card calendar-empty-card">
+                <h3 class="card-title">Sin jornada para esta fecha</h3>
+                <p class="app-desc">La app pudo cargar, pero no hay una jornada litúrgica disponible para la fecha seleccionada.</p>
+              </article>
+            ) : day ? (
+              <article class="calendar-day-panel">
+                <header class="calendar-day-panel__header">
+                  <p class="calendar-panel-label">Detalle de la jornada</p>
+                  <p class="calendar-day-panel__date">{day.weekdayLabel}</p>
+                  <h2 class="day-panel-title">{day.celebrationTitle}</h2>
+                  <p class="calendar-day-badge">{day.celebrationSubtitle}</p>
+                  <div class="calendar-detail-tags" aria-label="Metadatos liturgicos">
+                    {day.rankLabel ? <span class="calendar-detail-tag">{day.rankLabel}</span> : null}
+                    {day.isMarian ? <span class="calendar-detail-tag">Mariana</span> : null}
+                    {day.isArgentina ? <span class="calendar-detail-tag">Argentina</span> : null}
+                    {!day.hasExactMatch && day.sourceNote ? (
+                      <span class="calendar-detail-tag">Perfil 2026</span>
+                    ) : null}
+                  </div>
+                  <p class="calendar-day-panel__summary">{day.summary}</p>
+                </header>
+
+                <div class="calendar-day-panel__facts">
+                  <div class={`highlight-card liturgical-${day.liturgicalColor}`}>
+                    <h4>Tiempo y color</h4>
+                    <p>{day.liturgicalSeason} · {day.liturgicalColor === "blanco" ? "Blanco / dorado" : day.liturgicalColor === "morado" ? "Morado" : day.liturgicalColor === "rojo" ? "Rojo" : day.liturgicalColor === "rosa" ? "Rosa" : "Verde"}</p>
+                  </div>
+
+                  <div class="highlight-card">
+                    <h4>Fuente de datos</h4>
+                    <p>
+                      {
+                        day.hasExactMatch
+                          ? `La jornada coincide exactamente con ${day.sourceDate}.`
+                          : `La UI usa la fecha solicitada ${day.requestedDate}, reutilizando la referencia base ${day.sourceDate} del dataset ${day.sourceYear}.`
+                      }
+                    </p>
+                    {
+                      day.sourceNote ? <p class="calendar-source-note">Fuente editorial: {day.sourceNote}.</p> : null
+                    }
+                  </div>
+                </div>
+
+                <section class="calendar-readings">
+                  <h3 class="calendar-panel-label">Lecturas de la jornada</h3>
+                  {
+                    day.readings.length > 0 ? (
+                      day.readings.map((reading) => (
+                        <article class="calendar-reading-item">
+                          <span>{reading.label}</span>
+                          <strong>{reading.reference}</strong>
+                        </article>
+                      ))
+                    ) : (
+                      <article class="highlight-card">
+                        <h4>Sin referencias cargadas</h4>
+                        <p>Esta jornada aún no tiene lecturas publicadas en la base actual.</p>
+                      </article>
+                    )
+                  }
+                </section>
+              </article>
+            ) : (
+              <article class="card calendar-status-card calendar-empty-card">
+                <h3 class="card-title">Sin jornada seleccionada</h3>
+                <p class="app-desc">Selecciona una fecha disponible en la grilla para ver el detalle de la jornada.</p>
+              </article>
+            )
+          }
+        </aside>
+      </div>
+    </section>
+
+    <section class="section calendar-secondary" id="info">
+      <div class="page">
+        <div class="calendar-info-grid">
+          <article class="info-card">
+            <h3>Que resuelve este MVP</h3>
+            <p>
+              La jornada actual, la navegación mensual y una capa de lectura reutilizable para otras apps del ecosistema.
+            </p>
+          </article>
+
+          <article class="info-card">
+            <h3>Fuente de verdad</h3>
+            <p>
+              Supabase con `liturgy_daily_readings` como base del día, desacoplado de la UI mediante servicios y endpoints Astro.
+            </p>
+          </article>
+
+          <article class="info-card">
+            <h3>Estado del dataset</h3>
+            <p>
+              {
+                health
+                ? `${health.totalDays} jornadas exactas y ${health.totalProfiles} perfiles mensuales cargados. ${health.hasExactToday ? "La fecha actual tiene cobertura exacta." : health.hasProfileToday ? `La fecha actual se resuelve con perfil mensual derivado de ${health.fallbackDatasetYear}.` : `La fecha actual se resuelve por fallback con base ${health.fallbackDatasetYear}.`}`
+                : "El dataset no pudo resolverse en este momento."
+              }
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="ecosystem">
+      <div class="page">
+        <SectionIntro
+          title="Superficies relacionadas"
+          description="El calendario no intenta resolver toda la experiencia: abre el camino hacia otras apps del ecosistema cuando la jornada lo necesita."
+        />
+
+        {
+          day ? (
+            <div class="calendar-related-grid">
+              {day.relatedLinks.map((link) => (
+                <article class="card calendar-related-card">
+                  <h3 class="card-title">{link.label}</h3>
+                  <p>{link.description}</p>
+                  <ActionLinkList
+                    className="calendar-related-card__footer"
+                    items={[{ href: link.href, label: "Abrir", secondary: true }]}
+                  />
+                </article>
+              ))}
+            </div>
+          ) : (
+            <article class="card calendar-empty-card">
+              <h3 class="card-title">Sin derivaciones disponibles</h3>
+              <p>No se pudieron resolver links relaciónados para la jornada actual.</p>
+            </article>
+          )
+        }
+      </div>
+    </section>
+
+    <section class="section" id="api">
+      <div class="page calendar-api-grid">
+        <InfoPanel
+          badge="Contratos"
+          title="API del calendario"
+          description="La UI y otras apps del ecosistema deben consumir contratos normalizados, no depender del shape SQL ni del acceso directo a Supabase."
+          apiLinks={apiLinks}
+          className="card calendar-api-card"
+        >
+          <Fragment slot="actions">
+            <p class="calendar-footnote">
+              `GET /api/calendar/month` ahora incluye `rankLabel`, `isMarian`, `isArgentina` y `metadataSummary` para consumers internos del ecosistema.
+            </p>
+          </Fragment>
+        </InfoPanel>
+
+        <InfoPanel
+          badge="Persistencia"
+          title="Lectura desacoplada del dataset"
+          description="El MVP reutiliza `public.liturgy_daily_readings` como base real de jornada. La app resuelve una fecha solicitada, aplica fallback por mes y día cuando hace falta y publica un DTO estable para consumers internos."
+          className="card calendar-api-card"
+        >
+          <Fragment slot="actions">
+            <p class="calendar-footnote">
+              Esto permite mantener una sola fuente litúrgica sin exponer secretos ni lógica de negocio en el cliente.
+            </p>
+          </Fragment>
+        </InfoPanel>
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter />
+</BaseLayout>

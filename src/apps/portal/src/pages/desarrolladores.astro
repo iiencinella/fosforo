@@ -1,0 +1,43 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import { ExternalLinkButton } from "@repo/ui";
+import SectionIntro from "@repo/ui/astro/SectionIntro.astro";
+---
+
+<BaseLayout
+  title="Desarrolladores · Portal Fósforo"
+  description="Guía de contribución técnica del ecosistema Fósforo."
+>
+  <SiteHeader />
+  <main class="section">
+    <div class="page dev-page">
+      <SectionIntro
+        title="Sección para desarrolladores"
+        description="Las correcciones y sugerencias técnicas del MVP se canalizan mediante pull requests al repositorio del ecosistema."
+      />
+
+      <div class="card-grid mt-24">
+        <article class="card">
+          <h2 class="card-title">Flujo de contribución</h2>
+          <ol class="app-desc">
+            <li>Revisar documentación vigente del portal.</li>
+            <li>Implementar cambios en una rama del repositorio.</li>
+            <li>Abrir pull request con contexto funcional y técnico.</li>
+          </ol>
+        </article>
+
+        <article class="card">
+          <h2 class="card-title">Repositorio base</h2>
+          <p class="app-desc">La contribución técnica se realiza en el monorepo principal de Fósforo.</p>
+          <p>
+            Próximamente
+            <!-- <ExternalLinkButton href="https://github.com/iiencinella/fosforo" label="Abrir repositorio" /> -->
+          </p>
+        </article>
+      </div>
+    </div>
+  </main>
+  <SiteFooter />
+</BaseLayout>

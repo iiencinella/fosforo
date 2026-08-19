@@ -1,0 +1,64 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import { getCollection } from "astro:content";
+import { PortalBlogCard } from "@repo/ui";
+import blogPostDefault from "@/assets/blog_post_default.png";
+
+function summarizeBody(markdown: string): string {
+  const normalized = markdown
+    .replace(/[#*_`>\-]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  if (normalized.length <= 160) {
+    return normalized;
+  }
+
+  return `${normalized.slice(0, 157).trim()}...`;
+}
+
+const novedades = (await getCollection("novedades"))
+  .sort(
+    (a, b) =>
+      b.data.fecha_creación.getTime() - a.data.fecha_creación.getTime(),
+  )
+  .map((item) => ({
+    slug: item.data.slug,
+    title: item.data.titulo,
+    description: summarizeBody(item.body ?? ""),
+    date: item.data.fecha_creación.toISOString().slice(0, 10),
+    category: "novedad",
+    app: "portal",
+    href: `/novedades/${item.data.slug}`,
+    imageSrc: item.data.image?.src ?? blogPostDefault.src,
+    imageAlt: `Imagen de portada para ${item.data.titulo}`,
+  }));
+---
+
+<BaseLayout title="Novedades · Portal Fósforo" description="Novedades del ecosistema Fósforo.">
+  <SiteHeader />
+  <main class="section">
+    <div class="page">
+      <h1 class="section-title">Novedades</h1>
+      <p class="section-desc">
+        Publicaciónes manuales versionadas desde el contenido del portal.
+      </p>
+
+      {
+        novedades.length > 0 ? (
+          <div class="card-grid blog-grid mt-24">
+            {novedades.map((item) => <PortalBlogCard {...item} />)}
+          </div>
+        ) : (
+          <article class="card mt-24">
+            <h2 class="card-title">Todavía no hay novedades publicadas</h2>
+            <p class="app-desc">Cuando se publique contenido, aparecerá en esta sección.</p>
+          </article>
+        )
+      }
+    </div>
+  </main>
+  <SiteFooter />
+</BaseLayout>

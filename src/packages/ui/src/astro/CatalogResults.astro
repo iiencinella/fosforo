@@ -1,0 +1,19 @@
+---
+type Props = {
+  total: number;
+  page: number;
+  totalPages: number;
+  label?: string;
+  className?: string;
+};
+
+const {
+  total,
+  page,
+  totalPages,
+  label = "resultado(s)",
+  className = "catalog-results",
+} = Astro.props as Props;
+---
+
+<p class={className}>{total} {label} · pagina {page} de {totalPages}</p>

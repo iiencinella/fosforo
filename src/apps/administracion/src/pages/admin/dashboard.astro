@@ -1,0 +1,62 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import { getDashboardMetrics } from "@/lib/admin-data";
+import { requirePageAuth } from "@/lib/auth";
+
+const auth = await requirePageAuth(Astro, ["admin", "editor", "viewer"]);
+if (auth.response) {
+  return auth.response;
+}
+
+const metrics = await getDashboardMetrics();
+---
+
+<AdminLayout title="Dashboard | Fósforo Admin" userEmail={auth.session?.email}>
+  <section>
+    <h1>Dashboard general</h1>
+    <p class="app-desc">Resumen operativo de iglesias, horarios y actividad reciente.</p>
+  </section>
+
+  <section class="admin-grid" aria-label="Métricas principales">
+    <article class="metric-card">
+      <h3>Iglesias activas</h3>
+      <p>{metrics.activeChurches}</p>
+    </article>
+    <article class="metric-card">
+      <h3>Horarios registrados</h3>
+      <p>{metrics.schedules}</p>
+    </article>
+    <article class="metric-card">
+      <h3>Actividad reciente</h3>
+      <p>{metrics.recentActivity.length}</p>
+    </article>
+  </section>
+
+  <section class="admin-section" aria-labelledby="actividad-title">
+    <h2 id="actividad-title">Actividad reciente</h2>
+    {metrics.recentActivity.length === 0 ? (
+      <p class="app-desc">Sin actividad registrada todavía.</p>
+    ) : (
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Acción</th>
+              <th>Recurso</th>
+              <th>Fecha</th>
+            </tr>
+          </thead>
+          <tbody>
+            {metrics.recentActivity.map((entry) => (
+              <tr>
+                <td>{entry.action}</td>
+                <td>{entry.resource_type}</td>
+                <td>{new Date(entry.created_at).toLocaleString("es-AR")}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    )}
+  </section>
+</AdminLayout>

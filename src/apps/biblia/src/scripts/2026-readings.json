@@ -1,0 +1,2018 @@
+[
+  {
+    "date": "2026-01-01",
+    "reading1": "Numbers 6:22-27",
+    "psalm": "Psalms 67:2-3, 5-6, 8",
+    "reading2": "Galatians 4:4-7",
+    "gospel": "Luke 2:16-21"
+  },
+  {
+    "date": "2026-01-02",
+    "reading1": "1 John 2:22-28",
+    "psalm": "Psalms 98:1-4",
+    "reading2": null,
+    "gospel": "John 1:19-28"
+  },
+  {
+    "date": "2026-01-03",
+    "reading1": "Philippians 2:5-11",
+    "psalm": "Psalms 113:1-8",
+    "reading2": null,
+    "gospel": "Matthew 1:18-23"
+  },
+  {
+    "date": "2026-01-04",
+    "reading1": "Isaiah 60:1-6",
+    "psalm": "Psalms 72:1-2, 7-8, 10-13",
+    "reading2": "Ephesians 3:2-3, 5-6",
+    "gospel": "Matthew 2:1-12"
+  },
+  {
+    "date": "2026-01-05",
+    "reading1": "1 John 3:22--4:6",
+    "psalm": "Psalms 2:7-8, 10-12",
+    "reading2": null,
+    "gospel": "Matthew 4:12-17, 23-25"
+  },
+  {
+    "date": "2026-01-06",
+    "reading1": "1 John 4:7-10",
+    "psalm": "Psalms 72:1-4, 7-8",
+    "reading2": null,
+    "gospel": "Mark 6:34-44"
+  },
+  {
+    "date": "2026-01-07",
+    "reading1": "1 John 4:11-18",
+    "psalm": "Psalms 72:1-2, 10, 12-13",
+    "reading2": null,
+    "gospel": "Mark 6:45-52"
+  },
+  {
+    "date": "2026-01-08",
+    "reading1": "1 John 4:19--5:4",
+    "psalm": "Psalms 72:1-2, 14-15, 17",
+    "reading2": null,
+    "gospel": "Luke 4:14-22"
+  },
+  {
+    "date": "2026-01-09",
+    "reading1": "1 John 5:5-13",
+    "psalm": "Psalms 147:12-15, 19-20",
+    "reading2": null,
+    "gospel": "Luke 5:12-16"
+  },
+  {
+    "date": "2026-01-10",
+    "reading1": "1 John 5:14-21",
+    "psalm": "Psalms 149:1-6, 9",
+    "reading2": null,
+    "gospel": "John 3:22-30"
+  },
+  {
+    "date": "2026-01-11",
+    "reading1": "Isaiah 42:1-4, 6-7",
+    "psalm": "Psalms 29:1-4, 9-10",
+    "reading2": "Acts 10:34-38",
+    "gospel": "Matthew 3:13-17"
+  },
+  {
+    "date": "2026-01-12",
+    "reading1": "1 Samuel 1:1-8",
+    "psalm": "Psalms 116:12-19",
+    "reading2": null,
+    "gospel": "Mark 1:14-20"
+  },
+  {
+    "date": "2026-01-13",
+    "reading1": "1 Samuel 1:9-20",
+    "psalm": "1 Samuel 2:1, 4-8",
+    "reading2": null,
+    "gospel": "Mark 1:21-28"
+  },
+  {
+    "date": "2026-01-14",
+    "reading1": "1 Samuel 3:1-10, 19-20",
+    "psalm": "Psalms 40:2, 5, 7-10",
+    "reading2": null,
+    "gospel": "Mark 1:29-39"
+  },
+  {
+    "date": "2026-01-15",
+    "reading1": "1 Samuel 4:1-11",
+    "psalm": "Psalms 44:10-11, 14-15, 24-25",
+    "reading2": null,
+    "gospel": "Mark 1:40-45"
+  },
+  {
+    "date": "2026-01-16",
+    "reading1": "1 Samuel 8:4-7, 10-22",
+    "psalm": "Psalms 89:16-19",
+    "reading2": null,
+    "gospel": "Mark 2:1-12"
+  },
+  {
+    "date": "2026-01-17",
+    "reading1": "1 Samuel 9:1-4, 17-19; 10:1",
+    "psalm": "Psalms 21:2-7",
+    "reading2": null,
+    "gospel": "Mark 2:13-17"
+  },
+  {
+    "date": "2026-01-18",
+    "reading1": "Isaiah 49:3, 5-6",
+    "psalm": "Psalms 40:2, 4, 7-10",
+    "reading2": "1 Corinthians 1:1-3",
+    "gospel": "John 1:29-34"
+  },
+  {
+    "date": "2026-01-19",
+    "reading1": "1 Samuel 15:16-23",
+    "psalm": "Psalms 50:8-9, 16-17, 21, 23",
+    "reading2": null,
+    "gospel": "Mark 2:18-22"
+  },
+  {
+    "date": "2026-01-20",
+    "reading1": "1 Samuel 16:1-13",
+    "psalm": "Psalms 89:20-22, 27-28",
+    "reading2": null,
+    "gospel": "Mark 2:23-28"
+  },
+  {
+    "date": "2026-01-21",
+    "reading1": "1 Samuel 17:32-33, 37, 40-51",
+    "psalm": "Psalms 144:1-2, 9-10",
+    "reading2": null,
+    "gospel": "Mark 3:1-6"
+  },
+  {
+    "date": "2026-01-22",
+    "reading1": "1 Samuel 18:6-9; 19:1-7",
+    "psalm": "Psalms 56:2-3, 9-13",
+    "reading2": null,
+    "gospel": "Mark 3:7-12"
+  },
+  {
+    "date": "2026-01-23",
+    "reading1": "1 Samuel 24:3-21",
+    "psalm": "Psalms 57:2-4, 6, 11",
+    "reading2": null,
+    "gospel": "Mark 3:13-19"
+  },
+  {
+    "date": "2026-01-24",
+    "reading1": "2 Samuel 1:1-4, 11-12, 19, 23-27",
+    "psalm": "Psalms 80:2-3, 5-7",
+    "reading2": null,
+    "gospel": "Mark 3:20-21"
+  },
+  {
+    "date": "2026-01-25",
+    "reading1": "Isaiah 8:23--9:3",
+    "psalm": "Psalms 27:1, 4, 13-14",
+    "reading2": "1 Corinthians 1:10-13, 17",
+    "gospel": "Matthew 4:12-23"
+  },
+  {
+    "date": "2026-01-26",
+    "reading1": "2 Timothy 1:1-8",
+    "psalm": "Psalms 96:1-3, 7-8, 10",
+    "reading2": null,
+    "gospel": "Mark 3:22-30"
+  },
+  {
+    "date": "2026-01-27",
+    "reading1": "2 Samuel 6:12-15, 17-19",
+    "psalm": "Psalms 24:7-10",
+    "reading2": null,
+    "gospel": "Mark 3:31-35"
+  },
+  {
+    "date": "2026-01-28",
+    "reading1": "2 Samuel 7:4-17",
+    "psalm": "Psalms 89:4-5, 27-30",
+    "reading2": null,
+    "gospel": "Mark 4:1-20"
+  },
+  {
+    "date": "2026-01-29",
+    "reading1": "2 Samuel 7:18-19, 24-29",
+    "psalm": "Psalms 132:1-5, 11-14",
+    "reading2": null,
+    "gospel": "Mark 4:21-25"
+  },
+  {
+    "date": "2026-01-30",
+    "reading1": "2 Samuel 11:1-10, 13-17",
+    "psalm": "Psalms 51:3-7, 10-11",
+    "reading2": null,
+    "gospel": "Mark 4:26-34"
+  },
+  {
+    "date": "2026-01-31",
+    "reading1": "2 Samuel 12:1-7, 10-17",
+    "psalm": "Psalms 51:12-17",
+    "reading2": null,
+    "gospel": "Mark 4:35-41"
+  },
+  {
+    "date": "2026-02-01",
+    "reading1": "Zephaniah 2:3; 3:12-13",
+    "psalm": "Psalms 146:6-10",
+    "reading2": "1 Corinthians 1:26-31",
+    "gospel": "Matthew 5:1-12"
+  },
+  {
+    "date": "2026-02-02",
+    "reading1": "Malachi 3:1-4",
+    "psalm": "Psalms 24:7-10",
+    "reading2": "Hebrews 2:14-18",
+    "gospel": "Luke 2:22-40"
+  },
+  {
+    "date": "2026-02-03",
+    "reading1": "2 Samuel 18:9-10, 14, 24-25, 30--19:3",
+    "psalm": "Psalms 86:1-6",
+    "reading2": null,
+    "gospel": "Mark 5:21-43"
+  },
+  {
+    "date": "2026-02-04",
+    "reading1": "2 Samuel 24:2, 9-17",
+    "psalm": "Psalms 32:1-2, 5-7",
+    "reading2": null,
+    "gospel": "Mark 6:1-6"
+  },
+  {
+    "date": "2026-02-05",
+    "reading1": "1 Kings 2:1-4, 10-12",
+    "psalm": "1 Chronicles 29:10-12",
+    "reading2": null,
+    "gospel": "Mark 6:7-13"
+  },
+  {
+    "date": "2026-02-06",
+    "reading1": "Sirach 47:2-11",
+    "psalm": "Psalms 18:31, 47, 50-51",
+    "reading2": null,
+    "gospel": "Mark 6:14-29"
+  },
+  {
+    "date": "2026-02-07",
+    "reading1": "1 Kings 3:4-13",
+    "psalm": "Psalms 119:9-14",
+    "reading2": null,
+    "gospel": "Mark 6:30-34"
+  },
+  {
+    "date": "2026-02-08",
+    "reading1": "Isaiah 58:7-10",
+    "psalm": "Psalms 112:4-9",
+    "reading2": "1 Corinthians 2:1-5",
+    "gospel": "Matthew 5:13-16"
+  },
+  {
+    "date": "2026-02-09",
+    "reading1": "1 Kings 8:1-7, 9-13",
+    "psalm": "Psalms 132:6-10",
+    "reading2": null,
+    "gospel": "Mark 6:53-56"
+  },
+  {
+    "date": "2026-02-10",
+    "reading1": "1 Kings 8:22-23, 27-30",
+    "psalm": "Psalms 84:3-5, 10-11",
+    "reading2": null,
+    "gospel": "Mark 7:1-13"
+  },
+  {
+    "date": "2026-02-11",
+    "reading1": "1 Kings 10:1-10",
+    "psalm": "Psalms 37:5-6, 30-31, 39-40",
+    "reading2": null,
+    "gospel": "Mark 7:14-23"
+  },
+  {
+    "date": "2026-02-12",
+    "reading1": "1 Kings 11:4-13",
+    "psalm": "Psalms 106:3-4, 35-37, 40",
+    "reading2": null,
+    "gospel": "Mark 7:24-30"
+  },
+  {
+    "date": "2026-02-13",
+    "reading1": "1 Kings 11:29-32; 12:19",
+    "psalm": "Psalms 81:10-15",
+    "reading2": null,
+    "gospel": "Mark 7:31-37"
+  },
+  {
+    "date": "2026-02-14",
+    "reading1": "1 Kings 12:26-32; 13:33-34",
+    "psalm": "Psalms 106:6-7, 19-22",
+    "reading2": null,
+    "gospel": "Mark 8:1-10"
+  },
+  {
+    "date": "2026-02-15",
+    "reading1": "Sirach 15:15-20",
+    "psalm": "Psalms 119:1-2, 4-5, 17-18, 33-34",
+    "reading2": "1 Corinthians 2:6-10",
+    "gospel": "Matthew 5:17-37"
+  },
+  {
+    "date": "2026-02-16",
+    "reading1": "James 1:1-11",
+    "psalm": "Psalms 119:67-68, 71-72, 75-76",
+    "reading2": null,
+    "gospel": "Mark 8:11-13"
+  },
+  {
+    "date": "2026-02-17",
+    "reading1": "James 1:12-18",
+    "psalm": "Psalms 94:12-15, 18-19",
+    "reading2": null,
+    "gospel": "Mark 8:14-21"
+  },
+  {
+    "date": "2026-02-18",
+    "reading1": "Joel 2:12-18",
+    "psalm": "Psalms 51:3-6, 12-14, 17",
+    "reading2": "2 Corinthians 5:20--6:2",
+    "gospel": "Matthew 6:1-6, 16-18"
+  },
+  {
+    "date": "2026-02-19",
+    "reading1": "Deuteronomy 30:15-20",
+    "psalm": "Psalms 1:1-4, 6",
+    "reading2": null,
+    "gospel": "Luke 9:22-25"
+  },
+  {
+    "date": "2026-02-20",
+    "reading1": "Isaiah 58:1-9",
+    "psalm": "Psalms 51:3-6, 18-19",
+    "reading2": null,
+    "gospel": "Matthew 9:14-15"
+  },
+  {
+    "date": "2026-02-21",
+    "reading1": "Isaiah 58:9-14",
+    "psalm": "Psalms 86:1-6",
+    "reading2": null,
+    "gospel": "Luke 5:27-32"
+  },
+  {
+    "date": "2026-02-22",
+    "reading1": "Genesis 2:7-9; 3:1-7",
+    "psalm": "Psalms 51:3-6, 12-13, 17",
+    "reading2": "Romans 5:12-19",
+    "gospel": "Matthew 4:1-11"
+  },
+  {
+    "date": "2026-02-23",
+    "reading1": "Leviticus 19:1-2, 11-18",
+    "psalm": "Psalms 19:8-10, 15",
+    "reading2": null,
+    "gospel": "Matthew 25:31-46"
+  },
+  {
+    "date": "2026-02-24",
+    "reading1": "Isaiah 55:10-11",
+    "psalm": "Psalms 34:4-7, 16-19",
+    "reading2": null,
+    "gospel": "Matthew 6:7-15"
+  },
+  {
+    "date": "2026-02-25",
+    "reading1": "Jonah 3:1-10",
+    "psalm": "Psalms 51:3-4, 12-13, 18-19",
+    "reading2": null,
+    "gospel": "Luke 11:29-32"
+  },
+  {
+    "date": "2026-02-26",
+    "reading1": "Esther C:12, 14-16, 23-25",
+    "psalm": "Psalms 138:1-3, 7-8",
+    "reading2": null,
+    "gospel": "Matthew 7:7-12"
+  },
+  {
+    "date": "2026-02-27",
+    "reading1": "Ezekiel 18:21-28",
+    "psalm": "Psalms 130:1-8",
+    "reading2": null,
+    "gospel": "Matthew 5:20-26"
+  },
+  {
+    "date": "2026-02-28",
+    "reading1": "Deuteronomy 26:16-19",
+    "psalm": "Psalms 119:1-2, 4-5, 7-8",
+    "reading2": null,
+    "gospel": "Matthew 5:43-48"
+  },
+  {
+    "date": "2026-03-01",
+    "reading1": "Genesis 12:1-4",
+    "psalm": "Psalms 33:4-5, 18-20, 22",
+    "reading2": "2 Timothy 1:8-10",
+    "gospel": "Matthew 17:1-9"
+  },
+  {
+    "date": "2026-03-02",
+    "reading1": "Daniel 9:4-10",
+    "psalm": "Psalms 79:8-9, 11, 13",
+    "reading2": null,
+    "gospel": "Luke 6:36-38"
+  },
+  {
+    "date": "2026-03-03",
+    "reading1": "Isaiah 1:10, 16-20",
+    "psalm": "Psalms 50:8-9, 16-17, 21, 23",
+    "reading2": null,
+    "gospel": "Matthew 23:1-12"
+  },
+  {
+    "date": "2026-03-04",
+    "reading1": "Jeremiah 18:18-20",
+    "psalm": "Psalms 31:5-6, 14-16",
+    "reading2": null,
+    "gospel": "Matthew 20:17-28"
+  },
+  {
+    "date": "2026-03-05",
+    "reading1": "Jeremiah 17:5-10",
+    "psalm": "Psalms 1:1-4, 6",
+    "reading2": null,
+    "gospel": "Luke 16:19-31"
+  },
+  {
+    "date": "2026-03-06",
+    "reading1": "Genesis 37:3-4, 12-13, 17-28",
+    "psalm": "Psalms 105:16-21",
+    "reading2": null,
+    "gospel": "Matthew 21:33-43, 45-46"
+  },
+  {
+    "date": "2026-03-07",
+    "reading1": "Micah 7:14-15, 18-20",
+    "psalm": "Psalms 103:1-4, 9-12",
+    "reading2": null,
+    "gospel": "Luke 15:1-3, 11-32"
+  },
+  {
+    "date": "2026-03-08",
+    "reading1": "Exodus 17:3-7",
+    "psalm": "Psalms 95:1-2, 6-9",
+    "reading2": "Romans 5:1-2, 5-8",
+    "gospel": "John 4:5-42"
+  },
+  {
+    "date": "2026-03-09",
+    "reading1": "2 Kings 5:1-15",
+    "psalm": "Psalms 42:2-3; 43:3-4",
+    "reading2": null,
+    "gospel": "Luke 4:24-30"
+  },
+  {
+    "date": "2026-03-10",
+    "reading1": "Daniel 3:25, 34-43",
+    "psalm": "Psalms 25:4-9",
+    "reading2": null,
+    "gospel": "Matthew 18:21-35"
+  },
+  {
+    "date": "2026-03-11",
+    "reading1": "Deuteronomy 4:1, 5-9",
+    "psalm": "Psalms 147:12-13, 15-16, 19-20",
+    "reading2": null,
+    "gospel": "Matthew 5:17-19"
+  },
+  {
+    "date": "2026-03-12",
+    "reading1": "Jeremiah 7:23-28",
+    "psalm": "Psalms 95:1-2, 6-9",
+    "reading2": null,
+    "gospel": "Luke 11:14-23"
+  },
+  {
+    "date": "2026-03-13",
+    "reading1": "Hosea 14:2-10",
+    "psalm": "Psalms 81:6-11, 14, 17",
+    "reading2": null,
+    "gospel": "Mark 12:28-34"
+  },
+  {
+    "date": "2026-03-14",
+    "reading1": "Hosea 6:1-6",
+    "psalm": "Psalms 51:3-4, 18-21",
+    "reading2": null,
+    "gospel": "Luke 18:9-14"
+  },
+  {
+    "date": "2026-03-15",
+    "reading1": "1 Samuel 16:1, 6-7, 10-13",
+    "psalm": "Psalms 23:1-6",
+    "reading2": "Ephesians 5:8-14",
+    "gospel": "John 9:1-41"
+  },
+  {
+    "date": "2026-03-16",
+    "reading1": "Isaiah 65:17-21",
+    "psalm": "Psalms 30:2, 4-6, 11-13",
+    "reading2": null,
+    "gospel": "John 4:43-54"
+  },
+  {
+    "date": "2026-03-17",
+    "reading1": "Ezekiel 47:1-9, 12",
+    "psalm": "Psalms 46:2-3, 5-6, 8-9",
+    "reading2": null,
+    "gospel": "John 5:1-16"
+  },
+  {
+    "date": "2026-03-18",
+    "reading1": "Isaiah 49:8-15",
+    "psalm": "Psalms 145:8-9, 13-14, 17-18",
+    "reading2": null,
+    "gospel": "John 5:17-30"
+  },
+  {
+    "date": "2026-03-19",
+    "reading1": "2 Samuel 7:4-5, 12-14, 16",
+    "psalm": "Psalms 89:2-5, 27, 29",
+    "reading2": "Romans 4:13, 16-18, 22",
+    "gospel": "Matthew 1:16, 18-21, 24"
+  },
+  {
+    "date": "2026-03-20",
+    "reading1": "Wisdom 2:1, 12-22",
+    "psalm": "Psalms 34:17-21, 23",
+    "reading2": null,
+    "gospel": "John 7:1-2, 10, 25-30"
+  },
+  {
+    "date": "2026-03-21",
+    "reading1": "Jeremiah 11:18-20",
+    "psalm": "Psalms 7:2-3, 9-12",
+    "reading2": null,
+    "gospel": "John 7:40-53"
+  },
+  {
+    "date": "2026-03-22",
+    "reading1": "Ezekiel 37:12-14",
+    "psalm": "Psalms 130:1-8",
+    "reading2": "Romans 8:8-11",
+    "gospel": "John 11:1-45"
+  },
+  {
+    "date": "2026-03-23",
+    "reading1": "Daniel 13:1-9, 15-17, 19-30, 33-62",
+    "psalm": "Psalms 23:1-6",
+    "reading2": null,
+    "gospel": "John 8:1-11"
+  },
+  {
+    "date": "2026-03-24",
+    "reading1": "Numbers 21:4-9",
+    "psalm": "Psalms 102:2-3, 16-21",
+    "reading2": null,
+    "gospel": "John 8:21-30"
+  },
+  {
+    "date": "2026-03-25",
+    "reading1": "Isaiah 7:10-14; 8:10",
+    "psalm": "Psalms 40:7-11",
+    "reading2": "Hebrews 10:4-10",
+    "gospel": "Luke 1:26-38"
+  },
+  {
+    "date": "2026-03-26",
+    "reading1": "Genesis 17:3-9",
+    "psalm": "Psalms 105:4-9",
+    "reading2": null,
+    "gospel": "John 8:51-59"
+  },
+  {
+    "date": "2026-03-27",
+    "reading1": "Jeremiah 20:10-13",
+    "psalm": "Psalms 18:2-7",
+    "reading2": null,
+    "gospel": "John 10:31-42"
+  },
+  {
+    "date": "2026-03-28",
+    "reading1": "Ezekiel 37:21-28",
+    "psalm": "Jeremiah 31:10-13",
+    "reading2": null,
+    "gospel": "John 11:45-56"
+  },
+  {
+    "date": "2026-03-29",
+    "reading1": "Isaiah 50:4-7",
+    "psalm": "Psalms 22:8-9, 17-20, 23-24",
+    "reading2": "Philippians 2:6-11",
+    "gospel": "Matthew 26:14--27:66"
+  },
+  {
+    "date": "2026-03-30",
+    "reading1": "Isaiah 42:1-7",
+    "psalm": "Psalms 27:1-3, 13-14",
+    "reading2": null,
+    "gospel": "John 12:1-11"
+  },
+  {
+    "date": "2026-03-31",
+    "reading1": "Isaiah 49:1-6",
+    "psalm": "Psalms 71:1-6, 15, 17",
+    "reading2": null,
+    "gospel": "John 13:21-33, 36-38"
+  },
+  {
+    "date": "2026-04-01",
+    "reading1": "Isaiah 50:4-9",
+    "psalm": "Psalms 69:8-10, 21-22, 31, 33-34",
+    "reading2": null,
+    "gospel": "Matthew 26:14-25"
+  },
+  {
+    "date": "2026-04-02",
+    "reading1": "Exodus 12:1-8, 11-14",
+    "psalm": "Psalms 116:12-13, 15-18",
+    "reading2": "1 Corinthians 11:23-26",
+    "gospel": "John 13:1-15"
+  },
+  {
+    "date": "2026-04-03",
+    "reading1": "Isaiah 52:13--53:12",
+    "psalm": "Psalms 31:2, 6, 12-13, 15-17, 25",
+    "reading2": "Hebrews 4:14-16; 5:7-9",
+    "gospel": "John 18:1--19:42"
+  },
+  {
+    "date": "2026-04-04",
+    "reading1": "Genesis 1:1--2:2",
+    "psalm": "",
+    "reading2": "Genesis 22:1-18",
+    "gospel": "Matthew 28:1-10"
+  },
+  {
+    "date": "2026-04-05",
+    "reading1": "Acts 10:34, 37-43",
+    "psalm": "Psalms 118:1-2, 16-17, 22-23",
+    "reading2": "Colossians 3:1-4",
+    "gospel": "John 20:1-9"
+  },
+  {
+    "date": "2026-04-06",
+    "reading1": "Acts 2:14, 22-33",
+    "psalm": "Psalms 16:1-2, 5, 7-11",
+    "reading2": null,
+    "gospel": "Matthew 28:8-15"
+  },
+  {
+    "date": "2026-04-07",
+    "reading1": "Acts 2:36-41",
+    "psalm": "Psalms 33:4-5, 18-20, 22",
+    "reading2": null,
+    "gospel": "John 20:11-18"
+  },
+  {
+    "date": "2026-04-08",
+    "reading1": "Acts 3:1-10",
+    "psalm": "Psalms 105:1-4, 6-9",
+    "reading2": null,
+    "gospel": "Luke 24:13-35"
+  },
+  {
+    "date": "2026-04-09",
+    "reading1": "Acts 3:11-26",
+    "psalm": "Psalms 8:2, 5-9",
+    "reading2": null,
+    "gospel": "Luke 24:35-48"
+  },
+  {
+    "date": "2026-04-10",
+    "reading1": "Acts 4:1-12",
+    "psalm": "Psalms 118:1-2, 4, 22-27",
+    "reading2": null,
+    "gospel": "John 21:1-14"
+  },
+  {
+    "date": "2026-04-11",
+    "reading1": "Acts 4:13-21",
+    "psalm": "Psalms 118:1, 14-21",
+    "reading2": null,
+    "gospel": "Mark 16:9-15"
+  },
+  {
+    "date": "2026-04-12",
+    "reading1": "Acts 2:42-47",
+    "psalm": "Psalms 118:2-4, 13-15, 22-24",
+    "reading2": "1 Peter 1:3-9",
+    "gospel": "John 20:19-31"
+  },
+  {
+    "date": "2026-04-13",
+    "reading1": "Acts 4:23-31",
+    "psalm": "Psalms 2:1-9",
+    "reading2": null,
+    "gospel": "John 3:1-8"
+  },
+  {
+    "date": "2026-04-14",
+    "reading1": "Acts 4:32-37",
+    "psalm": "Psalms 93:1-2, 5",
+    "reading2": null,
+    "gospel": "John 3:7-15"
+  },
+  {
+    "date": "2026-04-15",
+    "reading1": "Acts 5:17-26",
+    "psalm": "Psalms 34:2-9",
+    "reading2": null,
+    "gospel": "John 3:16-21"
+  },
+  {
+    "date": "2026-04-16",
+    "reading1": "Acts 5:27-33",
+    "psalm": "Psalms 34:2, 9, 17-20",
+    "reading2": null,
+    "gospel": "John 3:31-36"
+  },
+  {
+    "date": "2026-04-17",
+    "reading1": "Acts 5:34-42",
+    "psalm": "Psalms 27:1, 4, 13-14",
+    "reading2": null,
+    "gospel": "John 6:1-15"
+  },
+  {
+    "date": "2026-04-18",
+    "reading1": "Acts 6:1-7",
+    "psalm": "Psalms 33:1-2, 4-5, 18-19",
+    "reading2": null,
+    "gospel": "John 6:16-21"
+  },
+  {
+    "date": "2026-04-19",
+    "reading1": "Acts 2:14, 22-33",
+    "psalm": "Psalms 16:1-2, 5, 7-11",
+    "reading2": "1 Peter 1:17-21",
+    "gospel": "Luke 24:13-35"
+  },
+  {
+    "date": "2026-04-20",
+    "reading1": "Acts 6:8-15",
+    "psalm": "Psalms 119:23-24, 26-27, 29-30",
+    "reading2": null,
+    "gospel": "John 6:22-29"
+  },
+  {
+    "date": "2026-04-21",
+    "reading1": "Acts 7:51--8:1",
+    "psalm": "Psalms 31:3-4, 6-8, 17, 21",
+    "reading2": null,
+    "gospel": "John 6:30-35"
+  },
+  {
+    "date": "2026-04-22",
+    "reading1": "Acts 8:1-8",
+    "psalm": "Psalms 66:1-7",
+    "reading2": null,
+    "gospel": "John 6:35-40"
+  },
+  {
+    "date": "2026-04-23",
+    "reading1": "Acts 8:26-40",
+    "psalm": "Psalms 66:8-9, 16-17, 20",
+    "reading2": null,
+    "gospel": "John 6:44-51"
+  },
+  {
+    "date": "2026-04-24",
+    "reading1": "Revelation 3:7-8, 10-12",
+    "psalm": "Psalms 119:137-144",
+    "reading2": null,
+    "gospel": "John 10:11-16"
+  },
+  {
+    "date": "2026-04-25",
+    "reading1": "1 Peter 5:5-14",
+    "psalm": "Psalms 89:2-3, 6-7, 16-17",
+    "reading2": null,
+    "gospel": "Mark 16:15-20"
+  },
+  {
+    "date": "2026-04-26",
+    "reading1": "Acts 2:14, 36-41",
+    "psalm": "Psalms 23:1-6",
+    "reading2": "1 Peter 2:20-25",
+    "gospel": "John 10:1-10"
+  },
+  {
+    "date": "2026-04-27",
+    "reading1": "Acts 11:1-18",
+    "psalm": "Psalms 42:2-3; 43:3-4",
+    "reading2": null,
+    "gospel": "John 10:11-18"
+  },
+  {
+    "date": "2026-04-28",
+    "reading1": "Acts 11:19-26",
+    "psalm": "Psalms 87:1-7",
+    "reading2": null,
+    "gospel": "John 10:22-30"
+  },
+  {
+    "date": "2026-04-29",
+    "reading1": "Acts 12:24--13:5",
+    "psalm": "Psalms 67:2-3, 5, 6, 8",
+    "reading2": null,
+    "gospel": "John 12:44-50"
+  },
+  {
+    "date": "2026-04-30",
+    "reading1": "Acts 13:13-25",
+    "psalm": "Psalms 89:2-3, 21-22, 25, 27",
+    "reading2": null,
+    "gospel": "John 13:16-20"
+  },
+  {
+    "date": "2026-05-01",
+    "reading1": "Genesis 1:26--2:3",
+    "psalm": "Psalms 90:2-4, 12-14, 16",
+    "reading2": null,
+    "gospel": "Matthew 13:54-58"
+  },
+  {
+    "date": "2026-05-02",
+    "reading1": "Acts 13:44-52",
+    "psalm": "Psalms 98:1-4",
+    "reading2": null,
+    "gospel": "John 14:7-14"
+  },
+  {
+    "date": "2026-05-03",
+    "reading1": "Acts 6:1-7",
+    "psalm": "Psalms 33:1-2, 4-5, 18-19",
+    "reading2": "1 Peter 2:4-9",
+    "gospel": "John 14:1-12"
+  },
+  {
+    "date": "2026-05-04",
+    "reading1": "Acts 14:5-18",
+    "psalm": "Psalms 115:1-4, 15-16",
+    "reading2": null,
+    "gospel": "John 14:21-26"
+  },
+  {
+    "date": "2026-05-05",
+    "reading1": "Acts 14:19-28",
+    "psalm": "Psalms 145:10-13, 21",
+    "reading2": null,
+    "gospel": "John 14:27-31"
+  },
+  {
+    "date": "2026-05-06",
+    "reading1": "Acts 15:1-6",
+    "psalm": "Psalms 122:1-5",
+    "reading2": null,
+    "gospel": "John 15:1-8"
+  },
+  {
+    "date": "2026-05-07",
+    "reading1": "Acts 15:7-21",
+    "psalm": "Psalms 96:1-3, 10",
+    "reading2": null,
+    "gospel": "John 15:9-11"
+  },
+  {
+    "date": "2026-05-08",
+    "reading1": "Acts 15:22-31",
+    "psalm": "Psalms 57:8-12",
+    "reading2": null,
+    "gospel": "John 15:12-17"
+  },
+  {
+    "date": "2026-05-09",
+    "reading1": "Acts 16:1-10",
+    "psalm": "Psalms 100:1-3, 5",
+    "reading2": null,
+    "gospel": "John 15:18-21"
+  },
+  {
+    "date": "2026-05-10",
+    "reading1": "Acts 8:5-8, 14-17",
+    "psalm": "Psalms 66:1-7, 16, 20",
+    "reading2": "1 Peter 3:15-18",
+    "gospel": "John 14:15-21"
+  },
+  {
+    "date": "2026-05-11",
+    "reading1": "Acts 16:11-15",
+    "psalm": "Psalms 149:1-6, 9",
+    "reading2": null,
+    "gospel": "John 15:26--16:4"
+  },
+  {
+    "date": "2026-05-12",
+    "reading1": "Acts 16:22-34",
+    "psalm": "Psalms 138:1-3, 7-8",
+    "reading2": null,
+    "gospel": "John 16:5-11"
+  },
+  {
+    "date": "2026-05-13",
+    "reading1": "Acts 17:15, 22--18:1",
+    "psalm": "Psalms 148:1-2, 11-14",
+    "reading2": null,
+    "gospel": "John 16:12-15"
+  },
+  {
+    "date": "2026-05-14",
+    "reading1": "Acts 1:15-17, 20-26",
+    "psalm": "Psalms 113:1-8",
+    "reading2": null,
+    "gospel": "John 15:9-17"
+  },
+  {
+    "date": "2026-05-15",
+    "reading1": "Acts 18:9-18",
+    "psalm": "Psalms 47:2-7",
+    "reading2": null,
+    "gospel": "John 16:20-23"
+  },
+  {
+    "date": "2026-05-16",
+    "reading1": "Acts 18:23-28",
+    "psalm": "Psalms 47:2-3, 8-10",
+    "reading2": null,
+    "gospel": "John 16:23-28"
+  },
+  {
+    "date": "2026-05-17",
+    "reading1": "Acts 1:1-11",
+    "psalm": "Psalms 47:2-3, 6-9",
+    "reading2": "Ephesians 1:17-23",
+    "gospel": "Matthew 28:16-20"
+  },
+  {
+    "date": "2026-05-18",
+    "reading1": "Acts 2:44-47",
+    "psalm": "Psalms 131:1-3",
+    "reading2": null,
+    "gospel": "Luke 12:22-31"
+  },
+  {
+    "date": "2026-05-19",
+    "reading1": "Acts 20:17-27",
+    "psalm": "Psalms 68:10-11, 20-21",
+    "reading2": null,
+    "gospel": "John 17:1-11"
+  },
+  {
+    "date": "2026-05-20",
+    "reading1": "Acts 20:28-38",
+    "psalm": "Psalms 68:29-30, 33-36",
+    "reading2": null,
+    "gospel": "John 17:11-19"
+  },
+  {
+    "date": "2026-05-21",
+    "reading1": "Acts 22:30; 23:6-11",
+    "psalm": "Psalms 16:1-2, 5, 7-11",
+    "reading2": null,
+    "gospel": "John 17:20-26"
+  },
+  {
+    "date": "2026-05-22",
+    "reading1": "Acts 25:13-21",
+    "psalm": "Psalms 103:1-2, 11-12, 19-20",
+    "reading2": null,
+    "gospel": "John 21:15-19"
+  },
+  {
+    "date": "2026-05-23",
+    "reading1": "Acts 28:16-20, 30-31",
+    "psalm": "Psalms 11:4, 5, 7",
+    "reading2": null,
+    "gospel": "John 21:20-25"
+  },
+  {
+    "date": "2026-05-24",
+    "reading1": "Acts 2:1-11",
+    "psalm": "Psalms 104:1, 24, 29-31, 34",
+    "reading2": "1 Corinthians 12:3-7, 12-13",
+    "gospel": "John 20:19-23"
+  },
+  {
+    "date": "2026-05-25",
+    "reading1": "Genesis 3:9-15, 20",
+    "psalm": "Psalms 87:1-3, 5-7",
+    "reading2": null,
+    "gospel": "John 19:25-34"
+  },
+  {
+    "date": "2026-05-26",
+    "reading1": "1 Peter 1:10-16",
+    "psalm": "Psalms 98:1-4",
+    "reading2": null,
+    "gospel": "Mark 10:28-31"
+  },
+  {
+    "date": "2026-05-27",
+    "reading1": "1 Peter 1:18-25",
+    "psalm": "Psalms 147:12-15, 19-20",
+    "reading2": null,
+    "gospel": "Mark 10:32-45"
+  },
+  {
+    "date": "2026-05-28",
+    "reading1": "1 Peter 2:2-5, 9-12",
+    "psalm": "Psalms 100:2-5",
+    "reading2": null,
+    "gospel": "Mark 10:46-52"
+  },
+  {
+    "date": "2026-05-29",
+    "reading1": "1 Peter 4:7-13",
+    "psalm": "Psalms 96:10-13",
+    "reading2": null,
+    "gospel": "Mark 11:11-26"
+  },
+  {
+    "date": "2026-05-30",
+    "reading1": "Jude 17, 20-25",
+    "psalm": "Psalms 63:2-6",
+    "reading2": null,
+    "gospel": "Mark 11:27-33"
+  },
+  {
+    "date": "2026-05-31",
+    "reading1": "Exodus 34:4-6, 8-9",
+    "psalm": "Daniel 3:52-55",
+    "reading2": "2 Corinthians 13:11-13",
+    "gospel": "John 3:16-18"
+  },
+  {
+    "date": "2026-06-01",
+    "reading1": "2 Peter 1:2-7",
+    "psalm": "Psalms 91:1-2, 14-16",
+    "reading2": null,
+    "gospel": "Mark 12:1-12"
+  },
+  {
+    "date": "2026-06-02",
+    "reading1": "2 Peter 3:12-15, 17-18",
+    "psalm": "Psalms 90:2-4, 10, 14, 16",
+    "reading2": null,
+    "gospel": "Mark 12:13-17"
+  },
+  {
+    "date": "2026-06-03",
+    "reading1": "2 Timothy 1:1-3, 6-12",
+    "psalm": "Psalms 123:1-2",
+    "reading2": null,
+    "gospel": "Mark 12:18-27"
+  },
+  {
+    "date": "2026-06-04",
+    "reading1": "2 Timothy 2:8-15",
+    "psalm": "Psalms 25:4-5, 8-10, 14",
+    "reading2": null,
+    "gospel": "Mark 12:28-34"
+  },
+  {
+    "date": "2026-06-05",
+    "reading1": "2 Timothy 3:10-17",
+    "psalm": "Psalms 119:157, 160-161, 165-166, 168",
+    "reading2": null,
+    "gospel": "Mark 12:35-37"
+  },
+  {
+    "date": "2026-06-06",
+    "reading1": "2 Timothy 4:1-8",
+    "psalm": "Psalms 71:8-9, 14-17, 22",
+    "reading2": null,
+    "gospel": "Mark 12:38-44"
+  },
+  {
+    "date": "2026-06-07",
+    "reading1": "Deuteronomy 8:2-3, 14-16",
+    "psalm": "Psalms 147:12-15, 19-20",
+    "reading2": "1 Corinthians 10:16-17",
+    "gospel": "John 6:51-58"
+  },
+  {
+    "date": "2026-06-08",
+    "reading1": "1 Kings 17:1-6",
+    "psalm": "Psalms 121:1-8",
+    "reading2": null,
+    "gospel": "Matthew 5:1-12"
+  },
+  {
+    "date": "2026-06-09",
+    "reading1": "1 Kings 17:7-16",
+    "psalm": "Psalms 4:2-5, 7-8",
+    "reading2": null,
+    "gospel": "Matthew 5:13-16"
+  },
+  {
+    "date": "2026-06-10",
+    "reading1": "1 Kings 18:20-39",
+    "psalm": "Psalms 16:1-2, 4-5, 8, 11",
+    "reading2": null,
+    "gospel": "Matthew 5:17-19"
+  },
+  {
+    "date": "2026-06-11",
+    "reading1": "Acts 11:21-26; 13:1-3",
+    "psalm": "Psalms 98:1-6",
+    "reading2": null,
+    "gospel": "Matthew 10:7-13"
+  },
+  {
+    "date": "2026-06-12",
+    "reading1": "1 Kings 19:9, 11-16",
+    "psalm": "Psalms 27:7-9, 13-14",
+    "reading2": null,
+    "gospel": "Matthew 5:27-32"
+  },
+  {
+    "date": "2026-06-13",
+    "reading1": "Wisdom 7:7-14",
+    "psalm": "Psalms 40:3-4, 10-11, 17",
+    "reading2": null,
+    "gospel": "Mark 16:15-20"
+  },
+  {
+    "date": "2026-06-14",
+    "reading1": "Deuteronomy 7:6-11",
+    "psalm": "Psalms 103:1-4, 6-7, 8, 10",
+    "reading2": "1 John 4:7-16",
+    "gospel": "Matthew 11:25-30"
+  },
+  {
+    "date": "2026-06-15",
+    "reading1": "1 Kings 21:1-16",
+    "psalm": "Psalms 5:2-3, 4-7",
+    "reading2": null,
+    "gospel": "Matthew 5:38-42"
+  },
+  {
+    "date": "2026-06-16",
+    "reading1": "1 Kings 21:17-29",
+    "psalm": "Psalms 51:3-6, 11, 16",
+    "reading2": null,
+    "gospel": "Matthew 5:43-48"
+  },
+  {
+    "date": "2026-06-17",
+    "reading1": "2 Kings 2:1, 6-14",
+    "psalm": "Psalms 31:20-21, 24",
+    "reading2": null,
+    "gospel": "Matthew 6:1-6, 16-18"
+  },
+  {
+    "date": "2026-06-18",
+    "reading1": "Sirach 48:1-14",
+    "psalm": "Psalms 97:1-7",
+    "reading2": null,
+    "gospel": "Matthew 6:7-15"
+  },
+  {
+    "date": "2026-06-19",
+    "reading1": "2 Kings 11:1-4, 9-18, 20",
+    "psalm": "Psalms 132:11-14, 17-18",
+    "reading2": null,
+    "gospel": "Matthew 6:19-23"
+  },
+  {
+    "date": "2026-06-20",
+    "reading1": "2 Chronicles 24:17-25",
+    "psalm": "Psalms 89:4-5, 29-34",
+    "reading2": null,
+    "gospel": "Matthew 6:24-34"
+  },
+  {
+    "date": "2026-06-21",
+    "reading1": "Jeremiah 20:10-13",
+    "psalm": "Psalms 69:8-10, 14, 17, 33-35",
+    "reading2": "Romans 5:12-15",
+    "gospel": "Matthew 10:26-33"
+  },
+  {
+    "date": "2026-06-22",
+    "reading1": "2 Kings 17:5-8, 13-15, 18",
+    "psalm": "Psalms 60:3-5, 12-13",
+    "reading2": null,
+    "gospel": "Matthew 7:1-5"
+  },
+  {
+    "date": "2026-06-23",
+    "reading1": "2 Kings 19:9-11, 14-21, 31-36",
+    "psalm": "Psalms 48:2-4, 10-11",
+    "reading2": null,
+    "gospel": "Matthew 7:6, 12-14"
+  },
+  {
+    "date": "2026-06-24",
+    "reading1": "Isaiah 49:1-6",
+    "psalm": "Psalms 139:1-3, 13-15",
+    "reading2": "Acts 13:22-26",
+    "gospel": "Luke 1:57-66, 80"
+  },
+  {
+    "date": "2026-06-25",
+    "reading1": "2 Kings 24:8-17",
+    "psalm": "Psalms 79:1-5, 8-9",
+    "reading2": null,
+    "gospel": "Matthew 7:21-29"
+  },
+  {
+    "date": "2026-06-26",
+    "reading1": "2 Kings 25:1-12",
+    "psalm": "Psalms 137:1-6",
+    "reading2": null,
+    "gospel": "Matthew 8:1-4"
+  },
+  {
+    "date": "2026-06-27",
+    "reading1": "Lamentations 2:2, 10-14, 18-19",
+    "psalm": "Psalms 74:1-7, 20-21",
+    "reading2": null,
+    "gospel": "Matthew 8:5-17"
+  },
+  {
+    "date": "2026-06-28",
+    "reading1": "2 Kings 4:8-11, 14-16",
+    "psalm": "Psalms 89:2-3, 16-19",
+    "reading2": "Romans 6:3-4, 8-11",
+    "gospel": "Matthew 10:37-42"
+  },
+  {
+    "date": "2026-06-29",
+    "reading1": "Acts 12:1-11",
+    "psalm": "Psalms 34:2-9",
+    "reading2": "2 Timothy 4:6-8, 17-18",
+    "gospel": "Matthew 16:13-19"
+  },
+  {
+    "date": "2026-06-30",
+    "reading1": "Amos 3:1-8; 4:11-12",
+    "psalm": "Psalms 5:4-8",
+    "reading2": null,
+    "gospel": "Matthew 8:23-27"
+  },
+  {
+    "date": "2026-07-01",
+    "reading1": "Amos 5:14-15, 21-24",
+    "psalm": "Psalms 50:7-13, 16-17",
+    "reading2": null,
+    "gospel": "Matthew 8:28-34"
+  },
+  {
+    "date": "2026-07-02",
+    "reading1": "Amos 7:10-17",
+    "psalm": "Psalms 19:8-11",
+    "reading2": null,
+    "gospel": "Matthew 9:1-8"
+  },
+  {
+    "date": "2026-07-03",
+    "reading1": "Ephesians 2:19-22",
+    "psalm": "Psalms 117:1-2",
+    "reading2": null,
+    "gospel": "John 20:24-29"
+  },
+  {
+    "date": "2026-07-04",
+    "reading1": "Isaiah 58:6-11",
+    "psalm": "Psalms 107:2-9",
+    "reading2": null,
+    "gospel": "Matthew 25:31-46"
+  },
+  {
+    "date": "2026-07-05",
+    "reading1": "Zechariah 9:9-10",
+    "psalm": "Psalms 145:1-2, 8-11, 13-14",
+    "reading2": "Romans 8:9, 11-13",
+    "gospel": "Matthew 11:25-30"
+  },
+  {
+    "date": "2026-07-06",
+    "reading1": "Hosea 2:16-18, 21-22",
+    "psalm": "Psalms 145:2-9",
+    "reading2": null,
+    "gospel": "Matthew 9:18-26"
+  },
+  {
+    "date": "2026-07-07",
+    "reading1": "Hosea 8:4-7, 11-13",
+    "psalm": "Psalms 115:3-10",
+    "reading2": null,
+    "gospel": "Matthew 9:32-38"
+  },
+  {
+    "date": "2026-07-08",
+    "reading1": "Hosea 10:1-3, 7-8, 12",
+    "psalm": "Psalms 105:2-7",
+    "reading2": null,
+    "gospel": "Matthew 10:1-7"
+  },
+  {
+    "date": "2026-07-09",
+    "reading1": "Hosea 11:1-4, 8-9",
+    "psalm": "Psalms 80:2-3, 15-16",
+    "reading2": null,
+    "gospel": "Matthew 10:7-15"
+  },
+  {
+    "date": "2026-07-10",
+    "reading1": "2 Corinthians 4:6-11, 16, 17",
+    "psalm": "Psalms 59:2, 10, 17-18",
+    "reading2": null,
+    "gospel": "Matthew 16:24-27"
+  },
+  {
+    "date": "2026-07-11",
+    "reading1": "Isaiah 6:1-8",
+    "psalm": "Psalms 93:1-2, 5",
+    "reading2": null,
+    "gospel": "Matthew 10:24-33"
+  },
+  {
+    "date": "2026-07-12",
+    "reading1": "Isaiah 55:10-11",
+    "psalm": "Psalms 65:10-14",
+    "reading2": "Romans 8:18-23",
+    "gospel": "Matthew 13:1-23"
+  },
+  {
+    "date": "2026-07-13",
+    "reading1": "Isaiah 1:10-17",
+    "psalm": "Psalms 50:8-9, 16-17, 21, 23",
+    "reading2": null,
+    "gospel": "Matthew 10:34--11:1"
+  },
+  {
+    "date": "2026-07-14",
+    "reading1": "Isaiah 7:1-9",
+    "psalm": "Psalms 48:2-8",
+    "reading2": null,
+    "gospel": "Matthew 11:20-24"
+  },
+  {
+    "date": "2026-07-15",
+    "reading1": "Wisdom 8:2-7, 16-18",
+    "psalm": "Psalms 16:5-9, 11",
+    "reading2": null,
+    "gospel": "Matthew 5:13-19"
+  },
+  {
+    "date": "2026-07-16",
+    "reading1": "Isaiah 26:7-9, 12, 16-19",
+    "psalm": "Psalms 102:13-21",
+    "reading2": null,
+    "gospel": "Matthew 11:28-30"
+  },
+  {
+    "date": "2026-07-17",
+    "reading1": "Isaiah 38:1-6, 21-22, 7-8",
+    "psalm": "Isaiah 38:10-12, 16",
+    "reading2": null,
+    "gospel": "Matthew 12:1-8"
+  },
+  {
+    "date": "2026-07-18",
+    "reading1": "Micah 2:1-5",
+    "psalm": "Psalms 10:1-4, 7-8, 14",
+    "reading2": null,
+    "gospel": "Matthew 12:14-21"
+  },
+  {
+    "date": "2026-07-19",
+    "reading1": "Wisdom 12:13, 16-19",
+    "psalm": "Psalms 86:5-6, 9-10, 15-16",
+    "reading2": "Romans 8:26-27",
+    "gospel": "Matthew 13:24-43"
+  },
+  {
+    "date": "2026-07-20",
+    "reading1": "Micah 6:1-4, 6-8",
+    "psalm": "Psalms 50:5-6, 8-9, 16-17, 21, 23",
+    "reading2": null,
+    "gospel": "Matthew 12:38-42"
+  },
+  {
+    "date": "2026-07-21",
+    "reading1": "Wisdom 8:9-16",
+    "psalm": "Psalms 67:2-5, 7-8",
+    "reading2": null,
+    "gospel": "Luke 9:1-6"
+  },
+  {
+    "date": "2026-07-22",
+    "reading1": "Jeremiah 1:1, 4-10",
+    "psalm": "Psalms 71:1-6, 15, 17",
+    "reading2": null,
+    "gospel": "John 20:1-2, 11-18"
+  },
+  {
+    "date": "2026-07-23",
+    "reading1": "Jeremiah 2:1-3, 7-8, 12-13",
+    "psalm": "Psalms 36:6-11",
+    "reading2": null,
+    "gospel": "Matthew 13:10-17"
+  },
+  {
+    "date": "2026-07-24",
+    "reading1": "Jeremiah 3:14-17",
+    "psalm": "Jeremiah 31:10-13",
+    "reading2": null,
+    "gospel": "Matthew 13:18-23"
+  },
+  {
+    "date": "2026-07-25",
+    "reading1": "2 Corinthians 4:7-15",
+    "psalm": "Psalms 126:1-6",
+    "reading2": null,
+    "gospel": "Matthew 20:20-28"
+  },
+  {
+    "date": "2026-07-26",
+    "reading1": "1 Kings 3:5, 7-12",
+    "psalm": "Psalms 119:57, 72, 76-77, 127-130",
+    "reading2": "Romans 8:28-30",
+    "gospel": "Matthew 13:44-52"
+  },
+  {
+    "date": "2026-07-27",
+    "reading1": "Jeremiah 13:1-11",
+    "psalm": "Deuteronomy 32:18-21",
+    "reading2": null,
+    "gospel": "Matthew 13:31-35"
+  },
+  {
+    "date": "2026-07-28",
+    "reading1": "Jeremiah 14:17-22",
+    "psalm": "Psalms 79:8-9, 11, 13",
+    "reading2": null,
+    "gospel": "Matthew 13:36-43"
+  },
+  {
+    "date": "2026-07-29",
+    "reading1": "Jeremiah 15:10, 16-21",
+    "psalm": "Psalms 59:2-4, 10-11, 17-18",
+    "reading2": null,
+    "gospel": "John 11:19-27"
+  },
+  {
+    "date": "2026-07-30",
+    "reading1": "Jeremiah 18:1-6",
+    "psalm": "Psalms 146:1-6",
+    "reading2": null,
+    "gospel": "Matthew 13:47-53"
+  },
+  {
+    "date": "2026-07-31",
+    "reading1": "Jeremiah 26:1-9",
+    "psalm": "Psalms 69:5, 8-10, 14",
+    "reading2": null,
+    "gospel": "Matthew 13:54-58"
+  },
+  {
+    "date": "2026-08-01",
+    "reading1": "Jeremiah 26:11-16, 24",
+    "psalm": "Psalms 69:15-16, 30-31, 33-34",
+    "reading2": null,
+    "gospel": "Matthew 14:1-12"
+  },
+  {
+    "date": "2026-08-02",
+    "reading1": "Sirach 24:1-4, 16, 22-24",
+    "psalm": "Psalms 34:5, 7, 9-10, 18-19",
+    "reading2": "Galatians 4:3-7",
+    "gospel": "Luke 1:26-33"
+  },
+  {
+    "date": "2026-08-03",
+    "reading1": "Jeremiah 28:1-17",
+    "psalm": "Psalms 119:29, 43, 79-80, 95, 102",
+    "reading2": null,
+    "gospel": "Matthew 14:13-21"
+  },
+  {
+    "date": "2026-08-04",
+    "reading1": "Jeremiah 30:1-2, 12-15, 18-22",
+    "psalm": "Psalms 102:16-21, 29, 22-23",
+    "reading2": null,
+    "gospel": "Matthew 14:22-36"
+  },
+  {
+    "date": "2026-08-05",
+    "reading1": "Jeremiah 31:1-7",
+    "psalm": "Jeremiah 31:10-13",
+    "reading2": null,
+    "gospel": "Matthew 15:21-28"
+  },
+  {
+    "date": "2026-08-06",
+    "reading1": "Daniel 7:9-10, 13-14",
+    "psalm": "2 Peter 1:16-19",
+    "reading2": null,
+    "gospel": "Matthew 17:1-9"
+  },
+  {
+    "date": "2026-08-07",
+    "reading1": "Nahum 2:1, 3; 3:1-3, 6-7",
+    "psalm": "Deuteronomy 32:35-36, 39, 41",
+    "reading2": null,
+    "gospel": "Matthew 16:24-28"
+  },
+  {
+    "date": "2026-08-08",
+    "reading1": "2 Timothy 4:1-5",
+    "psalm": "Psalms 37:3-6, 30-31",
+    "reading2": null,
+    "gospel": "Matthew 5:13-16"
+  },
+  {
+    "date": "2026-08-09",
+    "reading1": "1 Kings 19:9, 11-13",
+    "psalm": "Psalms 85:9-14",
+    "reading2": "Romans 9:1-5",
+    "gospel": "Matthew 14:22-33"
+  },
+  {
+    "date": "2026-08-10",
+    "reading1": "2 Corinthians 9:6-10",
+    "psalm": "Psalms 112:1-2, 5-9",
+    "reading2": null,
+    "gospel": "John 12:24-26"
+  },
+  {
+    "date": "2026-08-11",
+    "reading1": "Hosea 2:16, 17, 21-22",
+    "psalm": "Psalms 45:11-12, 14-16",
+    "reading2": null,
+    "gospel": "John 15:4-10"
+  },
+  {
+    "date": "2026-08-12",
+    "reading1": "Ezekiel 9:1-7; 10:18-22",
+    "psalm": "Psalms 113:1-6",
+    "reading2": null,
+    "gospel": "Matthew 18:15-20"
+  },
+  {
+    "date": "2026-08-13",
+    "reading1": "Ezekiel 12:1-2",
+    "psalm": "Psalms 78:56-59, 61-62",
+    "reading2": null,
+    "gospel": "Matthew 18:21--19:1"
+  },
+  {
+    "date": "2026-08-14",
+    "reading1": "1 John 3:13-18",
+    "psalm": "Psalms 116:10-13, 16-17",
+    "reading2": null,
+    "gospel": "John 15:12-17"
+  },
+  {
+    "date": "2026-08-15",
+    "reading1": "Revelation 11:19; 12:1-6, 10",
+    "psalm": "Psalms 45:10-12, 16",
+    "reading2": "1 Corinthians 15:20-27",
+    "gospel": "Luke 1:39-56"
+  },
+  {
+    "date": "2026-08-16",
+    "reading1": "Isaiah 56:1, 6-7",
+    "psalm": "Psalms 67:2-3, 5-6, 8",
+    "reading2": "Romans 11:13-15, 29-32",
+    "gospel": "Matthew 15:21-28"
+  },
+  {
+    "date": "2026-08-17",
+    "reading1": "Ezekiel 24:15-23",
+    "psalm": "Deuteronomy 32:18-21",
+    "reading2": null,
+    "gospel": "Matthew 19:16-22"
+  },
+  {
+    "date": "2026-08-18",
+    "reading1": "Ezekiel 28:1-10",
+    "psalm": "Deuteronomy 32:26-28, 30, 35-36",
+    "reading2": null,
+    "gospel": "Matthew 19:23-30"
+  },
+  {
+    "date": "2026-08-19",
+    "reading1": "Ezekiel 34:1-11",
+    "psalm": "Psalms 23:1-6",
+    "reading2": null,
+    "gospel": "Matthew 20:1-16"
+  },
+  {
+    "date": "2026-08-20",
+    "reading1": "Ezekiel 36:23-28",
+    "psalm": "Psalms 51:12-15, 18-19",
+    "reading2": null,
+    "gospel": "Matthew 22:1-14"
+  },
+  {
+    "date": "2026-08-21",
+    "reading1": "Ezekiel 37:1-14",
+    "psalm": "Psalms 107:2-9",
+    "reading2": null,
+    "gospel": "Matthew 22:34-40"
+  },
+  {
+    "date": "2026-08-22",
+    "reading1": "Isaiah 9:1-6",
+    "psalm": "Psalms 113:1-8",
+    "reading2": null,
+    "gospel": "Luke 1:26-38"
+  },
+  {
+    "date": "2026-08-23",
+    "reading1": "Isaiah 22:19-23",
+    "psalm": "Psalms 138:1-3, 6, 8",
+    "reading2": "Romans 11:33-36",
+    "gospel": "Matthew 16:13-20"
+  },
+  {
+    "date": "2026-08-24",
+    "reading1": "Revelation 21:9-14",
+    "psalm": "Psalms 145:10-13, 17-18",
+    "reading2": null,
+    "gospel": "John 1:45-51"
+  },
+  {
+    "date": "2026-08-25",
+    "reading1": "2 Thessalonians 2:1-3, 14-17",
+    "psalm": "Psalms 96:10-13",
+    "reading2": null,
+    "gospel": "Matthew 23:23-26"
+  },
+  {
+    "date": "2026-08-26",
+    "reading1": "2 Thessalonians 3:6-10, 16-18",
+    "psalm": "Psalms 128:1-2, 4-5",
+    "reading2": null,
+    "gospel": "Matthew 23:27-32"
+  },
+  {
+    "date": "2026-08-27",
+    "reading1": "1 Corinthians 1:1-9",
+    "psalm": "Psalms 145:2-7",
+    "reading2": null,
+    "gospel": "Matthew 24:42-51"
+  },
+  {
+    "date": "2026-08-28",
+    "reading1": "1 Corinthians 1:17-25",
+    "psalm": "Psalms 33:1-2, 4-5, 10-11",
+    "reading2": null,
+    "gospel": "Matthew 25:1-13"
+  },
+  {
+    "date": "2026-08-29",
+    "reading1": "Jeremiah 1:17-19",
+    "psalm": "Psalms 71:1-6, 15, 17",
+    "reading2": null,
+    "gospel": "Mark 6:17-29"
+  },
+  {
+    "date": "2026-08-30",
+    "reading1": "Jeremiah 20:7-9",
+    "psalm": "Psalms 63:2-6, 8-9",
+    "reading2": "Romans 12:1-2",
+    "gospel": "Matthew 16:21-27"
+  },
+  {
+    "date": "2026-08-31",
+    "reading1": "1 Corinthians 2:1-5",
+    "psalm": "Psalms 119:97-102",
+    "reading2": null,
+    "gospel": "Luke 4:16-30"
+  },
+  {
+    "date": "2026-09-01",
+    "reading1": "1 Corinthians 2:10-16",
+    "psalm": "Psalms 145:8-14",
+    "reading2": null,
+    "gospel": "Luke 4:31-37"
+  },
+  {
+    "date": "2026-09-02",
+    "reading1": "1 Corinthians 3:1-9",
+    "psalm": "Psalms 33:12-15, 20-21",
+    "reading2": null,
+    "gospel": "Luke 4:38-44"
+  },
+  {
+    "date": "2026-09-03",
+    "reading1": "1 Corinthians 3:18-23",
+    "psalm": "Psalms 24:1-6",
+    "reading2": null,
+    "gospel": "Luke 5:1-11"
+  },
+  {
+    "date": "2026-09-04",
+    "reading1": "1 Corinthians 4:1-5",
+    "psalm": "Psalms 37:3-6, 27-28, 39-40",
+    "reading2": null,
+    "gospel": "Luke 5:33-39"
+  },
+  {
+    "date": "2026-09-05",
+    "reading1": "1 Corinthians 4:6-15",
+    "psalm": "Psalms 145:17-21",
+    "reading2": null,
+    "gospel": "Luke 6:1-5"
+  },
+  {
+    "date": "2026-09-06",
+    "reading1": "Ezekiel 33:7-9",
+    "psalm": "Psalms 95:1-2, 6-9",
+    "reading2": "Romans 13:8-10",
+    "gospel": "Matthew 18:15-20"
+  },
+  {
+    "date": "2026-09-07",
+    "reading1": "Genesis 2:4-9, 15",
+    "psalm": "Psalms 90:2-5, 12-14, 16",
+    "reading2": null,
+    "gospel": "Matthew 6:31-34"
+  },
+  {
+    "date": "2026-09-08",
+    "reading1": "Micah 5:1-4",
+    "psalm": "Psalms 13:6",
+    "reading2": null,
+    "gospel": "Matthew 1:1-16, 18-23"
+  },
+  {
+    "date": "2026-09-09",
+    "reading1": "1 Corinthians 7:25-31",
+    "psalm": "Psalms 45:11-17",
+    "reading2": null,
+    "gospel": "Luke 6:20-26"
+  },
+  {
+    "date": "2026-09-10",
+    "reading1": "1 Corinthians 8:1-7, 11-13",
+    "psalm": "Psalms 139:1-3, 13-14, 23-24",
+    "reading2": null,
+    "gospel": "Luke 6:27-38"
+  },
+  {
+    "date": "2026-09-11",
+    "reading1": "1 Corinthians 9:16-19, 22-27",
+    "psalm": "Psalms 84:3-6, 12",
+    "reading2": null,
+    "gospel": "Luke 6:39-42"
+  },
+  {
+    "date": "2026-09-12",
+    "reading1": "Galatians 4:4-7",
+    "psalm": "Luke 1:46-55",
+    "reading2": null,
+    "gospel": "Luke 1:39-57"
+  },
+  {
+    "date": "2026-09-13",
+    "reading1": "Sirach 27:30--28:9",
+    "psalm": "Psalms 103:1-4, 9-12",
+    "reading2": "Romans 14:7-9",
+    "gospel": "Matthew 18:21-35"
+  },
+  {
+    "date": "2026-09-14",
+    "reading1": "Numbers 21:4-9",
+    "psalm": "Psalms 78:1-2, 34-38",
+    "reading2": "Philippians 2:6-11",
+    "gospel": "John 3:13-17"
+  },
+  {
+    "date": "2026-09-15",
+    "reading1": "Hebrews 5:7-9",
+    "psalm": "Psalms 31:2-6, 15-16, 20",
+    "reading2": null,
+    "gospel": "John 19:25-27"
+  },
+  {
+    "date": "2026-09-16",
+    "reading1": "1 Corinthians 12:31--13:13",
+    "psalm": "Psalms 33:2-5, 12, 22",
+    "reading2": null,
+    "gospel": "Luke 7:31-35"
+  },
+  {
+    "date": "2026-09-17",
+    "reading1": "Galatians 6:14-18",
+    "psalm": "Galatians 2:16, 20. Philippians 1:20-21",
+    "reading2": null,
+    "gospel": "Luke 9:23-26"
+  },
+  {
+    "date": "2026-09-18",
+    "reading1": "1 Corinthians 15:12-20",
+    "psalm": "Psalms 17:1, 6-8, 15",
+    "reading2": null,
+    "gospel": "Luke 8:1-3"
+  },
+  {
+    "date": "2026-09-19",
+    "reading1": "1 Corinthians 15:35-37, 42-49",
+    "psalm": "Psalms 56:10-14",
+    "reading2": null,
+    "gospel": "Luke 8:4-15"
+  },
+  {
+    "date": "2026-09-20",
+    "reading1": "Isaiah 55:6-9",
+    "psalm": "Psalms 145:2-3, 8-9, 17-18",
+    "reading2": "Philippians 1:20-24, 27",
+    "gospel": "Matthew 20:1-16"
+  },
+  {
+    "date": "2026-09-21",
+    "reading1": "Ephesians 4:1-7, 11-13",
+    "psalm": "Psalms 19:2-5",
+    "reading2": null,
+    "gospel": "Matthew 9:9-13"
+  },
+  {
+    "date": "2026-09-22",
+    "reading1": "Proverbs 21:1-6, 10-13",
+    "psalm": "Psalms 119:1, 27, 30, 34-35, 44",
+    "reading2": null,
+    "gospel": "Luke 8:19-21"
+  },
+  {
+    "date": "2026-09-23",
+    "reading1": "Proverbs 30:5-9",
+    "psalm": "Psalms 119:29, 72, 89, 101, 104, 163",
+    "reading2": null,
+    "gospel": "Luke 9:1-6"
+  },
+  {
+    "date": "2026-09-24",
+    "reading1": "Ecclesiastes 1:2-11",
+    "psalm": "Psalms 90:3-6, 12-14, 17",
+    "reading2": null,
+    "gospel": "Luke 9:7-9"
+  },
+  {
+    "date": "2026-09-25",
+    "reading1": "Ecclesiastes 3:1-11",
+    "psalm": "Psalms 144:1-4",
+    "reading2": null,
+    "gospel": "Luke 9:18-22"
+  },
+  {
+    "date": "2026-09-26",
+    "reading1": "Ecclesiastes 11:9--12:8",
+    "psalm": "Psalms 90:3-6, 12-14, 17",
+    "reading2": null,
+    "gospel": "Luke 9:43-45"
+  },
+  {
+    "date": "2026-09-27",
+    "reading1": "Ezekiel 18:25-28",
+    "psalm": "Psalms 25:4-9",
+    "reading2": "Philippians 2:1-11",
+    "gospel": "Matthew 21:28-32"
+  },
+  {
+    "date": "2026-09-28",
+    "reading1": "Job 1:6-22",
+    "psalm": "Psalms 17:1-3, 6-7",
+    "reading2": null,
+    "gospel": "Luke 9:46-50"
+  },
+  {
+    "date": "2026-09-29",
+    "reading1": "Daniel 7:9-10, 13-14",
+    "psalm": "Psalms 138:1-5",
+    "reading2": null,
+    "gospel": "John 1:47-51"
+  },
+  {
+    "date": "2026-09-30",
+    "reading1": "Job 9:1-12, 14-16",
+    "psalm": "Psalms 88:10-15",
+    "reading2": null,
+    "gospel": "Luke 9:57-62"
+  },
+  {
+    "date": "2026-10-01",
+    "reading1": "Job 19:21-27",
+    "psalm": "Psalms 27:7-9, 13-14",
+    "reading2": null,
+    "gospel": "Luke 10:1-12"
+  },
+  {
+    "date": "2026-10-02",
+    "reading1": "Exodus 23:20-23",
+    "psalm": "Psalms 91:1-6, 10-11",
+    "reading2": null,
+    "gospel": "Matthew 18:1-5, 10"
+  },
+  {
+    "date": "2026-10-03",
+    "reading1": "Job 42:1-3, 5-6, 12-17",
+    "psalm": "Psalms 119:66, 71, 75, 91, 125, 130",
+    "reading2": null,
+    "gospel": "Luke 10:17-24"
+  },
+  {
+    "date": "2026-10-04",
+    "reading1": "Sirach 50:1, 3-4, 6-7",
+    "psalm": "Psalms 16:1-2, 5, 7-8, 11",
+    "reading2": "Galatians 6:14-18",
+    "gospel": "Matthew 11:25-30"
+  },
+  {
+    "date": "2026-10-05",
+    "reading1": "Galatians 1:6-12",
+    "psalm": "Psalms 111:1-2, 7-10",
+    "reading2": null,
+    "gospel": "Luke 10:25-37"
+  },
+  {
+    "date": "2026-10-06",
+    "reading1": "Galatians 1:13-24",
+    "psalm": "Psalms 139:1-3, 13-15",
+    "reading2": null,
+    "gospel": "Luke 10:38-42"
+  },
+  {
+    "date": "2026-10-07",
+    "reading1": "Acts 1:12-14",
+    "psalm": "Luke 1:46-55",
+    "reading2": null,
+    "gospel": "Luke 1:26-38"
+  },
+  {
+    "date": "2026-10-08",
+    "reading1": "Galatians 3:1-5",
+    "psalm": "Luke 1:69-75",
+    "reading2": null,
+    "gospel": "Luke 11:5-13"
+  },
+  {
+    "date": "2026-10-09",
+    "reading1": "Galatians 3:7-14",
+    "psalm": "Psalms 111:1-6",
+    "reading2": null,
+    "gospel": "Luke 11:15-26"
+  },
+  {
+    "date": "2026-10-10",
+    "reading1": "Galatians 3:22-29",
+    "psalm": "Psalms 105:2-7",
+    "reading2": null,
+    "gospel": "Luke 11:27-28"
+  },
+  {
+    "date": "2026-10-11",
+    "reading1": "Isaiah 25:6-10",
+    "psalm": "Psalms 23:1-6",
+    "reading2": "Philippians 4:12-14, 19-20",
+    "gospel": "Matthew 22:1-14"
+  },
+  {
+    "date": "2026-10-12",
+    "reading1": "Galatians 4:22-24, 26-27, 31--5:1",
+    "psalm": "Psalms 113:1-7",
+    "reading2": null,
+    "gospel": "Luke 11:29-32"
+  },
+  {
+    "date": "2026-10-13",
+    "reading1": "Galatians 5:1-6",
+    "psalm": "Psalms 119:41, 43, 45, 47-48",
+    "reading2": null,
+    "gospel": "Luke 11:37-41"
+  },
+  {
+    "date": "2026-10-14",
+    "reading1": "Galatians 5:18-25",
+    "psalm": "Psalms 1:1-4, 6",
+    "reading2": null,
+    "gospel": "Luke 11:42-46"
+  },
+  {
+    "date": "2026-10-15",
+    "reading1": "Ephesians 1:1-10",
+    "psalm": "Psalms 98:1-6",
+    "reading2": null,
+    "gospel": "Luke 11:47-54"
+  }
+]

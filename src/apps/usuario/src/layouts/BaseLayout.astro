@@ -1,0 +1,27 @@
+---
+import Head from "@/components/Head.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+
+type Props = {
+  title: string;
+  description?: string;
+};
+
+const {
+  title,
+  description = "Gestión de usuarios del ecosistema Fósforo.",
+} = Astro.props as Props;
+---
+
+<!doctype html>
+<html lang="es">
+  <Head title={title} description={description} />
+  <body class="usuario-app">
+    <div class="app-shell" transition:animate="fade">
+      <SiteHeader />
+      <slot />
+      <SiteFooter />
+    </div>
+  </body>
+</html>

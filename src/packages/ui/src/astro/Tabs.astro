@@ -1,0 +1,119 @@
+---
+type Tab = {
+  id: string;
+  label: string;
+  description?: string;
+  active?: boolean;
+  href?: string;
+};
+
+type Props = {
+  tabs: Tab[];
+  rootClass?: string;
+  listClass?: string;
+  tabClass?: string;
+  activeTabClass?: string;
+  ariaLabel?: string;
+  idPrefix?: string;
+};
+
+const {
+  tabs,
+  rootClass = "eco-tabs",
+  listClass = "eco-tablist",
+  tabClass = "eco-tab",
+  activeTabClass = "eco-tab--active",
+  ariaLabel = "Motores de búsqueda",
+  idPrefix = "eco-tab",
+} = Astro.props as Props;
+
+const activeTab = tabs.find((tab) => tab.active) ?? tabs[0];
+---
+
+<section class={rootClass} aria-label={ariaLabel}>
+  <div class={listClass} role="tablist" aria-orientation="horizontal">
+    {
+      tabs.map((tab) => {
+        const isActive = tab.id === activeTab?.id;
+        const tabId = `${idPrefix}-${tab.id}`;
+        return (
+          <a
+            id={tabId}
+            class={`${tabClass}${isActive ? ` ${activeTabClass}` : ""}`}
+            role="tab"
+            href={tab.href ?? `#${tab.id}`}
+            aria-selected={isActive ? "true" : "false"}
+            tabindex={isActive ? 0 : -1}
+            data-tab={tab.id}
+          >
+            <span class="eco-tab-label">{tab.label}</span>
+            {tab.description ? (
+              <span class="eco-tab-description">{tab.description}</span>
+            ) : null}
+          </a>
+        );
+      })
+    }
+  </div>
+
+  {
+    activeTab ? (
+      <div
+        id={`${idPrefix}-panel-${activeTab.id}`}
+        class="eco-tabpanel"
+        role="tabpanel"
+        aria-labelledby={`${idPrefix}-${activeTab.id}`}
+      >
+        <slot />
+      </div>
+    ) : (
+      <slot />
+    )
+  }
+</section>
+
+<script is:inline data-eco-tabs>
+  (() => {
+    const lists = document.querySelectorAll('[role="tablist"]');
+    lists.forEach((list) => {
+      if (list.dataset.ecoTabsReady === "true") return;
+      list.dataset.ecoTabsReady = "true";
+
+      const tabs = Array.from(list.querySelectorAll('[role="tab"]'));
+      const focusTab = (index) => {
+        const target = tabs[index];
+        if (!target) return;
+        tabs.forEach((t) => t.setAttribute("tabindex", "-1"));
+        target.setAttribute("tabindex", "0");
+        target.focus();
+      };
+
+      list.addEventListener("keydown", (event) => {
+        const keyEvent = event;
+        const currentIndex = tabs.indexOf(document.activeElement);
+        if (currentIndex === -1) return;
+        let nextIndex = currentIndex;
+        if (keyEvent.key === "ArrowRight") {
+          nextIndex = (currentIndex + 1) % tabs.length;
+          keyEvent.preventDefault();
+        } else if (keyEvent.key === "ArrowLeft") {
+          nextIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+          keyEvent.preventDefault();
+        } else if (keyEvent.key === "Home") {
+          nextIndex = 0;
+          keyEvent.preventDefault();
+        } else if (keyEvent.key === "End") {
+          nextIndex = tabs.length - 1;
+          keyEvent.preventDefault();
+        } else {
+          return;
+        }
+        focusTab(nextIndex);
+        const target = tabs[nextIndex];
+        if (target instanceof HTMLAnchorElement) {
+          window.location.href = target.href;
+        }
+      });
+    });
+  })();
+</script>

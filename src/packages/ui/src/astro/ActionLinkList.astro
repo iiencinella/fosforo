@@ -1,0 +1,24 @@
+---
+type ActionLink = {
+  href: string;
+  label: string;
+  secondary?: boolean;
+};
+
+type Props = {
+  items: ActionLink[];
+  className?: string;
+};
+
+const { items, className = "hero-actions" } = Astro.props as Props;
+---
+
+<div class={className}>
+  {
+    items.map((item) => (
+      <a class={item.secondary ? "button secondary" : "button"} href={item.href}>
+        {item.label}
+      </a>
+    ))
+  }
+</div>

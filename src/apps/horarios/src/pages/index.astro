@@ -1,0 +1,512 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import SectionIntro from "@repo/ui/astro/SectionIntro.astro";
+import ActionLinkList from "@repo/ui/astro/ActionLinkList.astro";
+import InfoPanel from "@repo/ui/astro/InfoPanel.astro";
+import { getSearchDataSource } from "@/lib/repository";
+import {
+  getCelebrationTypeLabel,
+  getDayLabel,
+  getTempleDetailFromSource,
+  parseSearchParams,
+  searchCelebrationsFromSource,
+} from "@/lib/search";
+import type { SearchParams } from "@/types/horarios";
+
+const searchParams = Astro.url.searchParams;
+const source = await getSearchDataSource();
+
+let pageError: string | null = null;
+let parsed: SearchParams;
+
+try {
+  parsed = parseSearchParams(searchParams);
+} catch (error) {
+  pageError =
+    error instanceof Error
+      ? error.message
+      : "No pudimos interpretar los filtros enviados.";
+  parsed = {
+    page: 1,
+    pageSize: 12,
+    sort: "relevance",
+  };
+}
+
+const searchResult = searchCelebrationsFromSource(source, parsed);
+const selectedTempleId = searchParams.get("temple") ?? searchResult.items[0]?.templeId;
+const templeDetail = selectedTempleId
+  ? getTempleDetailFromSource(source, selectedTempleId)
+  : null;
+const selectedResult = selectedTempleId
+  ? searchResult.items.find((item) => item.templeId === selectedTempleId)
+  : null;
+
+const title = "Horarios de Misas · Fosforo";
+const description =
+  "Busca celebraciones por templo, ciudad y franja horaria con estado de actualizacion visible.";
+
+const statusLabel: Record<string, string> = {
+  updated: "Actualizado",
+  review: "En revision",
+  stale: "Sin confirmar",
+};
+
+const statusClass: Record<string, string> = {
+  updated: "status-chip status-chip--updated",
+  review: "status-chip status-chip--review",
+  stale: "status-chip status-chip--stale",
+};
+
+const totalPages = Math.max(1, Math.ceil(searchResult.total / searchResult.pageSize));
+const prevPage = Math.max(1, searchResult.page - 1);
+const nextPage = Math.min(totalPages, searchResult.page + 1);
+
+function buildPageHref(page: number): string {
+  const params = new URLSearchParams();
+  if (parsed.q) params.set("q", parsed.q);
+  if (parsed.city) params.set("city", parsed.city);
+  if (parsed.type) params.set("type", parsed.type);
+  if (parsed.range) params.set("range", parsed.range);
+  if (parsed.sort) params.set("sort", parsed.sort);
+  if (parsed.date) params.set("date", parsed.date);
+  if (typeof parsed.lat === "number") params.set("lat", String(parsed.lat));
+  if (typeof parsed.lng === "number") params.set("lng", String(parsed.lng));
+  params.set("page", String(page));
+  params.set("pageSize", String(parsed.pageSize));
+  if (selectedTempleId) {
+    params.set("temple", selectedTempleId);
+  }
+  return `/?${params.toString()}#resultado`;
+}
+
+function buildTempleHref(templeId: string): string {
+  const params = new URLSearchParams();
+  if (parsed.q) params.set("q", parsed.q);
+  if (parsed.city) params.set("city", parsed.city);
+  if (parsed.type) params.set("type", parsed.type);
+  if (parsed.range) params.set("range", parsed.range);
+  if (parsed.sort) params.set("sort", parsed.sort);
+  if (parsed.date) params.set("date", parsed.date);
+  if (typeof parsed.lat === "number") params.set("lat", String(parsed.lat));
+  if (typeof parsed.lng === "number") params.set("lng", String(parsed.lng));
+  params.set("page", String(parsed.page));
+  params.set("pageSize", String(parsed.pageSize));
+  params.set("temple", templeId);
+  return `/?${params.toString()}#resultado`;
+}
+
+const apiLinks = [
+  {
+    href: `/api/celebraciones?${searchParams.toString()}`,
+    label: "GET /api/celebraciones",
+    code: true,
+  },
+  {
+    href: templeDetail
+      ? `/api/templos/${templeDetail.temple.id}`
+      : "/api/templos/{id}",
+    label: "GET /api/templos/[id]",
+    code: true,
+  },
+  { href: "/api/health", label: "GET /api/health", code: true },
+];
+---
+
+<BaseLayout title={title} description={description}>
+  <SiteHeader />
+
+  <main
+    id="main-content"
+    class="horarios-main"
+    data-track-search-root
+    data-search-total={String(searchResult.total)}
+    data-search-sort={parsed.sort ?? "relevance"}
+  >
+    <section class="section" id="busqueda">
+      <div class="page horarios-hero">
+        <div class="horarios-hero__copy">
+          <span class="horarios-kicker">Horarios de Misas · Fase 1</span>
+          <h1 class="horarios-title">Encuentra una celebracion cerca tuyo en pocos pasos.</h1>
+          <p class="horarios-subtitle">
+            Busqueda por templo o ciudad, filtros por tipo y horario, y estado de actualizacion visible para reducir la incertidumbre.
+          </p>
+          <div class="horarios-meta">
+            <span class="pill">Sin login</span>
+            <span class="pill">Cobertura inicial AR</span>
+            <span class="pill">{searchResult.total} templos con coincidencias</span>
+          </div>
+          <ActionLinkList
+            items={[
+              { href: "#resultado", label: "Ver resultados" },
+              {
+                href: "https://www.horariosdemisas.com.ar/santoral",
+                label: "Ir al santoral",
+                secondary: true,
+              },
+            ]}
+          />
+        </div>
+
+        <article class="card horarios-hero__panel">
+          <p class="badge">Estado MVP</p>
+          <h2 class="card-title">Busqueda y detalle con feedback operativo</h2>
+          <p class="app-desc">
+            El panel combina resultado de busqueda, estado de actualizacion por templo y una ficha de detalle para ayudar a decidir rapido.
+          </p>
+          <div class="horarios-skeleton" aria-hidden="true">
+            <span class="skeleton-pulse skeleton-bar skeleton-bar--lg"></span>
+            <span class="skeleton-pulse skeleton-bar skeleton-bar--md"></span>
+            <span class="skeleton-pulse skeleton-bar"></span>
+            <span class="skeleton-pulse skeleton-bar"></span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="resultado">
+      <div class="page horarios-results-shell">
+        <article class="card horarios-search-card">
+          <SectionIntro
+            title="Buscar celebraciones"
+            description="Ajusta filtros y revisa el estado de actualizacion de cada templo para planificar tu asistencia."
+            className="horarios-intro"
+          />
+
+          <form
+            method="GET"
+            class="horarios-filters"
+            aria-label="Filtros de busqueda de celebraciones"
+          >
+            <div class="form-row horarios-filters__query">
+              <label for="q">Templo o ciudad</label>
+              <input
+                id="q"
+                name="q"
+                placeholder="Ej: Catedral, Parana, Rosario"
+                value={parsed.q ?? ""}
+              />
+            </div>
+
+            <div class="form-row">
+              <label for="city">Ciudad</label>
+              <input id="city" name="city" placeholder="Parana" value={parsed.city ?? ""} />
+            </div>
+
+            <div class="form-row">
+              <label for="type">Tipo</label>
+              <select id="type" name="type">
+                <option value="">Todos</option>
+                <option value="misa" selected={parsed.type === "misa"}>Misa</option>
+                <option value="adoracion" selected={parsed.type === "adoracion"}>Adoracion</option>
+                <option value="confesion" selected={parsed.type === "confesion"}>Confesion</option>
+                <option value="rosario" selected={parsed.type === "rosario"}>Rosario</option>
+                <option value="liturgia" selected={parsed.type === "liturgia"}>Liturgia</option>
+              </select>
+            </div>
+
+            <div class="form-row">
+              <label for="range">Franja</label>
+              <select id="range" name="range">
+                <option value="">Todas</option>
+                <option value="morning" selected={parsed.range === "morning"}>Manana</option>
+                <option value="afternoon" selected={parsed.range === "afternoon"}>Tarde</option>
+                <option value="evening" selected={parsed.range === "evening"}>Noche</option>
+              </select>
+            </div>
+
+            <div class="form-row">
+              <label for="sort">Orden</label>
+              <select id="sort" name="sort">
+                <option value="relevance" selected={parsed.sort === "relevance"}>Relevancia</option>
+                <option value="soonest" selected={parsed.sort === "soonest"}>Proxima celebracion</option>
+                <option value="nearby" selected={parsed.sort === "nearby"}>Cercania</option>
+              </select>
+            </div>
+
+            <input type="hidden" name="page" value="1" />
+            <input type="hidden" name="pageSize" value={String(parsed.pageSize)} />
+            <div class="form-row horarios-filters__submit">
+              <button class="button" type="submit">Aplicar filtros</button>
+            </div>
+          </form>
+
+          {
+            pageError ? (
+              <p class="form-status error">{pageError}</p>
+            ) : (
+              <p class="horarios-result-meta">
+                {searchResult.total} resultado(s) · pagina {searchResult.page} de {totalPages}
+              </p>
+            )
+          }
+
+          {
+            searchResult.items.length === 0 ? (
+              <article class="card horarios-empty-card">
+                <h3 class="card-title">No encontramos celebraciones con esos filtros</h3>
+                <p class="app-desc">
+                  Prueba con una ciudad mas amplia, quita el filtro de franja horaria o cambia el tipo de celebracion.
+                </p>
+              </article>
+            ) : (
+              <>
+                <div
+                  class="horarios-bento"
+                  role="list"
+                  aria-label="Resultados de templos y celebraciones"
+                >
+                  {
+                    searchResult.items.map((item) => (
+                      <a
+                        class={`card horarios-result-card ${selectedTempleId === item.templeId ? "is-active" : ""}`}
+                        href={buildTempleHref(item.templeId)}
+                        role="listitem"
+                      >
+                        <div class="horarios-result-card__header">
+                          <h3 class="card-title">{item.templeName}</h3>
+                          <span class={statusClass[item.status]}>{statusLabel[item.status]}</span>
+                        </div>
+                        <p class="app-desc">
+                          {item.city} · {item.address}
+                        </p>
+                        <p class="horarios-next">
+                          Proxima: {getCelebrationTypeLabel(item.nextCelebration.type)} · {getDayLabel(item.nextCelebration.weekday)} {item.nextCelebration.startTime}
+                        </p>
+                        <div class="horarios-result-card__meta">
+                          <span>{item.matchingCelebrations} coincidencias</span>
+                          {
+                            typeof item.distanceKm === "number" ? (
+                              <span>{item.distanceKm.toFixed(1)} km</span>
+                            ) : (
+                              <span>Sin geolocalizacion</span>
+                            )
+                          }
+                        </div>
+                      </a>
+                    ))
+                  }
+                </div>
+
+                <nav class="horarios-pagination" aria-label="Paginacion de resultados">
+                  <a
+                    class={`button secondary ${searchResult.page <= 1 ? "is-disabled" : ""}`}
+                    href={buildPageHref(prevPage)}
+                    aria-disabled={searchResult.page <= 1 ? "true" : "false"}
+                  >
+                    Anterior
+                  </a>
+                  <span class="horarios-pagination__meta">
+                    Pagina {searchResult.page} / {totalPages}
+                  </span>
+                  <a
+                    class={`button secondary ${searchResult.hasNextPage ? "" : "is-disabled"}`}
+                    href={buildPageHref(nextPage)}
+                    aria-disabled={searchResult.hasNextPage ? "false" : "true"}
+                  >
+                    Siguiente
+                  </a>
+                </nav>
+              </>
+            )
+          }
+        </article>
+
+        <aside class="card horarios-detail-card">
+          {
+            templeDetail ? (
+              <>
+                <p class="badge">Detalle de templo</p>
+                <h2 class="card-title">{templeDetail.temple.name}</h2>
+                <p class="app-desc">
+                  {templeDetail.temple.address} · {templeDetail.temple.city}, {templeDetail.temple.province}
+                </p>
+                <p class="horarios-detail-note">
+                  {templeDetail.temple.notes ?? "Sin notas pastorales adicionales para este templo."}
+                </p>
+                <div class="horarios-detail-pills">
+                  <span class={statusClass[templeDetail.temple.status]}>{statusLabel[templeDetail.temple.status]}</span>
+                  {
+                    selectedResult && typeof selectedResult.distanceKm === "number" ? (
+                      <span class="status-chip">{selectedResult.distanceKm.toFixed(1)} km de referencia</span>
+                    ) : null
+                  }
+                </div>
+
+                <div
+                  class="horarios-schedule"
+                  role="list"
+                  aria-label="Proximas celebraciones del templo"
+                >
+                  {
+                    templeDetail.schedule.slice(0, 8).map((entry) => (
+                      <article class="horarios-schedule-item" role="listitem">
+                        <strong>{getDayLabel(entry.weekday)}</strong>
+                        <span>{entry.startTime}</span>
+                        <span>{getCelebrationTypeLabel(entry.type)}</span>
+                      </article>
+                    ))
+                  }
+                </div>
+
+                <ActionLinkList
+                  className="horarios-detail-actions"
+                  items={[
+                    {
+                      href:
+                        templeDetail.liturgicalLinks[0]?.href ??
+                        "https://www.horariosdemisas.com.ar/santoral",
+                      label: "Ver santoral",
+                      secondary: true,
+                    },
+                    {
+                      href:
+                        templeDetail.liturgicalLinks[1]?.href ??
+                        "https://www.horariosdemisas.com.ar/evangelio-del-dia",
+                      label: "Evangelio del dia",
+                      secondary: true,
+                    },
+                  ]}
+                />
+              </>
+            ) : (
+              <>
+                <p class="badge">Detalle de templo</p>
+                <h2 class="card-title">Selecciona un templo</h2>
+                <p class="app-desc">
+                  Al elegir un resultado veras direccion, estado de actualizacion y las proximas celebraciones disponibles.
+                </p>
+              </>
+            )
+          }
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="ecosistema">
+      <div class="page">
+        <SectionIntro
+          title="Recorrido complementario"
+          description="Horarios resuelve la consulta practica y enlaza con contenidos liturgicos para una experiencia pastoral continua."
+        />
+
+        <div class="horarios-ecosystem-grid">
+          <article class="card">
+            <h3 class="card-title">Santoral diario</h3>
+            <p class="app-desc">
+              Consulta memorias y festividades del dia para contextualizar tu participacion liturgica.
+            </p>
+            <ActionLinkList
+              className="horarios-inline-actions"
+              items={[
+                {
+                  href: "https://www.horariosdemisas.com.ar/santoral",
+                  label: "Abrir santoral",
+                  secondary: true,
+                },
+              ]}
+            />
+          </article>
+          <article class="card">
+            <h3 class="card-title">Evangelio del dia</h3>
+            <p class="app-desc">
+              Lee, escucha o comparte el evangelio diario y complementa la preparacion para la celebracion.
+            </p>
+            <ActionLinkList
+              className="horarios-inline-actions"
+              items={[
+                {
+                  href: "https://www.horariosdemisas.com.ar/evangelio-del-dia",
+                  label: "Abrir evangelio",
+                  secondary: true,
+                },
+              ]}
+            />
+          </article>
+          <article class="card">
+            <h3 class="card-title">Colaboracion comunitaria</h3>
+            <p class="app-desc">
+              El estado visible de actualizacion facilita detectar templos en revision y priorizar mejoras de datos.
+            </p>
+            <ActionLinkList
+              className="horarios-inline-actions"
+              items={[{ href: "/#resultado", label: "Revisar resultados", secondary: true }]}
+            />
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="api">
+      <div class="page horarios-api-grid">
+        <InfoPanel
+          badge="Contratos"
+          title="API de Horarios"
+          description="La UI consume contratos HTTP internos para evitar acoplarse al modelo fisico de datos y facilitar futura migracion a Supabase productivo."
+          apiLinks={apiLinks}
+          className="card"
+        >
+          <Fragment slot="actions">
+            <p class="horarios-footnote">
+              El endpoint de eventos acepta telemetria minima para observabilidad operacional del buscador.
+            </p>
+          </Fragment>
+        </InfoPanel>
+
+        <InfoPanel
+          badge="MVP"
+          title="Fuente inicial de datos"
+          description="Esta iteracion usa persistencia en Supabase con fallback tipado local para mantener continuidad operativa en entornos sin credenciales."
+          listItems={[
+            "Templos con estado updated/review/stale",
+            "Horarios por tipo y franja",
+            "Orden por relevancia, cercania o proxima celebracion",
+          ]}
+          className="card"
+        />
+      </div>
+    </section>
+  </main>
+
+  <script is:inline>
+    (() => {
+      const root = document.querySelector("[data-track-search-root]");
+      if (!root) return;
+
+      const params = new URLSearchParams(window.location.search);
+      const payload = {
+        sessionId: (() => {
+          try {
+            const key = "horarios-session-id";
+            const existing = localStorage.getItem(key);
+            if (existing) return existing;
+            const generated =
+              globalThis.crypto?.randomUUID?.() ?? `session-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+            localStorage.setItem(key, generated);
+            return generated;
+          } catch {
+            return `session-${Date.now()}`;
+          }
+        })(),
+        query: params.get("q") ?? "",
+        filters: {
+          city: params.get("city") ?? undefined,
+          type: params.get("type") ?? undefined,
+          range: params.get("range") ?? undefined,
+          sort: root.getAttribute("data-search-sort") ?? params.get("sort") ?? "relevance",
+        },
+        resultsCount: Number(root.getAttribute("data-search-total") ?? "0"),
+      };
+
+      fetch("/api/events/search", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(payload),
+      }).catch(() => undefined);
+    })();
+  </script>
+
+  <SiteFooter />
+</BaseLayout>

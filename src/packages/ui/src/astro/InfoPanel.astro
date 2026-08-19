@@ -1,0 +1,42 @@
+---
+import ApiLinkList from "./ApiLinkList.astro";
+
+type ApiLinkItem = {
+  href: string;
+  label: string;
+  code?: boolean;
+};
+
+type Props = {
+  badge: string;
+  title: string;
+  description?: string;
+  listItems?: string[];
+  apiLinks?: ApiLinkItem[];
+  className?: string;
+};
+
+const {
+  badge,
+  title,
+  description,
+  listItems = [],
+  apiLinks = [],
+  className = "card biblia-stack",
+} = Astro.props as Props;
+---
+
+<aside class={className}>
+  <p class="badge">{badge}</p>
+  <h2 class="card-title">{title}</h2>
+  {description ? <p class="biblia-panel-copy">{description}</p> : null}
+  {
+    listItems.length > 0 ? (
+      <ul class="biblia-meta-list">
+        {listItems.map((item) => <li>{item}</li>)}
+      </ul>
+    ) : null
+  }
+  <slot name="actions" />
+  {apiLinks.length > 0 ? <ApiLinkList items={apiLinks} className="catalog-link-stack" /> : null}
+</aside>

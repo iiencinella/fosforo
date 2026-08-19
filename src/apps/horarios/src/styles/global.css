@@ -1,0 +1,407 @@
+@import "@repo/ui/foundation.css";
+@import "@repo/ui/portal.css";
+
+.horarios-app .skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 999;
+  padding: 0.75rem 1rem;
+  border-radius: 0 0 0.75rem 0.75rem;
+  background: var(--color-bg-elevated);
+  color: var(--color-text);
+  border: 1px solid var(--color-line);
+}
+
+.horarios-app .skip-link:focus {
+  left: 1rem;
+}
+
+.horarios-main {
+  display: grid;
+  gap: var(--spacing-8);
+  padding-bottom: var(--spacing-16);
+}
+
+.horarios-hero {
+  display: grid;
+  gap: var(--spacing-5);
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  align-items: stretch;
+}
+
+.horarios-hero__copy,
+.horarios-hero__panel {
+  grid-column: span 12;
+}
+
+.horarios-hero__copy {
+  display: grid;
+  gap: var(--spacing-4);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-line);
+  padding: clamp(1.2rem, 3vw, 2rem);
+  background:
+    radial-gradient(
+      circle at 16% -20%,
+      color-mix(in srgb, var(--color-brand-300) 18%, transparent),
+      transparent 42%
+    ),
+    color-mix(in srgb, var(--color-bg-elevated) 90%, transparent);
+}
+
+.horarios-kicker {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.horarios-title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: clamp(1.9rem, 3.8vw, 3.1rem);
+  line-height: 1.08;
+}
+
+.horarios-subtitle {
+  margin: 0;
+  max-width: 62ch;
+  color: var(--color-muted);
+  line-height: 1.65;
+}
+
+.horarios-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-3);
+}
+
+.horarios-hero__panel {
+  display: grid;
+  gap: var(--spacing-3);
+  align-content: start;
+  background: color-mix(in srgb, var(--color-surface-strong) 86%, transparent);
+}
+
+.horarios-skeleton {
+  display: grid;
+  gap: var(--spacing-2);
+  margin-top: var(--spacing-2);
+}
+
+.horarios-results-shell {
+  display: grid;
+  gap: var(--spacing-5);
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+}
+
+.horarios-search-card,
+.horarios-detail-card {
+  grid-column: span 12;
+}
+
+.horarios-search-card {
+  display: grid;
+  gap: var(--spacing-4);
+}
+
+.horarios-intro {
+  display: grid;
+  gap: 8px;
+}
+
+.horarios-intro .section-title {
+  font-size: clamp(1.5rem, 2.4vw, 2rem);
+}
+
+.horarios-filters {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  align-items: end;
+}
+
+.horarios-filters .form-row {
+  grid-column: span 12;
+}
+
+.horarios-filters__query {
+  grid-column: span 12;
+}
+
+.horarios-filters__submit {
+  display: grid;
+  align-items: end;
+}
+
+.horarios-result-meta {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.9rem;
+}
+
+.horarios-empty-card {
+  border-color: color-mix(
+    in srgb,
+    var(--color-brand-500) 14%,
+    var(--color-line)
+  );
+}
+
+.horarios-bento {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--spacing-4);
+}
+
+.horarios-result-card {
+  grid-column: span 12;
+  color: inherit;
+  text-decoration: none;
+  transition:
+    transform var(--transition-default),
+    border-color var(--transition-default),
+    box-shadow var(--transition-default),
+    background var(--transition-default);
+}
+
+.horarios-result-card:hover {
+  transform: translateY(-1px);
+  border-color: color-mix(
+    in srgb,
+    var(--color-brand-500) 24%,
+    var(--color-line)
+  );
+  box-shadow: var(--shadow-soft);
+}
+
+.horarios-result-card.is-active {
+  border-color: color-mix(
+    in srgb,
+    var(--color-brand-500) 42%,
+    var(--color-line)
+  );
+  background: color-mix(
+    in srgb,
+    var(--color-surface-strong) 90%,
+    var(--color-bg-elevated)
+  );
+}
+
+.horarios-result-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--spacing-2);
+}
+
+.horarios-next {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.horarios-result-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-3);
+  color: var(--color-muted);
+  font-size: 0.84rem;
+}
+
+.horarios-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-3);
+  margin-top: var(--spacing-2);
+}
+
+.horarios-pagination__meta {
+  color: var(--color-muted);
+  font-size: 0.9rem;
+}
+
+.horarios-pagination .button.is-disabled {
+  pointer-events: none;
+  opacity: 0.52;
+}
+
+.status-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.75rem;
+  border-radius: 999px;
+  border: 1px solid var(--color-line);
+  padding: 0.2rem 0.62rem;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: color-mix(in srgb, var(--color-surface-strong) 80%, transparent);
+}
+
+.status-chip--updated {
+  border-color: color-mix(
+    in srgb,
+    var(--color-success-500) 42%,
+    var(--color-line)
+  );
+  color: color-mix(in srgb, var(--color-success-500) 82%, var(--color-text));
+}
+
+.status-chip--review {
+  border-color: color-mix(
+    in srgb,
+    var(--color-warning-500) 42%,
+    var(--color-line)
+  );
+  color: color-mix(in srgb, var(--color-warning-500) 82%, var(--color-text));
+}
+
+.status-chip--stale {
+  border-color: color-mix(
+    in srgb,
+    var(--color-danger-500) 42%,
+    var(--color-line)
+  );
+  color: color-mix(in srgb, var(--color-danger-500) 82%, var(--color-text));
+}
+
+.horarios-detail-card {
+  display: grid;
+  gap: var(--spacing-4);
+  align-content: start;
+}
+
+.horarios-detail-note {
+  margin: 0;
+  color: var(--color-muted);
+  line-height: 1.6;
+}
+
+.horarios-detail-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-2);
+}
+
+.horarios-schedule {
+  display: grid;
+  gap: var(--spacing-2);
+}
+
+.horarios-schedule-item {
+  display: grid;
+  grid-template-columns: 1.3fr 0.7fr 1fr;
+  gap: var(--spacing-2);
+  align-items: center;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-line);
+  background: color-mix(in srgb, var(--color-surface-strong) 86%, transparent);
+  padding: 0.62rem 0.7rem;
+  font-size: 0.86rem;
+}
+
+.horarios-schedule-item strong {
+  font-size: 0.86rem;
+}
+
+.horarios-schedule-item span:last-child {
+  text-align: right;
+  color: var(--color-muted);
+}
+
+.horarios-detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-3);
+}
+
+.horarios-ecosystem-grid,
+.horarios-api-grid {
+  display: grid;
+  gap: var(--spacing-4);
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+}
+
+.horarios-ecosystem-grid > .card,
+.horarios-api-grid > .card {
+  grid-column: span 12;
+}
+
+.horarios-inline-actions {
+  display: flex;
+  gap: var(--spacing-2);
+  flex-wrap: wrap;
+}
+
+.horarios-footnote {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.9rem;
+}
+
+@media (min-width: 48rem) {
+  .horarios-hero__copy {
+    grid-column: span 8;
+  }
+
+  .horarios-hero__panel {
+    grid-column: span 4;
+  }
+
+  .horarios-search-card {
+    grid-column: span 8;
+  }
+
+  .horarios-detail-card {
+    grid-column: span 4;
+  }
+
+  .horarios-filters__query {
+    grid-column: span 4;
+  }
+
+  .horarios-filters .form-row {
+    grid-column: span 2;
+  }
+
+  .horarios-filters__submit {
+    grid-column: span 2;
+  }
+
+  .horarios-bento .horarios-result-card:nth-child(1),
+  .horarios-bento .horarios-result-card:nth-child(2) {
+    grid-column: span 6;
+  }
+
+  .horarios-bento .horarios-result-card {
+    grid-column: span 4;
+  }
+
+  .horarios-ecosystem-grid > .card {
+    grid-column: span 4;
+  }
+
+  .horarios-api-grid > .card {
+    grid-column: span 6;
+  }
+}
+
+@media (max-width: 720px) {
+  .horarios-pagination {
+    flex-wrap: wrap;
+  }
+
+  .horarios-schedule-item {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+
+  .horarios-schedule-item span:last-child {
+    text-align: left;
+  }
+}

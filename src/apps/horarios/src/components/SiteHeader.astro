@@ -1,0 +1,24 @@
+---
+import { PortalHeader } from "@repo/ui";
+import logo from "@/assets/astro.svg";
+
+const links = [
+  { href: "/#busqueda", label: "Busqueda" },
+  { href: "/#resultado", label: "Resultados" },
+  { href: "/#ecosistema", label: "Ecosistema" },
+  { href: "/#api", label: "API" },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<PortalHeader
+  title="Horarios"
+  logoSrc={logo.src}
+  logoAlt="Logo de Fosforo Horarios"
+  links={links}
+  currentPath={currentPath}
+  ctaHref="/#busqueda"
+  ctaLabel="Buscar celebracion"
+  client:load
+/>

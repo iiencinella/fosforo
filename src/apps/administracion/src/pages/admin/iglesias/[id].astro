@@ -1,0 +1,106 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import { requirePageAuth } from "@/lib/auth";
+import { supabase } from "@/db/supabase";
+
+const auth = await requirePageAuth(Astro, ["admin", "editor", "viewer"]);
+if (auth.response) {
+  return auth.response;
+}
+
+const churchId = Astro.params.id;
+if (!churchId) {
+  return Astro.redirect("/admin/iglesias");
+}
+
+const [{ data: church }, { data: schedules }] = await Promise.all([
+  supabase.from("churches").select("*").eq("id", churchId).maybeSingle(),
+  supabase
+    .from("celebration_schedules")
+    .select("id, celebration_type, weekday, start_time, valid_from, valid_to")
+    .eq("church_id", churchId)
+    .order("weekday", { ascending: true })
+    .order("start_time", { ascending: true }),
+]);
+
+if (!church) {
+  return Astro.redirect("/admin/iglesias");
+}
+
+const canEdit = auth.session?.role === "admin" || auth.session?.role === "editor";
+---
+
+<AdminLayout title={`${church.name} | Fósforo Admin`} userEmail={auth.session?.email}>
+  <section>
+    <h1>{church.name}</h1>
+    <p class="app-desc">{church.address ?? "Sin dirección cargada"}</p>
+  </section>
+
+  <section class="admin-section">
+    <h2>Datos generales</h2>
+    <div class="table-wrap">
+      <table>
+        <tbody>
+          <tr><th>Ciudad</th><td>{church.city}</td></tr>
+          <tr><th>Provincia</th><td>{church.province ?? "-"}</td></tr>
+          <tr><th>País</th><td>{church.country ?? "-"}</td></tr>
+          <tr>
+            <th>Estado</th>
+            <td>
+              <span class="status-pill" data-status={church.status}>{church.status}</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="admin-section">
+    <h2>Horarios</h2>
+    {schedules && schedules.length > 0 ? (
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Celebración</th>
+              <th>Día</th>
+              <th>Hora</th>
+              <th>Vigencia</th>
+            </tr>
+          </thead>
+          <tbody>
+            {schedules.map((item) => (
+              <tr>
+                <td>{item.celebration_type}</td>
+                <td>{item.weekday}</td>
+                <td>{item.start_time}</td>
+                <td>{item.valid_from ?? "-"} → {item.valid_to ?? "-"}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    ) : (
+      <p class="app-desc">Esta iglesia no tiene horarios registrados.</p>
+    )}
+
+    {canEdit && (
+      <form class="form" method="post" action={`/api/churches/${churchId}/schedules`}>
+        <h3>Agregar horario</h3>
+        <div class="form-row">
+          <label for="celebration_type">Celebración</label>
+          <input id="celebration_type" name="celebration_type" required />
+        </div>
+        <div class="form-row">
+          <label for="weekday">Día (0-6)</label>
+          <input id="weekday" name="weekday" type="number" min="0" max="6" required />
+        </div>
+        <div class="form-row">
+          <label for="start_time">Hora</label>
+          <input id="start_time" name="start_time" type="time" required />
+        </div>
+        <button class="button-primary" type="submit">Guardar horario</button>
+      </form>
+    )}
+  </section>
+</AdminLayout>

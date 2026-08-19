@@ -1,0 +1,153 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import ActionLinkList from "@repo/ui/astro/ActionLinkList.astro";
+import InfoPanel from "@repo/ui/astro/InfoPanel.astro";
+import ButtonLink from "@repo/ui/astro/ButtonLink.astro";
+import { PortalAppCard, SectionHeader } from "@repo/ui";
+import { getRepositoryHealth } from "@/lib/server/repository";
+
+const health = await getRepositoryHealth();
+
+const appCards = [
+  {
+    href: "/buscar",
+    slug: "buscar",
+    name: "Búsqueda textual",
+    resume:
+      "Consulta por palabra clave, título o frase con resultados navegables. Incluye acordes y referencia litúrgica.",
+    category: "Consulta",
+    status: "disponible" as const,
+  },
+  {
+    href: "/liturgia",
+    slug: "liturgia",
+    name: "Canciones del día",
+    resume:
+      "Exploración por tiempo litúrgico y momento de la misa según el calendario del ecosistema.",
+    category: "Liturgia",
+    status: "disponible" as const,
+  },
+  {
+    href: "/contribuir",
+    slug: "contribuir",
+    name: "Contribuir canción",
+    resume:
+      "Envía nuevas canciones con letra y acordes. Todo pasa por moderación antes de publicarse.",
+    category: "Comunidad",
+    status: "disponible" as const,
+  },
+  {
+    href: "/estado",
+    slug: "estado",
+    name: "Estado operativo",
+    resume:
+      "Verificación del catálogo, endpoints internos y estado documental del MVP privado.",
+    category: "Operación",
+    status: "disponible" as const,
+  },
+];
+
+const apiLinks = [
+  { href: "/api/cancionero/search?q=amor", label: "GET /api/cancionero/search", code: true },
+  {
+    href: "/api/cancionero/liturgy?tiempo=adviento&momento=Entrada",
+    label: "GET /api/cancionero/liturgy",
+    code: true,
+  },
+  {
+    href: "/api/cancionero/songs/123",
+    label: "GET /api/cancionero/songs/:id",
+    code: true,
+  },
+  { href: "/api/health", label: "GET /api/health", code: true },
+];
+---
+
+<Layout
+  title="Cancionero · Fósforo"
+  description="Exploración litúrgica, búsqueda de canciones y contribución comunitaria dentro del ecosistema Fósforo."
+>
+  <SiteHeader />
+
+  <main class="cancionero-app">
+    <section class="section cancionero-page-hero" id="inicio">
+      <!-- <div class="page cancionero-hero"> -->
+        <div class="page cancionero-hero-copy">
+          <span class="cancionero-kicker">Cancionero · Fase 4</span>
+          <h1 class="cancionero-title">
+            Un cancionero litúrgico con búsqueda inteligente y contribución comunitaria.
+          </h1>
+          <p class="cancionero-subtitle">
+            Cancionero permite buscar canciones por texto, por tiempo litúrgico o por momento
+            de la misa. La comunidad puede contribuir con nuevas canciones que pasan por
+            moderación antes de publicarse.
+          </p>
+
+          <div class="hero-actions">
+            <ButtonLink href="/buscar" label="Buscar canción" />
+            <ButtonLink href="/liturgia" label="Explorar por liturgia" variant="secondary" />
+            <ButtonLink href="/contribuir" label="Contribuir" variant="secondary" />
+          </div>
+        </div>
+
+        <!-- <article class="cancionero-panel cancionero-callout">
+          <p class="cancionero-panel-label">Motor de búsqueda</p>
+          <h2 class="card-title">Tres formas de encontrar</h2>
+          <p class="cancionero-panel-copy">
+            <strong>A:</strong> Búsqueda textual por palabra clave en título, letra o acordes.
+            <br />
+            <strong>B:</strong> Exploración por tiempo litúrgico (Adviento, Cuaresma, etc.).
+            <br />
+            <strong>C:</strong> Filtro por momento de la misa (Entrada, Ofertorio, Comunión, etc.).
+          </p>
+          <div class="cancionero-tag-row">
+            <span class="pill">Canciones: {health.totalCanciones}</span>
+            <span class="pill">Publicadas: {health.totalPublicadas}</span>
+            <span class="pill">Pendientes: {health.totalPendientes}</span>
+          </div>
+        </article> -->
+      <!-- </div> -->
+    </section>
+
+    <section class="section" id="modulos">
+      <div class="page cancionero-shell">
+        <article class="cancionero-panel cancionero-stack">
+          <SectionHeader
+            title="Módulos principales"
+            description="La primera entrega aterriza búsqueda textual, exploración litúrgica y contribución comunitaria sobre `@repo/ui`, con una base que conversa con Supabase y conserva el lenguaje visual del ecosistema."
+          />
+          <div class="apps-grid">
+            {appCards.map((app) => <PortalAppCard {...app} />)}
+          </div>
+        </article>
+
+        <InfoPanel
+          badge="Operación"
+          title="Punto de control del MVP"
+          description="La app prioriza tres motores de búsqueda, contribución moderada y endpoints internos desacoplados de la UI."
+          listItems={[
+            "Búsqueda textual sobre el catálogo completo de canciones.",
+            "Exploración por 18 tiempos litúrgicos y 8 momentos de misa.",
+            "Flujo de contribución con moderación antes de publicación.",
+            "Acordes posicionados visualmente y renderizados sobre la sílaba correspondiente.",
+          ]}
+          apiLinks={apiLinks}
+          className="cancionero-panel cancionero-stack"
+        >
+          <Fragment slot="actions">
+            <ActionLinkList
+              items={[
+                { href: "/estado", label: "Revisar estado", secondary: true },
+                { href: "/api/health", label: "Abrir health", secondary: true },
+              ]}
+            />
+          </Fragment>
+        </InfoPanel>
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter />
+</Layout>

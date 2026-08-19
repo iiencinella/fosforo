@@ -1,0 +1,21 @@
+---
+import { PortalHeader } from "@repo/ui";
+
+const links = [
+  { href: "/logs", label: "Logs" },
+  { href: "/dashboard", label: "Dashboard" },
+  { href: "/login", label: "Login" },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<PortalHeader
+  title="Fosforo Log"
+  links={links}
+  currentPath={currentPath}
+  ctaHref="/dashboard"
+  ctaLabel="Ver alertas"
+  logoAlt="Logo de Fosforo Log"
+  client:load
+/>

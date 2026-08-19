@@ -1,0 +1,128 @@
+[
+  {
+    "id": "scb-jn-3-16",
+    "version": "pd",
+    "reference": "Jn 3,16",
+    "normalizedReference": "Jn 3,16",
+    "bookId": "juan",
+    "chapterStart": 3,
+    "verseStart": 16,
+    "chapterEnd": 3,
+    "verseEnd": 16,
+    "tags": ["amor", "salvacion"],
+    "verses": [
+      {
+        "version": "pd",
+        "bookId": "juan",
+        "chapter": 3,
+        "verse": 16,
+        "text": "Porque tanto amo Dios al mundo que dio a su Hijo unico, para que todo el que crea en el no perezca, sino que tenga vida eterna."
+      }
+    ]
+  },
+  {
+    "id": "scb-lc-1-26-38",
+    "version": "pd",
+    "reference": "Lc 1,26-38",
+    "normalizedReference": "Lc 1,26-38",
+    "bookId": "lucas",
+    "chapterStart": 1,
+    "verseStart": 26,
+    "chapterEnd": 1,
+    "verseEnd": 38,
+    "tags": ["esperanza", "anunciacion", "maria"],
+    "verses": [
+      {
+        "version": "pd",
+        "bookId": "lucas",
+        "chapter": 1,
+        "verse": 26,
+        "text": "Al sexto mes fue enviado por Dios el angel Gabriel a una ciudad de Galilea llamada Nazaret."
+      },
+      {
+        "version": "pd",
+        "bookId": "lucas",
+        "chapter": 1,
+        "verse": 27,
+        "text": "A una virgen desposada con un hombre llamado Jose, de la casa de David; el nombre de la virgen era Maria."
+      },
+      {
+        "version": "pd",
+        "bookId": "lucas",
+        "chapter": 1,
+        "verse": 28,
+        "text": "Y entrando donde ella estaba, dijo: Dios te salve, llena de gracia, el Senor esta contigo."
+      },
+      {
+        "version": "pd",
+        "bookId": "lucas",
+        "chapter": 1,
+        "verse": 29,
+        "text": "Ella se turbo por estas palabras y pensaba que significaria este saludo."
+      },
+      {
+        "version": "pd",
+        "bookId": "lucas",
+        "chapter": 1,
+        "verse": 30,
+        "text": "El angel le dijo: No temas, Maria, porque has hallado gracia delante de Dios."
+      },
+      {
+        "version": "pd",
+        "bookId": "lucas",
+        "chapter": 1,
+        "verse": 31,
+        "text": "Concebiras en tu seno y daras a luz un hijo, y le pondras por nombre Jesus."
+      },
+      {
+        "version": "pd",
+        "bookId": "lucas",
+        "chapter": 1,
+        "verse": 32,
+        "text": "El sera grande y sera llamado Hijo del Altisimo, y el Senor Dios le dara el trono de David, su padre."
+      },
+      {
+        "version": "pd",
+        "bookId": "lucas",
+        "chapter": 1,
+        "verse": 33,
+        "text": "Reinara sobre la casa de Jacob por los siglos y su reino no tendra fin."
+      },
+      {
+        "version": "pd",
+        "bookId": "lucas",
+        "chapter": 1,
+        "verse": 34,
+        "text": "Maria dijo al angel: Como sera eso, pues no conozco varon?"
+      },
+      {
+        "version": "pd",
+        "bookId": "lucas",
+        "chapter": 1,
+        "verse": 35,
+        "text": "El angel le respondio: El Espiritu Santo vendra sobre ti y el poder del Altisimo te cubrira con su sombra; por eso el que ha de nacer sera santo y sera llamado Hijo de Dios."
+      },
+      {
+        "version": "pd",
+        "bookId": "lucas",
+        "chapter": 1,
+        "verse": 36,
+        "text": "Mira, tambien Isabel, tu parienta, ha concebido un hijo en su vejez y este es ya el sexto mes de aquella que llamaban esteril."
+      },
+      {
+        "version": "pd",
+        "bookId": "lucas",
+        "chapter": 1,
+        "verse": 37,
+        "text": "Porque nada hay imposible para Dios."
+      },
+      {
+        "version": "pd",
+        "bookId": "lucas",
+        "chapter": 1,
+        "verse": 38,
+        "text": "Dijo Maria: He aqui la esclava del Senor; hagase en mi segun tu palabra. Y el angel se retiro de su presencia."
+      }
+    ]
+  }
+]

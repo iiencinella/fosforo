@@ -1,0 +1,175 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Administración de usuarios - Fósforo"
+  description="Panel base para listado de usuarios y gestión de roles."
+>
+  <main>
+    <section class="section">
+      <div class="page">
+        <div class="section-header">
+          <div>
+            <h1 class="section-title">Administración de usuarios</h1>
+            <p class="section-desc">
+              Listado de cuentas y asignación de roles base (admin, sacerdote, coordinador, usuario).
+            </p>
+          </div>
+        </div>
+
+        <div class="card surface-card">
+          <div class="table-wrap" role="region" aria-label="Usuarios registrados">
+            <table class="users-table">
+              <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Email</th>
+                  <th>Rol</th>
+                  <th>Alta</th>
+                  <th>Acción</th>
+                </tr>
+              </thead>
+              <tbody id="admin-users-body">
+                <tr>
+                  <td colspan="5">Cargando usuarios...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p id="admin-status" class="form-status pending" role="status" aria-live="polite">
+            Cargando usuarios...
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const body = document.querySelector("#admin-users-body") as HTMLTableSectionElement | null;
+    const status = document.querySelector("#admin-status") as HTMLParagraphElement | null;
+
+    function renderEmpty(message: string) {
+      if (!body) return;
+      body.innerHTML = `<tr><td colspan="5">${message}</td></tr>`;
+    }
+
+    function formatDate(value: string | null | undefined) {
+      if (!value) return "-";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return "-";
+      return new Intl.DateTimeFormat("es-AR", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      }).format(date);
+    }
+
+    async function updateRole(userId: string, roleSlug: string) {
+      if (!status) return;
+
+      status.className = "form-status pending";
+      status.textContent = "Actualizando rol...";
+
+      try {
+        const response = await fetch(`/api/admin/users/${userId}/role`, {
+          method: "PUT",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ roleSlug }),
+        });
+
+        const data = await response.json();
+        if (!response.ok || !data.ok) {
+          throw new Error(data.error || "USERS_ROLE_ASSIGNMENT_FAILED");
+        }
+
+        status.className = "form-status success";
+        status.textContent = "Rol actualizado correctamente.";
+      } catch (error) {
+        const message = error instanceof Error ? error.message : "USERS_ROLE_ASSIGNMENT_FAILED";
+        status.className = "form-status error";
+        status.textContent = `No pudimos actualizar el rol (${message}).`;
+      }
+    }
+
+    async function loadUsers() {
+      if (!status) return;
+
+      status.className = "form-status pending";
+      status.textContent = "Cargando usuarios...";
+
+      try {
+        const response = await fetch("/api/admin/users");
+        const data = await response.json();
+
+        if (!response.ok || !data.ok) {
+          throw new Error(data.error || "USERS_ADMIN_LIST_FAILED");
+        }
+
+        const rows = data.data || [];
+        if (!Array.isArray(rows) || rows.length === 0) {
+          renderEmpty("Todavia no hay usuarios registrados.");
+          status.className = "form-status pending";
+          status.textContent = "Sin usuarios para mostrar.";
+          return;
+        }
+
+        if (!body) return;
+        body.innerHTML = "";
+
+        for (const user of rows) {
+          const row = document.createElement("tr");
+
+          const roleSelectId = `role-select-${user.id}`;
+
+          row.innerHTML = `
+            <td>${user.name || "-"}</td>
+            <td>${user.email || "-"}</td>
+            <td>
+              <label class="sr-only" for="${roleSelectId}">Rol</label>
+              <select id="${roleSelectId}" data-user-id="${user.id}">
+                <option value="usuario" ${user.role === "usuario" ? "selected" : ""}>Usuario</option>
+                <option value="coordinador" ${user.role === "coordinador" ? "selected" : ""}>Coordinador</option>
+                <option value="sacerdote" ${user.role === "sacerdote" ? "selected" : ""}>Sacerdote</option>
+                <option value="admin" ${user.role === "admin" ? "selected" : ""}>Admin</option>
+              </select>
+            </td>
+            <td>${formatDate(user.createdAt)}</td>
+            <td>
+              <button class="button-secondary" type="button" data-save-role="${user.id}">
+                Guardar
+              </button>
+            </td>
+          `;
+
+          body.appendChild(row);
+        }
+
+        body.querySelectorAll("[data-save-role]").forEach((button) => {
+          button.addEventListener("click", async () => {
+            if (!(button instanceof HTMLElement)) return;
+            const userId = button.getAttribute("data-save-role");
+            if (!userId) return;
+
+            const select = body.querySelector(`select[data-user-id=\"${userId}\"]`);
+            const roleSlug = select instanceof HTMLSelectElement ? select.value : "";
+            if (!roleSlug) return;
+
+            await updateRole(userId, roleSlug);
+          });
+        });
+
+        status.className = "form-status success";
+        status.textContent = "Listado actualizado.";
+      } catch (error) {
+        const message = error instanceof Error ? error.message : "USERS_ADMIN_LIST_FAILED";
+        renderEmpty("No fue posible cargar el listado.");
+        status.className = "form-status error";
+        status.textContent = `No pudimos cargar usuarios (${message}).`;
+      }
+    }
+
+    loadUsers();
+  </script>
+</BaseLayout>

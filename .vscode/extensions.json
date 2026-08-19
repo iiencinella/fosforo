@@ -1,0 +1,21 @@
+{
+  "recommendations": [
+    "alefragnani.project-manager",
+    "astro-build.astro-vscode",
+    "bradlc.vscode-tailwindcss",
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "christian-kohler.path-intellisense",
+    "christian-kohler.npm-intellisense",
+    "mikestead.dotenv",
+    "redhat.vscode-yaml",
+    "usernamehw.errorlens",
+    "eamodio.gitlens",
+    "gruntfuggly.todo-tree",
+    "yzhang.markdown-all-in-one",
+    "davidanson.vscode-markdownlint",
+    "pkief.material-icon-theme",
+    "naumovs.color-highlight",
+    "rangav.vscode-thunder-client"
+  ]
+}

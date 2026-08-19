@@ -1,0 +1,24 @@
+---
+type MetricItem = {
+  label: string;
+  value: string | number;
+};
+
+type Props = {
+  items: MetricItem[];
+  className?: string;
+};
+
+const { items, className = "biblia-card-grid" } = Astro.props as Props;
+---
+
+<div class={className}>
+  {
+    items.map((item) => (
+      <article class="card biblia-count-card">
+        <h3 class="card-title">{item.label}</h3>
+        <p>{item.value}</p>
+      </article>
+    ))
+  }
+</div>

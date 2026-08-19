@@ -1,0 +1,71 @@
+name: "Consulta de licencia"
+description: "Consulta sobre uso no comercial, atribución o excepciones comerciales"
+title: "[Licencia]: "
+labels:
+  - legal
+  - license
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Gracias por tu consulta.
+
+        Este repositorio usa:
+        - PolyForm Noncommercial 1.0.0 para codigo fuente y scripts
+        - CC BY-NC 4.0 para contenido textual y multimedia
+
+        Completa los siguientes campos para que mantenimiento pueda responder con claridad.
+
+  - type: dropdown
+    id: material-type
+    attributes:
+      label: Tipo de material
+      description: Que material planeas usar?
+      options:
+        - Codigo fuente / scripts
+        - Contenido textual (docs, articulos)
+        - Multimedia (imagenes, audio, video)
+        - Mixto
+    validations:
+      required: true
+
+  - type: textarea
+    id: planned-use
+    attributes:
+      label: Uso previsto
+      description: Describe exactamente como quieres usarlo.
+      placeholder: "Ejemplo: integrar el modulo X en una herramienta interna para un servicio pago."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: revenue-related
+    attributes:
+      label: Hay compensación monetaria o ventaja comercial involucrada?
+      options:
+        - Si
+        - No
+        - No estoy seguro
+    validations:
+      required: true
+
+  - type: textarea
+    id: attribution-plan
+    attributes:
+      label: Plan de atribución
+      description: Como conservaras la atribución y los avisos?
+      placeholder: "Ejemplo: mantener avisos de copyright en los archivos fuente y agregar creditos en la pagina Acerca de."
+
+  - type: textarea
+    id: links
+    attributes:
+      label: Enlaces relevantes
+      description: PR, rama, sitio web, ficha de tienda o enlaces al repositorio.
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: Lei `LICENSE` y `NOTICE` antes de abrir este issue.
+          required: true

@@ -1,0 +1,10 @@
+---
+type Props = {
+  message: string;
+  className?: string;
+};
+
+const { message, className = "catalog-empty" } = Astro.props as Props;
+---
+
+<section class={className}>{message}</section>

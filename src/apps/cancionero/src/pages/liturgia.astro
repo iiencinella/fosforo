@@ -1,0 +1,129 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import { getCurrentLiturgicalTimeId } from "@/lib/server/calendar";
+import { listLiturgicalTimes, listSongs } from "@/lib/server/repository";
+
+const searchParams = Astro.url.searchParams;
+const timesPayload = await listLiturgicalTimes();
+
+const autoTime = await getCurrentLiturgicalTimeId();
+const selectedTime = searchParams.get("tiempo") ?? autoTime ?? timesPayload.items[0]?.id ?? "";
+const selectedMoment = searchParams.get("momento") ?? "";
+
+const moments =
+  timesPayload.items.find((time) => time.id === selectedTime)?.momentosMisa ?? [];
+
+const result = await listSongs({
+  tiempo: selectedTime || undefined,
+  momento: selectedMoment || undefined,
+});
+---
+
+<Layout
+  title="Liturgia · Cancionero Fósforo"
+  description="Explora canciones por tiempo litúrgico y momento de misa."
+>
+  <SiteHeader />
+
+  <main class="cancionero-app">
+    <section class="section cancionero-page-hero" id="liturgia">
+      <div class="page cancionero-stack">
+        <div class="cancionero-hero-copy">
+          <span class="cancionero-kicker">Motores B + C · Liturgia</span>
+          <h1 class="cancionero-title">Filtra por tiempo litúrgico y momento de misa.</h1>
+          <p class="cancionero-subtitle">
+            Selecciona una combinación litúrgica para obtener canciones publicadas y validadas
+            para esa celebración.
+          </p>
+        </div>
+
+        <form method="GET" action="/liturgia" class="catalog-toolbar">
+          <div class="cancionero-filters-grid">
+            <label class="filter-field">
+              <span>Tiempo litúrgico</span>
+              <select name="tiempo">
+                {
+                  timesPayload.items.map((time) => (
+                    <option value={time.id} selected={time.id === selectedTime}>
+                      {time.nombre}
+                    </option>
+                  ))
+                }
+              </select>
+            </label>
+
+            <label class="filter-field">
+              <span>Momento de misa</span>
+              <select name="momento">
+                <option value="">Todos</option>
+                {
+                  moments.map((moment) => (
+                    <option value={moment} selected={moment === selectedMoment}>
+                      {moment}
+                    </option>
+                  ))
+                }
+              </select>
+            </label>
+
+            <div class="cancionero-filter-actions">
+              <button class="button" type="submit">Aplicar filtros</button>
+              <a class="button secondary" href="/liturgia">
+                Reiniciar
+              </a>
+            </div>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <section class="section" id="canciones-liturgia">
+      <div class="page cancionero-stack">
+        <div class="cancionero-results-head">
+          <p class="badge">Catálogo litúrgico</p>
+          <h2 class="card-title">
+            {result.total} canciones para {selectedTime || "tiempo no definido"}
+          </h2>
+          <p class="app-desc">
+            Fuente: {result.source === "database" ? "Supabase" : "Fallback local"}
+          </p>
+        </div>
+
+        {
+          result.items.length === 0 ? (
+            <article class="card cancionero-empty-card">
+              <h3 class="card-title">Aún no hay canciones para este filtro</h3>
+              <p class="app-desc">
+                Ajusta el momento o contribuye una nueva canción para este tiempo litúrgico.
+              </p>
+              <a class="button" href="/contribuir">
+                Contribuir canción
+              </a>
+            </article>
+          ) : (
+            <div class="cancionero-song-grid">
+              {
+                result.items.map((song) => (
+                  <article class="card cancionero-song-card">
+                    <h3 class="card-title">{song.titulo}</h3>
+                    <p class="app-desc">{song.excerpt}</p>
+                    <div class="cancionero-tag-row">
+                      {song.etiquetas.slice(0, 4).map((tag) => <span class="pill">{tag.tiempoLiturgico} · {tag.momentoMisa}</span>)}
+                    </div>
+                    <a class="button secondary" href={`/canciones/${song.id}`}>
+                      Ver canción
+                    </a>
+                  </article>
+                ))
+              }
+            </div>
+          )
+        }
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter />
+</Layout>

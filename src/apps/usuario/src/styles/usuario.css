@@ -1,0 +1,173 @@
+@import "@repo/ui/portal.css";
+@import "@repo/ui/foundation.css";
+
+.usuario-app .hero {
+  min-height: clamp(26rem, 70vh, 38rem);
+  display: grid;
+  align-items: center;
+  background:
+    radial-gradient(
+      circle at 8% 0%,
+      color-mix(in srgb, var(--color-brand-300) 20%, transparent),
+      transparent 42%
+    ),
+    radial-gradient(
+      circle at 88% 100%,
+      color-mix(in srgb, var(--color-brand-600) 18%, transparent),
+      transparent 45%
+    ),
+    var(--color-bg-elevated);
+}
+
+.usuario-app .section-free {
+  padding-block: var(--spacing-12);
+}
+
+.usuario-app .hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.9fr);
+  gap: var(--spacing-8);
+  align-items: stretch;
+}
+
+.usuario-app .hero-copy {
+  display: grid;
+  align-content: center;
+  gap: var(--spacing-4);
+}
+
+.usuario-app .hero-title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 3.8vw, 3rem);
+  line-height: 1.1;
+  color: var(--color-text);
+}
+
+.usuario-app .hero-desc {
+  margin: 0;
+  max-width: 58ch;
+  color: var(--color-muted);
+  font-size: 1.02rem;
+  line-height: 1.7;
+}
+
+.usuario-app .hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-3);
+  margin-top: var(--spacing-2);
+}
+
+.usuario-app .hero-panel {
+  display: grid;
+  gap: var(--spacing-3);
+  padding: var(--spacing-6);
+  align-content: center;
+}
+
+.usuario-app .hero-panel h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.usuario-app .status-list {
+  margin: 0;
+  padding-left: 1rem;
+  display: grid;
+  gap: var(--spacing-2);
+  color: var(--color-muted);
+}
+
+.usuario-app .users-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.usuario-app .card .button-secondary {
+  justify-self: flex-start;
+}
+
+.usuario-app .profile-grid {
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--spacing-4);
+}
+
+.usuario-app .profile-grid div {
+  display: grid;
+  gap: var(--spacing-1);
+}
+
+.usuario-app .profile-grid dt {
+  color: var(--color-muted);
+  font-size: 0.8rem;
+  letter-spacing: 0.03em;
+}
+
+.usuario-app .profile-grid dd {
+  margin: 0;
+  font-weight: 600;
+}
+
+.usuario-app .table-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.usuario-app .users-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 42rem;
+}
+
+.usuario-app .users-table th,
+.usuario-app .users-table td {
+  border-bottom: 1px solid var(--color-line);
+  text-align: left;
+  padding: 0.75rem;
+  vertical-align: middle;
+}
+
+.usuario-app .users-table th {
+  color: var(--color-muted);
+  font-size: 0.8rem;
+  letter-spacing: 0.03em;
+}
+
+.usuario-app .users-table td select {
+  min-width: 10rem;
+}
+
+.usuario-app .sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 64rem) {
+  .usuario-app .hero-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .usuario-app .hero-panel {
+    order: -1;
+  }
+}
+
+@media (max-width: 56rem) {
+  .usuario-app .users-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .usuario-app .profile-grid {
+    grid-template-columns: 1fr;
+  }
+}

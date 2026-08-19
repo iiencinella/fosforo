@@ -1,0 +1,62 @@
+---
+import { ClientRouter } from "astro:transitions";
+import AdminNav from "@/components/AdminNav";
+import ThemeToggle from "@/components/ThemeToggle";
+import "@/styles/global.css";
+
+type Props = {
+  title: string;
+  userEmail?: string | null;
+};
+
+const { title, userEmail = null } = Astro.props as Props;
+
+const links = [
+  { href: "/admin/dashboard", label: "Dashboard" },
+  { href: "/admin/iglesias", label: "Iglesias" },
+  { href: "/admin/horarios", label: "Horarios" },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <ClientRouter />
+    <script is:inline>
+      (() => {
+        const theme = localStorage.getItem("fosforo-theme");
+        document.documentElement.dataset.theme = theme === "light" ? "light" : "dark";
+      })();
+    </script>
+  </head>
+  <body class="admin-app">
+    <div class="app-shell" transition:animate="fade">
+      <header class="admin-header">
+        <div class="admin-header__brand">
+          <a href="/admin/dashboard" class="brand-link">Fósforo Admin</a>
+          <p class="brand-subtitle">Panel de administración del ecosistema</p>
+        </div>
+
+        <AdminNav links={links} currentPath={currentPath} client:load />
+
+        <div class="admin-header__actions">
+          <ThemeToggle client:load />
+          {userEmail && <span class="user-chip">{userEmail}</span>}
+          <form method="post" action="/api/auth/logout">
+            <button type="submit" class="button-secondary">Salir</button>
+          </form>
+        </div>
+      </header>
+
+      <main class="admin-main page" transition:animate="slide">
+        <slot />
+      </main>
+    </div>
+  </body>
+</html>

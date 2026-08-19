@@ -1,0 +1,47 @@
+---
+import { PortalHeader } from "@repo/ui";
+import cancioneroLogoDark from "@/assets/cancionero-dark.svg";
+import cancioneroLogoLight from "@/assets/cancionero-light.svg";
+import { canAccessPage } from "@/lib/auth";
+
+const role = Astro.locals.appRole;
+
+const allLinks = [
+  { href: "/", label: "Inicio" },
+  { href: "/buscar", label: "Buscar cancion" },
+  { href: "/liturgia", label: "Liturgia" },
+  { href: "/contribuir", label: "Contribuir" },
+  { href: "/moderacion", label: "Moderacion" },
+  { href: "/estado", label: "Estado" },
+];
+
+const links = allLinks.filter((link) => canAccessPage(role, link.href));
+
+const currentPath = Astro.url.pathname;
+const session = Astro.locals.session;
+---
+
+<PortalHeader
+  title="Cantos que unen"
+  logoSrc={cancioneroLogoDark.src}
+  logoSrcLight={cancioneroLogoLight.src}
+  logoAlt="Logo de Cancionero"
+  links={links}
+  currentPath={currentPath}
+  ctaHref="/buscar"
+  ctaLabel="Buscar cancion"
+  loginHref="/auth/login"
+  registerHref="/auth/register"
+  user={session
+    ? {
+        name: session.profile.name,
+        href: "/perfil",
+      }
+    : undefined}
+  onLogout={
+    session
+      ? { endpoint: "/api/cancionero/auth/logout", redirectTo: "/" }
+      : undefined
+  }
+  client:load
+/>

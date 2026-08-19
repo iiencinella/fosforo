@@ -1,0 +1,82 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import AccessDeniedCard from "@/components/AccessDeniedCard.astro";
+import { getAccessTokenFromRequest } from "@/lib/auth";
+import { getSessionFromToken } from "@/lib/auth-supabase";
+import { createLogRepository } from "@/lib/log-repository";
+
+const token = getAccessTokenFromRequest(Astro.request);
+let role: "dev" | "ops" | null = null;
+
+if (token) {
+  try {
+    const session = await getSessionFromToken(token);
+    role = session.role;
+  } catch {
+    role = null;
+  }
+}
+
+const canAccess = role === "dev" || role === "ops";
+const repository = createLogRepository();
+const entry = canAccess && Astro.params.id ? await repository.getById(Astro.params.id) : null;
+
+if (canAccess && !entry) {
+  return Astro.redirect("/logs");
+}
+---
+
+<BaseLayout title="Detalle de log · Fosforo Log" description="Detalle de evento en observabilidad.">
+  <SiteHeader />
+
+  <main id="main-content" class="page log-main">
+    {
+      canAccess && entry ? (
+        <>
+          <section class="log-hero">
+            <p class="log-hero__kicker">Detalle de evento</p>
+            <h1 class="log-hero__title">{entry.message}</h1>
+            <p class="log-hero__subtitle">
+              {entry.app} · {new Date(entry.timestamp).toLocaleString("es-AR")}
+            </p>
+          </section>
+
+          <section class="log-detail-grid">
+            <article class="surface-card">
+              <p class="surface-card__label">Metadata</p>
+              <pre class="json-block">{JSON.stringify(entry.metadata ?? {}, null, 2)}</pre>
+            </article>
+
+            <article class="surface-card">
+              <p class="surface-card__label">Ficha</p>
+              <p class="surface-card__meta">ID: {entry.id}</p>
+              <p class="surface-card__meta">Nivel: {entry.level}</p>
+              <p class="surface-card__meta">Version app: {entry.app_version ?? "n/a"}</p>
+              <p class="surface-card__meta">Entorno: {entry.environment ?? "n/a"}</p>
+            </article>
+
+            {
+              entry.stack_trace ? (
+                <article class="surface-card">
+                  <p class="surface-card__label">Stack trace</p>
+                  <pre class="stack-block">{entry.stack_trace}</pre>
+                </article>
+              ) : null
+            }
+          </section>
+
+          <section class="inline-actions">
+            <a class="button secondary" href="/logs">Volver al listado</a>
+            <a class="button" href="/dashboard">Ir al dashboard</a>
+          </section>
+        </>
+      ) : (
+        <AccessDeniedCard />
+      )
+    }
+  </main>
+
+  <SiteFooter />
+</BaseLayout>

@@ -1,0 +1,193 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import {
+  CATEGORY_ORDER,
+  getCategoryDescription,
+  getCategoryLabel,
+  sortAppsCatalogEntries,
+} from "@/lib/apps-catalog";
+import { getCollection } from "astro:content";
+import { PortalAppCard } from "@repo/ui";
+import SectionIntro from "@repo/ui/astro/SectionIntro.astro";
+
+const categoryFilters = CATEGORY_ORDER.map((category) => ({
+  key: category,
+  label: getCategoryLabel(category),
+  href: `/apps?categoria=${category}#group-${category}`,
+}));
+
+const allApps = sortAppsCatalogEntries(await getCollection("appsCatalog"))
+  .map((app) => ({
+    slug: app.data.slug,
+    name: app.data.name,
+    resume: app.data.resume,
+    category: getCategoryLabel(app.data.category),
+    categoryKey: app.data.category,
+    status: app.data.status,
+    visible: app.data.visible,
+    imageSrc: app.data.image?.src,
+    imageAlt: `Imagen de portada para ${app.data.name}`,
+  }));
+
+const apps = allApps.filter((app) => app.visible !== false);
+
+const groupedApps = CATEGORY_ORDER.map((category) => ({
+  key: category,
+  label: getCategoryLabel(category),
+  description: getCategoryDescription(category),
+  apps: apps.filter((app) => app.categoryKey === category),
+})).filter((group) => group.apps.length > 0);
+---
+
+<BaseLayout title="Aplicaciones · Portal Fósforo" description="Catálogo inicial del ecosistema Fósforo.">
+  <SiteHeader />
+  <main class="section">
+    <div class="page">
+      <SectionIntro
+        className="dev-page"
+        title="Aplicaciones del ecosistema"
+        description="Catalogo editorial del ecosistema Fósforo, ordenado por tipo de experiencia para que sea mas facil descubrir cada propuesta."
+      />
+
+      <section class="catalog-toolbar mt-24" aria-labelledby="catalog-toolbar-title">
+        <div class="catalog-toolbar__copy">
+          <p class="catalog-group__eyebrow">Exploración guiada</p>
+          <h2 class="catalog-toolbar__title" id="catalog-toolbar-title">
+            Elegi una categoria o recorrelas todas
+          </h2>
+          <p class="catalog-toolbar__desc">
+            Puedes saltar a una seccion puntual o filtrar la grilla para concentrarte solo en el
+            tipo de experiencia que te interese ahora.
+          </p>
+        </div>
+
+        <div class="catalog-filter-bar" data-catalog-filters>
+          <a class="catalog-filter-chip is-active" href="/apps#catalog-top" data-filter="all">
+            Ver todo
+          </a>
+          {
+            categoryFilters.map((category) => (
+              <a
+                class="catalog-filter-chip"
+                href={category.href}
+                data-filter={category.key}
+              >
+                {category.label}
+              </a>
+            ))
+          }
+        </div>
+      </section>
+
+      <div class="catalog-groups mt-24" id="catalog-top" data-catalog-groups style="scroll-margin-top:9rem">
+        {
+          groupedApps.map((group) => (
+            <section
+              class="catalog-group"
+              aria-labelledby={`group-${group.key}`}
+              data-category-group={group.key}
+              style="scroll-margin-top:9rem"
+            >
+              <div class="catalog-group__header">
+                <div>
+                  <p class="catalog-group__eyebrow">Categoria</p>
+                  <h2 class="catalog-group__title" id={`group-${group.key}`} style="scroll-margin-top:9rem">
+                    {group.label}
+                  </h2>
+                </div>
+                <p class="catalog-group__desc">{group.description}</p>
+              </div>
+
+              <div class="apps-grid">
+                {group.apps.map((app) => <PortalAppCard {...app} />)}
+              </div>
+            </section>
+          ))
+        }
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const FILTER_PARAM = "categoria";
+    const chips = Array.from(
+      document.querySelectorAll<HTMLAnchorElement>("[data-filter]"),
+    );
+    const groups = Array.from(
+      document.querySelectorAll<HTMLElement>("[data-category-group]"),
+    );
+    const validFilters = new Set(
+      chips.map((chip) => chip.dataset.filter ?? "all"),
+    );
+
+    const scrollToFilterTarget = (filter: string) => {
+      const selector = filter === "all" ? "#catalog-top" : `#group-${filter}`;
+      const target = document.querySelector<HTMLElement>(selector);
+
+      target?.scrollIntoView({ behavior: "smooth", block: "start" });
+    };
+
+    const updateUrl = (filter: string) => {
+      const url = new URL(window.location.href);
+
+      if (filter === "all") {
+        url.searchParams.delete(FILTER_PARAM);
+        url.hash = "catalog-top";
+      } else {
+        url.searchParams.set(FILTER_PARAM, filter);
+        url.hash = `group-${filter}`;
+      }
+
+      history.replaceState({}, "", `${url.pathname}${url.search}${url.hash}`);
+    };
+
+    const getFilterFromLocation = () => {
+      const url = new URL(window.location.href);
+      const queryFilter = url.searchParams.get(FILTER_PARAM);
+      const hashFilter = url.hash.replace("#group-", "");
+
+      if (queryFilter && validFilters.has(queryFilter)) {
+        return queryFilter;
+      }
+
+      if (hashFilter && validFilters.has(hashFilter)) {
+        return hashFilter;
+      }
+
+      return "all";
+    };
+
+    const setActiveFilter = (filter: string) => {
+      chips.forEach((chip) => {
+        chip.classList.toggle("is-active", chip.dataset.filter === filter);
+      });
+
+      groups.forEach((group) => {
+        const matches = filter === "all" || group.dataset.categoryGroup === filter;
+        group.toggleAttribute("hidden", !matches);
+      });
+    };
+
+    chips.forEach((chip) => {
+      chip.addEventListener("click", (event) => {
+        event.preventDefault();
+        const filter = chip.dataset.filter ?? "all";
+        setActiveFilter(filter);
+        updateUrl(filter);
+        scrollToFilterTarget(filter);
+      });
+    });
+
+    const syncFromLocation = () => {
+      setActiveFilter(getFilterFromLocation());
+    };
+
+    window.addEventListener("popstate", syncFromLocation);
+    window.addEventListener("hashchange", syncFromLocation);
+
+    syncFromLocation();
+  </script>
+  <SiteFooter />
+</BaseLayout>

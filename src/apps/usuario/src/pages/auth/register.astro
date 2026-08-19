@@ -1,0 +1,98 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Registro - Usuarios Fósforo"
+  description="Crear una cuenta para acceder al ecosistema Fósforo."
+>
+  <main>
+    <section class="section">
+      <div class="page form-center">
+        <article class="card surface-card" style="max-width: 34rem;">
+          <h1 class="section-title">Crear cuenta</h1>
+          <p class="section-desc">
+            Registrate con email y contraseña para acceder a las aplicaciones de Fósforo.
+          </p>
+
+          <form id="register-form" class="form" novalidate>
+            <div class="form-row">
+              <label for="register-name">Nombre completo</label>
+              <input id="register-name" name="name" autocomplete="name" required />
+            </div>
+
+            <div class="form-row">
+              <label for="register-email">Email</label>
+              <input
+                id="register-email"
+                name="email"
+                type="email"
+                autocomplete="email"
+                required
+              />
+            </div>
+
+            <div class="form-row">
+              <label for="register-password">Contraseña</label>
+              <input
+                id="register-password"
+                name="password"
+                type="password"
+                autocomplete="new-password"
+                minlength="8"
+                required
+              />
+            </div>
+
+            <button class="button-primary" type="submit">Crear cuenta</button>
+            <p id="register-status" class="form-status pending" role="status" aria-live="polite">
+              Completá tus datos para continuar.
+            </p>
+          </form>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const form = document.querySelector("#register-form") as HTMLFormElement | null;
+    const status = document.querySelector("#register-status") as HTMLParagraphElement | null;
+
+    if (form && status) {
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        const formData = new FormData(form);
+        const payload = {
+          name: String(formData.get("name") || "").trim(),
+          email: String(formData.get("email") || "").trim(),
+          password: String(formData.get("password") || "").trim(),
+        };
+
+        status.className = "form-status pending";
+        status.textContent = "Creando cuenta...";
+
+        try {
+          const response = await fetch("/api/auth/register", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+
+          const data = await response.json();
+          if (!response.ok || !data.ok) {
+            throw new Error(data.error || "USERS_REGISTER_FAILED");
+          }
+
+          status.className = "form-status success";
+          status.textContent = "Cuenta creada. Ahora podés iniciar sesión.";
+          form.reset();
+        } catch (error) {
+          const message = error instanceof Error ? error.message : "USERS_REGISTER_FAILED";
+          status.className = "form-status error";
+          status.textContent = `No pudimos crear la cuenta (${message}).`;
+        }
+      });
+    }
+  </script>
+</BaseLayout>

@@ -1,0 +1,162 @@
+@import "@repo/ui/foundation.css";
+
+.bible-search-card {
+  gap: 14px;
+}
+
+.bible-results {
+  display: grid;
+  gap: 12px;
+}
+
+.bible-verses {
+  display: grid;
+  gap: 10px;
+  max-height: 320px;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+.bible-verses p {
+  margin: 0;
+  line-height: 1.6;
+  color: color-mix(in srgb, var(--color-text) 90%, var(--color-brand-100));
+}
+
+.bible-results-skeleton {
+  display: grid;
+  gap: var(--spacing-3);
+  margin-top: var(--spacing-3);
+}
+
+.bible-results-skeleton__wide {
+  width: min(100%, 22rem);
+}
+
+.portal-bible-reader-module,
+.portal-bible-search-module,
+.portal-liturgy-module {
+  gap: var(--spacing-4);
+}
+
+.portal-bible-controls-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--spacing-3);
+}
+
+.portal-bible-skeleton {
+  display: grid;
+  gap: var(--spacing-3);
+}
+
+.portal-bible-skeleton .skeleton-bar--md {
+  width: 80%;
+}
+
+.portal-bible-skeleton .skeleton-bar--sm {
+  width: 55%;
+}
+
+.portal-bible-reader-result,
+.portal-bible-search-results,
+.portal-liturgy-result {
+  display: grid;
+  gap: var(--spacing-3);
+}
+
+.portal-bible-reader-result {
+  position: relative;
+  border: 1px solid transparent;
+  border-image-slice: 1;
+  border-image-source: linear-gradient(
+    135deg,
+    rgba(255, 208, 128, 0.3),
+    rgba(245, 157, 106, 0.08)
+  );
+  border-radius: var(--radius-md);
+  padding: var(--spacing-5);
+  background: color-mix(in srgb, var(--color-surface) 96%, var(--color-bg));
+  box-shadow: 0 0 20px rgba(255, 208, 128, 0.05);
+  animation: portal-card-border-glow 3s ease-in-out infinite alternate;
+}
+
+.portal-bible-reader-result--backward {
+  animation-direction: alternate-reverse;
+}
+
+.portal-bible-verses {
+  display: grid;
+  gap: var(--spacing-2);
+  max-height: 420px;
+  overflow-y: auto;
+  padding-right: var(--spacing-2);
+}
+
+.portal-bible-verses p {
+  margin: 0;
+  line-height: 1.65;
+  color: var(--color-text);
+  text-align: justify;
+  scroll-margin-top: 5.5rem;
+}
+
+.portal-bible-pagination {
+  align-items: center;
+}
+
+.portal-liturgy-result ul {
+  margin: 0;
+  padding-left: 1rem;
+  color: var(--color-muted);
+  display: grid;
+  gap: 0.4rem;
+}
+
+.portal-bible-reader-module .button.secondary,
+.portal-bible-search-module .button.secondary,
+.portal-liturgy-module .button.secondary {
+  border-color: color-mix(
+    in srgb,
+    var(--color-brand-300) 24%,
+    var(--color-line)
+  );
+  background: color-mix(
+    in srgb,
+    var(--color-surface-strong) 92%,
+    var(--color-bg)
+  );
+  box-shadow: 0 10px 24px color-mix(in srgb, var(--color-bg) 20%, transparent);
+}
+
+.portal-bible-reader-module .button.secondary:hover,
+.portal-bible-search-module .button.secondary:hover,
+.portal-liturgy-module .button.secondary:hover {
+  background: color-mix(
+    in srgb,
+    var(--color-surface-strong) 100%,
+    var(--color-bg)
+  );
+  border-color: color-mix(
+    in srgb,
+    var(--color-brand-300) 36%,
+    var(--color-line)
+  );
+}
+
+html[data-theme="light"] .portal-bible-reader-module .button.secondary,
+html[data-theme="light"] .portal-bible-search-module .button.secondary,
+html[data-theme="light"] .portal-liturgy-module .button.secondary {
+  background: color-mix(
+    in srgb,
+    var(--color-surface-strong) 88%,
+    var(--color-bg-elevated)
+  );
+  box-shadow: 0 8px 18px color-mix(in srgb, var(--color-bg) 10%, transparent);
+}
+
+@media (max-width: 900px) {
+  .portal-bible-controls-grid {
+    grid-template-columns: 1fr;
+  }
+}

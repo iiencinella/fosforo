@@ -1,0 +1,25 @@
+---
+import { PortalHeader } from "@repo/ui";
+import logoLight from "../assets/userLight.svg";
+import logoDark from "../assets/userDark.svg";
+
+const links = [
+  { href: "/", label: "Inicio" },
+  { href: "/auth/login", label: "Login" },
+  { href: "/auth/register", label: "Registro" },
+  { href: "/perfil", label: "Perfil" },
+  { href: "/admin/usuarios", label: "Admin" },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<PortalHeader
+  title="Usuarios"
+  logoSrc={logoDark.src}
+  logoSrcLight={logoLight.src}
+  logoAlt="Logo de Usuarios Fósforo"
+  links={links}
+  currentPath={currentPath}
+  client:load
+/>

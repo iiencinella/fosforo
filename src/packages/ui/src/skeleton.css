@@ -1,0 +1,184 @@
+/**
+ * Placeholders de carga (ecosistema Fósforo).
+ * Importado desde foundation.css — usar solo tokens del tema.
+ */
+
+@keyframes fosforo-skeleton-shimmer {
+  0% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 0.92;
+  }
+  100% {
+    opacity: 0.55;
+  }
+}
+
+.skeleton-pulse {
+  background: var(--color-surface-strong);
+  border-radius: var(--radius-sm);
+  animation: fosforo-skeleton-shimmer 1.35s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-pulse {
+    animation: none;
+    opacity: 0.75;
+  }
+}
+
+.skeleton-bar {
+  height: 0.85rem;
+  border-radius: var(--radius-xs);
+  max-width: 100%;
+}
+
+.skeleton-bar--sm {
+  width: 7rem;
+  height: 0.7rem;
+}
+
+.skeleton-bar--md {
+  width: min(22rem, 100%);
+  height: 1rem;
+}
+
+.skeleton-bar--lg {
+  width: min(28rem, 100%);
+  height: clamp(1.75rem, 4vw, 2.4rem);
+  border-radius: var(--radius-sm);
+}
+
+.skeleton-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-3);
+  margin-top: var(--spacing-4);
+}
+
+.skeleton-actions::before,
+.skeleton-actions::after {
+  content: "";
+  display: block;
+  height: 2.75rem;
+  width: 10rem;
+  border-radius: 999px;
+  background: var(--color-surface-strong);
+  animation: fosforo-skeleton-shimmer 1.35s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-actions::before,
+  .skeleton-actions::after {
+    animation: none;
+    opacity: 0.75;
+  }
+}
+
+/* --- Portal: islas client:only --- */
+
+.portal-island-stack {
+  position: relative;
+}
+
+.portal-island-stack--hero {
+  min-height: 100vh;
+}
+
+.portal-island-stack--hero [data-portal-skeleton] {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  border-radius: var(--radius-lg);
+  width: 98vw;
+  margin-left: calc(50% - 49vw);
+  margin-right: calc(50% - 49vw);
+  overflow: hidden;
+  background: var(--color-bg-elevated);
+}
+
+.portal-island-stack--hero .hero {
+  position: relative;
+  z-index: 1;
+}
+
+.portal-skeleton-hero {
+  display: grid;
+  place-items: center;
+  padding: 96px 0 72px;
+}
+
+.portal-skeleton-hero__media {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  opacity: 0.35;
+}
+
+.portal-skeleton-hero__content {
+  position: relative;
+  z-index: 1;
+  width: min(980px, 90vw);
+  padding: 0 var(--spacing-4);
+}
+
+.portal-island-stack--card {
+  min-height: 320px;
+}
+
+.portal-island-stack--playground {
+  min-height: 380px;
+}
+
+.portal-island-stack--card [data-portal-skeleton] {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.portal-island-stack--card > :not([data-portal-skeleton]) {
+  position: relative;
+  z-index: 1;
+}
+
+.portal-skeleton-card {
+  height: 100%;
+  min-height: 280px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-line);
+  background: var(--color-surface);
+  padding: var(--spacing-5);
+  display: grid;
+  gap: var(--spacing-4);
+  align-content: start;
+}
+
+.portal-skeleton-card .skeleton-bar--lg {
+  width: 55%;
+}
+
+.portal-skeleton-card-rows {
+  display: grid;
+  gap: var(--spacing-3);
+  margin-top: var(--spacing-2);
+}
+
+.portal-skeleton-card-rows .skeleton-bar {
+  width: 100%;
+}
+
+.portal-skeleton-card-rows__short {
+  width: 72%;
+  max-width: 18rem;
+}
+
+.portal-skeleton-bible {
+  min-height: 300px;
+}
+
+.portal-skeleton-bible .skeleton-bar--lg {
+  width: 70%;
+}

@@ -1,0 +1,471 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import { listAllSongs, listLiturgicalTimes } from "@/lib/server/repository";
+
+const payload = await listAllSongs();
+const timesPayload = await listLiturgicalTimes();
+
+const pendientes = payload.items.filter((s) => s.estado === "pendiente");
+const publicadas = payload.items.filter((s) => s.estado === "publicado");
+const rechazadas = payload.items.filter((s) => s.estado === "rechazado");
+---
+
+<Layout
+  title="Moderación · Cancionero Fósforo"
+  description="Revisión y aprobación de contribuciones del cancionero litúrgico."
+>
+  <SiteHeader />
+
+  <main class="cancionero-app">
+    <section class="section cancionero-page-hero" id="moderacion">
+      <div class="page cancionero-stack">
+        <div class="cancionero-hero-copy">
+          <span class="cancionero-kicker">Panel de moderación</span>
+          <h1 class="cancionero-title">Revisión y moderación de canciones.</h1>
+          <p class="cancionero-subtitle">
+            Como sacerdote podés aprobar, rechazar o reevaluar cualquier canción del cancionero.
+          </p>
+        </div>
+
+        <article class="card cancionero-results-head">
+          <h2 class="card-title">Pendientes: {pendientes.length} · Publicadas: {publicadas.length} · Rechazadas: {rechazadas.length}</h2>
+          <p class="app-desc">Fuente: {payload.source === "database" ? "Supabase" : "Fallback local"}</p>
+        </article>
+
+        {
+          payload.items.length === 0 ? (
+            <article class="card cancionero-empty-card">
+              <h3 class="card-title">No hay canciones</h3>
+              <p class="app-desc">Cuando se contribuya una canción aparecerá aquí.</p>
+            </article>
+          ) : (
+            <div
+              class="cancionero-song-grid"
+              data-liturgical-times={JSON.stringify(timesPayload.items)}
+            >
+              {
+                payload.items.map((song) => (
+                  <article
+                    class={`card cancionero-song-card cancionero-song-card--${song.estado}`}
+                    data-song-id={song.id}
+                  >
+                    <h3 class="card-title">{song.titulo}</h3>
+                    <span class={`pill cancionero-estado-badge cancionero-estado-badge--${song.estado}`}>
+                      {song.estado === "publicado" ? "Publicada" : song.estado === "rechazado" ? "Rechazada" : "Pendiente"}
+                    </span>
+                    <p class="app-desc">{song.letra ? song.letra.split("\n").slice(0, 3).join("\n") : ""}</p>
+                    {
+                      song.observacionesContribucion ? (
+                        <p class="app-desc cancionero-observaciones">
+                          <strong>Observaciones del proponente:</strong> {song.observacionesContribucion}
+                        </p>
+                      ) : (
+                        <p class="app-desc cancionero-observaciones is-muted">
+                          Sin observaciones del proponente.
+                        </p>
+                      )
+                    }
+                    <div class="cancionero-tag-row">
+                      {song.etiquetas.map((tag) => <span class="pill">{tag.tiempoLiturgico} · {tag.momentoMisa}</span>)}
+                    </div>
+
+                    <div class="cancionero-form-grid">
+                      <div class="form-row">
+                        <span>Etiquetas litúrgicas</span>
+                        <div class="tag-rows" data-song-id={song.id} data-etiquetas={JSON.stringify(song.etiquetas)}></div>
+                        <button type="button" class="button secondary tag-row-add" data-song-id={song.id}>
+                          + Agregar etiqueta
+                        </button>
+                        <p class="tag-row-error" data-song-id={song.id} hidden>
+                          Hay combinaciones de tiempo+momento duplicadas. Revisá las filas marcadas.
+                        </p>
+                      </div>
+                    </div>
+                    <div class="cancionero-card-actions">
+                      <button class="button secondary" type="button" data-action="ver" data-id={song.id}>
+                        Ver
+                      </button>
+                      <button class="button" type="button" data-action="aprobar" data-id={song.id}>
+                        Aprobar
+                      </button>
+                      <button class="button secondary" type="button" data-action="rechazar" data-id={song.id}>
+                        Rechazar
+                      </button>
+                    </div>
+
+                    <div class="cancionero-letra-panel" id={`letra-${song.id}`} hidden>
+                      <hr class="cancionero-letra-divider" />
+                      <pre class="cancionero-letra-texto">{song.letra}</pre>
+                    </div>
+                  </article>
+                ))
+              }
+            </div>
+          )
+        }
+
+        <span id="moderacion-status" class="form-status pending">Selecciona una acción</span>
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter />
+</Layout>
+
+<style>
+  .cancionero-song-card--publicado {
+    border-left: 4px solid var(--color-success, #22c55e);
+  }
+  .cancionero-song-card--rechazado {
+    border-left: 4px solid var(--color-error, #ef4444);
+  }
+  .cancionero-song-card--pendiente {
+    border-left: 4px solid var(--color-warning, #f59e0b);
+  }
+  .cancionero-estado-badge {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .cancionero-estado-badge--publicado {
+    background: var(--color-success-bg, #dcfce7);
+    color: var(--color-success, #22c55e);
+  }
+  .cancionero-estado-badge--rechazado {
+    background: var(--color-error-bg, #fce4ec);
+    color: var(--color-error, #ef4444);
+  }
+  .cancionero-estado-badge--pendiente {
+    background: var(--color-warning-bg, #fef3c7);
+    color: var(--color-warning, #f59e0b);
+  }
+  .cancionero-letra-panel {
+    margin-top: 1rem;
+  }
+  .cancionero-observaciones {
+    margin: 0;
+    white-space: pre-wrap;
+  }
+  .cancionero-observaciones.is-muted {
+    opacity: 0.75;
+  }
+  .cancionero-letra-divider {
+    border: none;
+    border-top: 1px solid var(--color-border, #e2e8f0);
+    margin-bottom: 1rem;
+  }
+  .cancionero-letra-texto {
+    font-family: inherit;
+    white-space: pre-wrap;
+    word-break: break-word;
+    line-height: 1.7;
+    font-size: 0.95rem;
+    margin: 0;
+    max-height: 20rem;
+    overflow-y: auto;
+  }
+  .tag-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+  .tag-row {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .tag-row select {
+    flex: 1;
+    min-width: 10rem;
+  }
+  .tag-row--duplicate select {
+    outline: 2px solid var(--color-error, #ef4444);
+    outline-offset: 1px;
+    border-color: var(--color-error, #ef4444);
+  }
+  .tag-row-remove {
+    font-size: 1.1rem;
+    line-height: 1;
+    padding: 0.25rem 0.6rem;
+    flex-shrink: 0;
+  }
+  .tag-row-error {
+    color: var(--color-error, #ef4444);
+    font-size: 0.85rem;
+    margin: 0;
+  }
+  .tag-row-add {
+    margin-top: 0.25rem;
+  }
+</style>
+
+<script>
+  const timesContainer = document.querySelector(".cancionero-song-grid");
+  type LiturgicalTimeClient = {
+    nombre: string;
+    momentosMisa: string[];
+  };
+
+  let liturgicalTimes: LiturgicalTimeClient[] = [];
+  if (timesContainer instanceof HTMLElement) {
+    try {
+      const parsed = JSON.parse(timesContainer.dataset.liturgicalTimes ?? "[]") as unknown;
+      if (Array.isArray(parsed)) {
+        liturgicalTimes = parsed
+          .filter((item): item is LiturgicalTimeClient => {
+            if (!item || typeof item !== "object") return false;
+            const candidate = item as Record<string, unknown>;
+            return (
+              typeof candidate.nombre === "string" &&
+              Array.isArray(candidate.momentosMisa)
+            );
+          })
+          .map((item) => ({
+            nombre: item.nombre,
+            momentosMisa: item.momentosMisa.filter(
+              (moment): moment is string => typeof moment === "string",
+            ),
+          }));
+      }
+    } catch {
+      liturgicalTimes = [];
+    }
+  }
+  const status = document.getElementById("moderacion-status");
+
+  function getMomentsForTime(timeName: string): string[] {
+    const found = liturgicalTimes.find((time) => time.nombre === timeName);
+    return Array.isArray(found?.momentosMisa) ? found.momentosMisa : [];
+  }
+
+  function syncMomentOptions(row: HTMLElement, selectedMoment = ""): void {
+    const timeSelect = row.querySelector<HTMLSelectElement>(".tag-row-tiempo");
+    const momentSelect = row.querySelector<HTMLSelectElement>(".tag-row-momento");
+    if (!timeSelect || !momentSelect) return;
+
+    const options = getMomentsForTime(timeSelect.value);
+
+    momentSelect.innerHTML = "";
+    options.forEach((moment: string) => {
+      const option = document.createElement("option");
+      option.value = moment;
+      option.textContent = moment;
+      option.selected = selectedMoment === moment;
+      momentSelect.appendChild(option);
+    });
+
+    if (options.length > 0 && !options.includes(selectedMoment)) {
+      momentSelect.value = options[0];
+    }
+  }
+
+  function validateAndStyleRows(container: HTMLElement): boolean {
+    const rows = container.querySelectorAll<HTMLElement>(".tag-row");
+    const pairs = new Map<string, HTMLElement[]>();
+    const errorEl = container.parentElement?.querySelector<HTMLElement>(".tag-row-error");
+
+    rows.forEach((row) => {
+      const tiempo = row.querySelector<HTMLSelectElement>(".tag-row-tiempo")?.value ?? "";
+      const momento = row.querySelector<HTMLSelectElement>(".tag-row-momento")?.value ?? "";
+      if (!tiempo || !momento) return;
+      const key = `${tiempo}||${momento}`;
+      if (!pairs.has(key)) pairs.set(key, []);
+      pairs.get(key)!.push(row);
+    });
+
+    let hasDups = false;
+    rows.forEach((row) => {
+      const tiempo = row.querySelector<HTMLSelectElement>(".tag-row-tiempo")?.value ?? "";
+      const momento = row.querySelector<HTMLSelectElement>(".tag-row-momento")?.value ?? "";
+      const key = `${tiempo}||${momento}`;
+      const isDup = (pairs.get(key)?.length ?? 0) > 1;
+      row.classList.toggle("tag-row--duplicate", isDup);
+      if (isDup) hasDups = true;
+    });
+
+    if (errorEl) {
+      errorEl.hidden = !hasDups;
+    }
+    return hasDups;
+  }
+
+  function addTagRow(container: HTMLElement, prefill?: { tiempoLiturgico?: string; momentoMisa?: string }): HTMLElement {
+    const row = document.createElement("div");
+    row.className = "tag-row";
+
+    const timeSelect = document.createElement("select");
+    timeSelect.className = "tag-row-tiempo";
+
+    const emptyOption = document.createElement("option");
+    emptyOption.value = "";
+    emptyOption.textContent = "Seleccionar...";
+    timeSelect.appendChild(emptyOption);
+
+    liturgicalTimes.forEach((time) => {
+      const option = document.createElement("option");
+      option.value = time.nombre;
+      option.textContent = time.nombre;
+      option.selected = prefill?.tiempoLiturgico === time.nombre;
+      timeSelect.appendChild(option);
+    });
+
+    const momentSelect = document.createElement("select");
+    momentSelect.className = "tag-row-momento";
+
+    const removeBtn = document.createElement("button");
+    removeBtn.type = "button";
+    removeBtn.className = "button secondary tag-row-remove";
+    removeBtn.textContent = "\u00D7";
+    removeBtn.setAttribute("aria-label", "Quitar etiqueta");
+
+    row.appendChild(timeSelect);
+    row.appendChild(momentSelect);
+    row.appendChild(removeBtn);
+    container.appendChild(row);
+
+    const selectedMoment = prefill?.momentoMisa ?? "";
+    syncMomentOptions(row, selectedMoment);
+
+    timeSelect.addEventListener("change", () => {
+      syncMomentOptions(row, "");
+      validateAndStyleRows(container);
+    });
+
+    momentSelect.addEventListener("change", () => {
+      validateAndStyleRows(container);
+    });
+
+    removeBtn.addEventListener("click", () => {
+      row.remove();
+      validateAndStyleRows(container);
+    });
+
+    return row;
+  }
+
+  function collectTags(container: HTMLElement): Array<{ tiempoLiturgico: string; momentoMisa: string }> {
+    const rows = container.querySelectorAll<HTMLElement>(".tag-row");
+    const tags: Array<{ tiempoLiturgico: string; momentoMisa: string }> = [];
+    rows.forEach((row) => {
+      const tiempo = row.querySelector<HTMLSelectElement>(".tag-row-tiempo")?.value ?? "";
+      const momento = row.querySelector<HTMLSelectElement>(".tag-row-momento")?.value ?? "";
+      if (tiempo && momento) {
+        tags.push({ tiempoLiturgico: tiempo, momentoMisa: momento });
+      }
+    });
+    return tags;
+  }
+
+  function initTagRows(): void {
+    document.querySelectorAll<HTMLElement>(".tag-rows").forEach((container) => {
+      const raw = container.dataset.etiquetas ?? "[]";
+      let etiquetas: Array<{ tiempoLiturgico: string; momentoMisa: string }> = [];
+      try {
+        etiquetas = JSON.parse(raw);
+      } catch {
+        etiquetas = [];
+      }
+      if (!Array.isArray(etiquetas)) etiquetas = [];
+
+      if (etiquetas.length > 0) {
+        etiquetas.forEach((tag) => {
+          addTagRow(container, { tiempoLiturgico: tag.tiempoLiturgico, momentoMisa: tag.momentoMisa });
+        });
+      } else {
+        addTagRow(container);
+      }
+    });
+  }
+
+  document.querySelectorAll<HTMLElement>(".tag-row-add").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const songId = btn.dataset.songId;
+      if (!songId) return;
+      const container = document.querySelector<HTMLElement>(`.tag-rows[data-song-id="${songId}"]`);
+      if (!container) return;
+      addTagRow(container);
+      validateAndStyleRows(container);
+    });
+  });
+
+  document.addEventListener("click", (event) => {
+    const button = (event.target as HTMLElement)?.closest("button[data-action][data-id]");
+    if (!(button instanceof HTMLButtonElement)) return;
+
+    const action = button.dataset.action;
+    const id = button.dataset.id;
+    if (!action || !id) return;
+
+    if (action === "ver") {
+      const panel = document.getElementById(`letra-${id}`);
+      if (panel) {
+        panel.hidden = !panel.hidden;
+      }
+      return;
+    }
+
+    void runAction(action, id);
+  });
+
+  async function runAction(action: string, id: string) {
+    if (!(status instanceof HTMLElement)) return;
+
+    const container = document.querySelector<HTMLElement>(`.tag-rows[data-song-id="${id}"]`);
+
+    if (action === "aprobar") {
+      if (!container) return;
+      const hasDups = validateAndStyleRows(container);
+      if (hasDups) {
+        status.className = "form-status error";
+        status.textContent = "Hay etiquetas duplicadas. Revisá las filas marcadas en rojo.";
+        return;
+      }
+      const tags = collectTags(container);
+      if (tags.length === 0) {
+        status.className = "form-status error";
+        status.textContent = "Debe seleccionar al menos un tiempo litúrgico y momento de misa para aprobar.";
+        return;
+      }
+    }
+
+    status.className = "form-status pending";
+    status.textContent = `Procesando ${action}...`;
+
+    try {
+      const body: {
+        accion: string;
+        etiquetas?: Array<{ tiempoLiturgico: string; momentoMisa: string }>;
+      } = { accion: action };
+
+      if (action === "aprobar" && container) {
+        body.etiquetas = collectTags(container);
+      }
+
+      const response = await fetch(`/api/cancionero/moderacion/${id}`, {
+        method: "PUT",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(body),
+      });
+
+      const json = await response.json();
+      if (!response.ok || !json?.ok) {
+        throw new Error(json?.error ?? "No se pudo ejecutar la moderación");
+      }
+
+      status.className = "form-status success";
+      status.textContent = `Acción ${action} aplicada. Recarga la pantalla para ver cambios.`;
+    } catch (error) {
+      status.className = "form-status error";
+      status.textContent =
+        error instanceof Error ? error.message : "No se pudo ejecutar la moderación";
+    }
+  }
+
+  initTagRows();
+</script>

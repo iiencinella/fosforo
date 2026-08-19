@@ -1,0 +1,5 @@
+---
+const params = new URLSearchParams(Astro.url.searchParams);
+params.set("modo", "busqueda");
+return Astro.redirect(`/?${params.toString()}`);
+---

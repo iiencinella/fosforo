@@ -1,0 +1,213 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import AccessDeniedCard from "@/components/AccessDeniedCard.astro";
+import { getAccessTokenFromRequest } from "@/lib/auth";
+import { getSessionFromToken } from "@/lib/auth-supabase";
+import { createLogRepository } from "@/lib/log-repository";
+import { type LogLevel } from "@/lib/log-data";
+
+const token = getAccessTokenFromRequest(Astro.request);
+let role: "dev" | "ops" | null = null;
+
+if (token) {
+  try {
+    const session = await getSessionFromToken(token);
+    role = session.role;
+  } catch {
+    role = null;
+  }
+}
+
+const canAccess = role === "dev" || role === "ops";
+
+const repository = createLogRepository();
+
+const metricsResult = canAccess
+  ? await repository.metrics()
+  : {
+      metrics: {
+        totalLogs: 0,
+        errorCount24h: 0,
+        errorRate: 0,
+        topApps: [] as Array<{ app: string; count: number }>,
+      },
+      alerts: {
+        threshold: 10,
+        triggered: [] as Array<{ app: string; count: number }>,
+      },
+      hourlySeries: [] as Array<{ label: string; count: number }>,
+    };
+const metrics = metricsResult.metrics;
+const alerts = metricsResult.alerts;
+
+const levelParam = Astro.url.searchParams.get("level") as LogLevel | null;
+const appParam = Astro.url.searchParams.get("app") ?? "";
+const searchParam = Astro.url.searchParams.get("search") ?? "";
+const limitParam = Number.parseInt(Astro.url.searchParams.get("limit") ?? "20", 10);
+
+const result = canAccess
+  ? await repository.list({
+      page: 1,
+      limit: Number.isNaN(limitParam) ? 20 : limitParam,
+      level: levelParam ?? undefined,
+      app: appParam || undefined,
+      search: searchParam || undefined,
+    })
+  : { data: [], total: 0, page: 1, limit: 20 };
+
+const knownApps = [
+  ...new Set([
+    ...result.data.map((item) => item.app),
+    ...metrics.topApps.map((item) => item.app),
+  ]),
+].sort((a, b) => a.localeCompare(b));
+
+function levelClass(level: LogLevel) {
+  return `log-level log-level--${level}`;
+}
+---
+
+<BaseLayout title="Logs · Fosforo Log" description="Listado de eventos del ecosistema Fosforo.">
+  <SiteHeader />
+
+  <main id="main-content" class="page log-main">
+    {
+      canAccess ? (
+        <>
+          <section class="log-hero">
+            <p class="log-hero__kicker">Observabilidad centralizada</p>
+            <h1 class="log-hero__title">Logs del ecosistema</h1>
+            <p class="log-hero__subtitle">
+              Explora errores, advertencias y eventos por aplicacion, severidad y texto libre.
+            </p>
+          </section>
+
+          {
+            alerts.triggered.length > 0 ? (
+              <div class="alert-banner" role="status">
+                <strong>Alerta activa:</strong> {alerts.triggered[0]?.app} supero el threshold de {alerts.threshold} errores por minuto.
+              </div>
+            ) : null
+          }
+
+          <section class="surface-grid" aria-label="Metricas resumen">
+            <article class="surface-card surface-card--metric">
+              <p class="surface-card__label">Total logs</p>
+              <p class="surface-card__value">{metrics.totalLogs}</p>
+              <p class="surface-card__meta">Acumulado del entorno actual</p>
+            </article>
+            <article class="surface-card surface-card--metric">
+              <p class="surface-card__label">Errores 24h</p>
+              <p class="surface-card__value">{metrics.errorCount24h}</p>
+              <p class="surface-card__meta">Error + fatal en ventana movil</p>
+            </article>
+            <article class="surface-card surface-card--metric">
+              <p class="surface-card__label">Error rate</p>
+              <p class="surface-card__value">{metrics.errorRate.toFixed(1)}%</p>
+              <p class="surface-card__meta">Sobre total de eventos</p>
+            </article>
+            <article class="surface-card surface-card--metric">
+              <p class="surface-card__label">Top app</p>
+              <p class="surface-card__value">{metrics.topApps[0]?.app ?? "-"}</p>
+              <p class="surface-card__meta">Mayor volumen registrado</p>
+            </article>
+          </section>
+
+          <section class="surface-card">
+            <form class="log-filters" method="get" action="/logs">
+              <div class="form-row form-row--search">
+                <label for="search">Busqueda</label>
+                <input
+                  id="search"
+                  name="search"
+                  type="search"
+                  value={searchParam}
+                  placeholder="timeout, 500, endpoint..."
+                />
+              </div>
+
+              <div class="form-row form-row--level">
+                <label for="level">Nivel</label>
+                <select id="level" name="level">
+                  <option value="">Todos</option>
+                  <option value="debug" selected={levelParam === "debug"}>debug</option>
+                  <option value="info" selected={levelParam === "info"}>info</option>
+                  <option value="warn" selected={levelParam === "warn"}>warn</option>
+                  <option value="error" selected={levelParam === "error"}>error</option>
+                  <option value="fatal" selected={levelParam === "fatal"}>fatal</option>
+                </select>
+              </div>
+
+              <div class="form-row form-row--app">
+                <label for="app">App</label>
+                <select id="app" name="app">
+                  <option value="">Todas</option>
+                  {knownApps.map((app) => <option value={app} selected={appParam === app}>{app}</option>)}
+                </select>
+              </div>
+
+              <div class="form-row form-row--limit">
+                <label for="limit">Limite</label>
+                <select id="limit" name="limit">
+                  <option value="10" selected={result.limit === 10}>10</option>
+                  <option value="20" selected={result.limit === 20}>20</option>
+                  <option value="50" selected={result.limit === 50}>50</option>
+                </select>
+              </div>
+
+              <div class="form-row form-row--submit">
+                <button class="button" type="submit">Filtrar</button>
+              </div>
+            </form>
+          </section>
+
+          <section class="surface-card">
+            <div class="log-table-wrap">
+              {
+                result.data.length > 0 ? (
+                  <table class="log-table">
+                    <thead>
+                      <tr>
+                        <th>Timestamp</th>
+                        <th>App</th>
+                        <th>Nivel</th>
+                        <th>Mensaje</th>
+                        <th>Detalle</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {result.data.map((item) => (
+                        <tr>
+                          <td>{new Date(item.timestamp).toLocaleString("es-AR")}</td>
+                          <td>{item.app}</td>
+                          <td>
+                            <span class={levelClass(item.level)}>{item.level}</span>
+                          </td>
+                          <td class="log-row-message">{item.message}</td>
+                          <td>
+                            <a class="button secondary" href={`/logs/${item.id}`}>Ver</a>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                ) : (
+                  <article aria-live="polite">
+                    <h2 class="card-title">Sin resultados</h2>
+                    <p class="app-desc">No hay logs que coincidan con los filtros aplicados.</p>
+                  </article>
+                )
+              }
+            </div>
+          </section>
+        </>
+      ) : (
+        <AccessDeniedCard />
+      )
+    }
+  </main>
+
+  <SiteFooter />
+</BaseLayout>

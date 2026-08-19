@@ -1,0 +1,15 @@
+---
+type Props = {
+  leftText: string;
+  rightText?: string;
+};
+
+const { leftText, rightText = `Fase 1 · ${new Date().getFullYear()}` } = Astro.props as Props;
+---
+
+<footer class="footer">
+  <div class="page footer-grid">
+    <span>{leftText}</span>
+    <span>{rightText}</span>
+  </div>
+</footer>

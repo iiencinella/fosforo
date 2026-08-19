@@ -1,0 +1,68 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import { getCollection, render } from "astro:content";
+import { ExternalLinkButton } from "@repo/ui";
+
+const pages = await getCollection("paginas");
+const pageEntry = pages.find((entry) => entry.data.slug === "sobre-nosotros");
+
+if (!pageEntry) {
+  throw new Error('No se encontro la pagina "sobre-nosotros" en la coleccion "paginas".');
+}
+
+const { Content } = await render(pageEntry);
+---
+
+<BaseLayout title={`${pageEntry.data.title} · Portal Fósforo`} description={pageEntry.data.description}>
+  <SiteHeader />
+  <main class="section">
+    <div class="page">
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <a href="/">Inicio</a>
+        <span class="breadcrumbs-sep">/</span>
+        <span class="breadcrumbs-item is-active">{pageEntry.data.title}</span>
+      </nav>
+
+        <article class="card detail-card">
+        <h1 class="section-title">{pageEntry.data.title}</h1>
+        <p class="section-desc">{pageEntry.data.description}</p>
+        <div class="app-meta">
+          <span>Portal</span>
+          <span class="pill">Actualizado {pageEntry.data.updatedAt.toISOString().slice(0, 10)}</span>
+        </div>
+
+        <div class="markdown-content">
+          <Content />
+        </div>
+
+        <section class="legal-callout" id="licencia-y-atribuciones" aria-labelledby="legal-callout-title">
+          <p class="catalog-group__eyebrow">Transparencia legal</p>
+          <h2 class="card-title" id="legal-callout-title">Licencia y atribuciones</h2>
+          <p class="app-desc">
+            El codigo del repositorio Fósforo es source-available y no comercial bajo PolyForm
+            Noncommercial 1.0.0. Los textos, imágenes, audios, videos y demás materiales de
+            contenido se distribuyen bajo CC BY-NC 4.0 y deben conservar la atribución de sus
+            autores originales cuando corresponda.
+          </p>
+          <p class="app-desc">
+            También mantenemos un registro de procedencia y créditos para activos externos o
+            adaptados, de modo que la comunidad pueda reutilizar el material de manera responsable.
+          </p>
+          <div class="not-found-actions">
+            <ExternalLinkButton
+              href="https://github.com/iiencinella/fosforo/blob/main/LICENSE"
+              label="Leer LICENSE"
+            />
+            <ExternalLinkButton
+              href="https://github.com/iiencinella/fosforo/blob/main/ATTRIBUTIONS.md"
+              label="Ver ATTRIBUTIONS"
+            />
+          </div>
+        </section>
+      </article>
+    </div>
+  </main>
+  <SiteFooter />
+</BaseLayout>

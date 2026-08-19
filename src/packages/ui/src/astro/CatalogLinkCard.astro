@@ -1,0 +1,39 @@
+---
+type Props = {
+  title: string;
+  excerpt: string;
+  href: string;
+  chips?: string[];
+  rootClass?: string;
+  titleClass?: string;
+  linkClass?: string;
+  excerptClass?: string;
+  chipListClass?: string;
+  chipClass?: string;
+};
+
+const {
+  title,
+  excerpt,
+  href,
+  chips = [],
+  rootClass = "catalog-card",
+  titleClass = "",
+  linkClass = "",
+  excerptClass = "",
+  chipListClass = "catalog-chip-list",
+  chipClass = "catalog-chip",
+} = Astro.props as Props;
+---
+
+<article class={rootClass}>
+  <h2 class={titleClass}><a class={linkClass} href={href}>{title}</a></h2>
+  <p class={excerptClass}>{excerpt}</p>
+  {
+    chips.length > 0 && (
+      <div class={chipListClass}>
+        {chips.map((chip) => <span class={chipClass}>{chip}</span>)}
+      </div>
+    )
+  }
+</article>

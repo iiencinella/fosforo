@@ -1,0 +1,162 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import AccessDeniedCard from "@/components/AccessDeniedCard.astro";
+import OpsDashboardPanel from "@/components/dashboard/OpsDashboardPanel.astro";
+import { getAccessTokenFromRequest } from "@/lib/auth";
+import { getSessionFromToken } from "@/lib/auth-supabase";
+import { createLogRepository } from "@/lib/log-repository";
+
+const token = getAccessTokenFromRequest(Astro.request);
+let role: "dev" | "ops" | null = null;
+
+if (token) {
+  try {
+    const session = await getSessionFromToken(token);
+    role = session.role;
+  } catch {
+    role = null;
+  }
+}
+
+const canAccess = role === "ops";
+
+const repository = createLogRepository();
+const metricsResult = canAccess
+  ? await repository.metrics()
+  : {
+      metrics: {
+        totalLogs: 0,
+        errorCount24h: 0,
+        errorRate: 0,
+        topApps: [] as Array<{ app: string; count: number }>,
+      },
+      hourlySeries: [] as Array<{ label: string; count: number }>,
+      alerts: {
+        threshold: 10,
+        triggered: [] as Array<{ app: string; count: number }>,
+      },
+    };
+
+const metrics = metricsResult.metrics;
+const series = metricsResult.hourlySeries.slice(-12);
+const alerts = metricsResult.alerts;
+---
+
+<BaseLayout title="Dashboard · Fosforo Log" description="Metricas operativas del ecosistema Fosforo.">
+  <SiteHeader />
+
+  <main id="main-content" class="page log-main">
+    {
+      canAccess ? (
+        <>
+          <section class="log-hero">
+            <p class="log-hero__kicker">Panel ops</p>
+            <h1 class="log-hero__title">Dashboard de observabilidad</h1>
+            <p class="log-hero__subtitle">
+              Vista resumida de volumen, error rate, top apps y evolucion temporal de eventos.
+            </p>
+          </section>
+
+          {
+            alerts.triggered.length > 0 ? (
+              <div class="alert-banner" role="status">
+                <strong>Incidente detectado:</strong> {alerts.triggered.length} apps superaron el threshold de {alerts.threshold} errores/min.
+              </div>
+            ) : (
+              <div class="alert-banner" role="status">
+                <strong>Sin alertas activas:</strong> No se detectaron apps por encima del threshold actual.
+              </div>
+            )
+          }
+
+          <section class="surface-grid" aria-label="Metricas clave">
+            <article class="surface-card surface-card--metric">
+              <p class="surface-card__label">Total logs</p>
+              <p class="surface-card__value">{metrics.totalLogs}</p>
+              <p class="surface-card__meta">Acumulado global</p>
+            </article>
+            <article class="surface-card surface-card--metric">
+              <p class="surface-card__label">Errores 24h</p>
+              <p class="surface-card__value">{metrics.errorCount24h}</p>
+              <p class="surface-card__meta">Error + fatal</p>
+            </article>
+            <article class="surface-card surface-card--metric">
+              <p class="surface-card__label">Error rate</p>
+              <p class="surface-card__value">{metrics.errorRate.toFixed(1)}%</p>
+              <p class="surface-card__meta">Sobre total eventos</p>
+            </article>
+            <article class="surface-card surface-card--metric">
+              <p class="surface-card__label">Apps monitoreadas</p>
+              <p class="surface-card__value">{metrics.topApps.length}</p>
+              <p class="surface-card__meta">Con volumen en ventana actual</p>
+            </article>
+          </section>
+
+          <section class="surface-grid" aria-label="Top apps y serie temporal">
+            <article class="surface-card" style="grid-column: span 6;">
+              <p class="surface-card__label">Top apps por volumen</p>
+              <div class="log-table-wrap">
+                <table class="log-table">
+                  <thead>
+                    <tr>
+                      <th>App</th>
+                      <th>Eventos</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {metrics.topApps.map((item) => (
+                      <tr>
+                        <td>{item.app}</td>
+                        <td>{item.count}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </article>
+
+            <div style="grid-column: span 6;" class="portal-island-stack portal-island-stack--card">
+              <div data-portal-skeleton aria-hidden="true">
+                <div class="portal-skeleton-card">
+                  <div class="skeleton-pulse skeleton-bar skeleton-bar--sm"></div>
+                  <div class="portal-skeleton-card-rows">
+                    <div class="skeleton-pulse skeleton-bar"></div>
+                    <div class="skeleton-pulse skeleton-bar"></div>
+                    <div class="skeleton-pulse skeleton-bar"></div>
+                    <div class="skeleton-pulse skeleton-bar portal-skeleton-card-rows__short"></div>
+                  </div>
+                </div>
+              </div>
+              <OpsDashboardPanel series={series} />
+            </div>
+          </section>
+
+          <section class="surface-card" aria-label="API debug endpoints">
+            <p class="surface-card__label">API debug</p>
+            <div class="inline-actions">
+              <a class="button secondary" href="/api/health">/api/health</a>
+              <a class="button secondary" href="/api/logs?limit=20">/api/logs</a>
+              <a class="button secondary" href="/api/dashboard/metrics">/api/dashboard/metrics</a>
+            </div>
+          </section>
+
+          <section class="inline-actions">
+            <a class="button secondary" href="/logs">Ver logs</a>
+            <form method="post" action="/api/auth/logout">
+              <button class="button" type="submit">Cerrar sesion</button>
+            </form>
+          </section>
+        </>
+      ) : (
+        <AccessDeniedCard
+          title="Dashboard solo para ops"
+          message="Esta pantalla requiere rol ops para proteger datos operativos sensibles."
+        />
+      )
+    }
+  </main>
+
+  <SiteFooter />
+</BaseLayout>

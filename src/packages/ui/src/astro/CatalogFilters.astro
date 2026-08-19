@@ -1,0 +1,24 @@
+---
+type Props = {
+  rootClass?: string;
+  formClass?: string;
+  actionsClass?: string;
+};
+
+const {
+  rootClass = "catalog-card catalog-filters",
+  formClass = "catalog-form-grid",
+  actionsClass = "catalog-actions",
+} = Astro.props as Props;
+---
+
+<section class={rootClass}>
+  <form method="get">
+    <div class={formClass}>
+      <slot name="fields" />
+    </div>
+    <div class={actionsClass}>
+      <slot name="actions" />
+    </div>
+  </form>
+</section>

@@ -1,0 +1,102 @@
+---
+import { getPortalEnv } from "@repo/env";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import { getCategoryLabel } from "@/lib/apps-catalog";
+import { getCollection, render } from "astro:content";
+import { ExternalLinkButton } from "@repo/ui";
+
+const { whatsappNumber } = getPortalEnv();
+
+export async function getStaticPaths() {
+  const apps = (await getCollection("appsCatalog")).filter(
+    (app) => app.data.visible !== false,
+  );
+
+  return apps.map((app) => ({ params: { slug: app.data.slug }, props: { app } }));
+}
+
+const { app } = Astro.props as {
+  app: Awaited<ReturnType<typeof getCollection<"appsCatalog">>>[number];
+};
+
+const { Content } = await render(app);
+const coverImage = app.data.image?.src;
+const categoryLabel = getCategoryLabel(app.data.category);
+const appUrl = app.data.url?.trim() ?? "";
+
+const normalizedWhatsappNumber = whatsappNumber;
+
+const statusLabel =
+  app.data.status === "disponible"
+    ? "Disponible"
+    : app.data.status === "en-desarrollo"
+      ? "En desarrollo"
+      : "Proximamente";
+const isAvailable = app.data.status === "disponible";
+const message = [
+    `Hola.`,
+    `Vi la aplicación ${encodeURIComponent(app.data.name)} en el Portal Fósforo y me gustaría colaborar con su desarrollo.`,
+    `¿Cómo puedo contribuir?`
+  ].join("\n");
+
+const appHelpHref = `https://wa.me/${normalizedWhatsappNumber}?text=${encodeURIComponent(message)}`;
+---
+
+<BaseLayout
+  title={`${app.data.name} · Portal Fósforo`}
+  description={app.data.resume}
+  image={coverImage}
+>
+  <SiteHeader />
+  <main class="section">
+    <div class="page">
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <a href="/">Inicio</a>
+        <span class="breadcrumbs-sep">/</span>
+        <a href="/apps">Aplicaciones</a>
+        <span class="breadcrumbs-sep">/</span>
+        <span class="breadcrumbs-item is-active">{app.data.name}</span>
+      </nav>
+
+      <article class={`card detail-card${coverImage ? " detail-card--with-image" : ""}`}>
+        {
+          coverImage ? (
+            <div
+              class="detail-cover"
+              style={`background-image: url(${coverImage});`}
+              aria-hidden="true"
+            ></div>
+          ) : null
+        }
+        <h1 class="section-title">{app.data.name}</h1>
+        <p class="section-desc">{app.data.resume}</p>
+        <div class="app-meta">
+          <span>{categoryLabel}</span>
+          <span class="pill">{statusLabel}</span>
+        </div>
+        <div class="markdown-content">
+          <Content />
+        </div>
+        {
+          !isAvailable ? (
+            <div class="app-detail-actions">
+              <a class="button" href={appHelpHref}>
+                Quiero ayudar en esta app
+              </a>
+            </div>
+          ) : null
+        }
+        {
+          appUrl ? (
+            <div class="app-detail-visit-link">
+              <ExternalLinkButton href={appUrl} label="Visitar sitio oficial" />
+            </div>
+          ) : null
+        }
+      </article>
+    </div>
+  </main>
+  <SiteFooter />
+</BaseLayout>

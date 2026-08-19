@@ -1,0 +1,12 @@
+[
+  {
+    "code": "pd",
+    "name": "Biblia del Pueblo de Dios",
+    "language": "es",
+    "tradition": "catolica",
+    "license": "Pendiente de validacion",
+    "provider": "Fuente incorporada al proyecto",
+    "notes": "Version principal para el MVP",
+    "default": true
+  }
+]

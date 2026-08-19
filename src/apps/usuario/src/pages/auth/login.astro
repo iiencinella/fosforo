@@ -1,0 +1,88 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Login - Usuarios Fósforo"
+  description="Iniciar sesión para acceder al ecosistema Fósforo."
+>
+  <main>
+    <section class="section">
+      <div class="page form-center">
+        <article class="card surface-card" style="max-width: 34rem;">
+          <h1 class="section-title">Iniciar sesion</h1>
+          <p class="section-desc">
+            Ingresá con tu cuenta para continuar en las aplicaciones del ecosistema.
+          </p>
+
+          <form id="login-form" class="form" novalidate>
+            <div class="form-row">
+              <label for="login-email">Email</label>
+              <input id="login-email" name="email" type="email" autocomplete="email" required />
+            </div>
+
+            <div class="form-row">
+              <label for="login-password">Contraseña</label>
+              <input
+                id="login-password"
+                name="password"
+                type="password"
+                autocomplete="current-password"
+                required
+              />
+            </div>
+
+            <button class="button-primary" type="submit">Ingresar</button>
+            <a class="button-secondary" href="/auth/reset-password">Olvidé mi contraseña</a>
+            <p id="login-status" class="form-status pending" role="status" aria-live="polite">
+              Ingresá tus credenciales.
+            </p>
+          </form>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const form = document.querySelector("#login-form") as HTMLFormElement | null;
+    const status = document.querySelector("#login-status") as HTMLParagraphElement | null;
+
+    if (form && status) {
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        const formData = new FormData(form);
+        const payload = {
+          email: String(formData.get("email") || "").trim(),
+          password: String(formData.get("password") || "").trim(),
+        };
+
+        status.className = "form-status pending";
+        status.textContent = "Validando sesión...";
+
+        try {
+          const response = await fetch("/api/auth/login", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+
+          const data = await response.json();
+          if (!response.ok || !data.ok) {
+            throw new Error(data.error || "USERS_INVALID_CREDENTIALS");
+          }
+
+          status.className = "form-status success";
+          status.textContent = "Sesión iniciada correctamente.";
+          window.setTimeout(() => {
+            window.location.href = "/perfil";
+          }, 400);
+        } catch (error) {
+          const message = error instanceof Error ? error.message : "USERS_INVALID_CREDENTIALS";
+          status.className = "form-status error";
+          status.textContent = `No pudimos iniciar sesión (${message}).`;
+        }
+      });
+    }
+  </script>
+</BaseLayout>

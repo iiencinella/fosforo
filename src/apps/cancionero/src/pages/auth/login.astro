@@ -1,0 +1,115 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+
+const session = Astro.locals.session;
+const nextPath = Astro.url.searchParams.get("next") ?? "/";
+
+if (session) {
+  return Astro.redirect(nextPath);
+}
+---
+
+<Layout
+  title="Iniciar sesion - Cancionero Fosforo"
+  description="Accede con tu cuenta para contribuir y moderar canciones en el Cancionero Fosforo."
+>
+  <SiteHeader />
+
+  <main class="cancionero-app">
+    <section class="section" id="login">
+      <div class="page cancionero-stack">
+        <div class="cancionero-hero-copy">
+          <span class="cancionero-kicker">Acceso al cancionero</span>
+          <h1 class="cancionero-title">Inicia sesion para contribuir y moderar.</h1>
+          <p class="cancionero-subtitle">
+            Tu cuenta del ecosistema Fosforo te da acceso a la busqueda, la
+            contribucion de canciones y la moderacion liturgica.
+          </p>
+        </div>
+
+        <article class="card surface-card cancionero-auth-card">
+          <h2 class="card-title">Ingresar</h2>
+          <form id="login-form" class="cancionero-form" novalidate>
+            <label class="form-row">
+              <span>Email</span>
+              <input
+                id="login-email"
+                name="email"
+                type="email"
+                autocomplete="email"
+                required
+              />
+            </label>
+            <label class="form-row">
+              <span>Contrasena</span>
+              <input
+                id="login-password"
+                name="password"
+                type="password"
+                autocomplete="current-password"
+                required
+              />
+            </label>
+            <div class="cancionero-filter-actions">
+              <button class="button" type="submit">Ingresar</button>
+              <a class="button secondary" href={`/auth/register${nextPath === "/" ? "" : `?next=${encodeURIComponent(nextPath)}`}`}>
+                Crear cuenta
+              </a>
+            </div>
+            <p id="login-status" class="form-status pending" role="status" aria-live="polite">
+              Ingresa tus credenciales.
+            </p>
+          </form>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter />
+</Layout>
+
+<script>
+  const form = document.querySelector("#login-form") as HTMLFormElement | null;
+  const status = document.querySelector("#login-status") as HTMLParagraphElement | null;
+  const nextPath = new URL(window.location.href).searchParams.get("next") ?? "/";
+
+  if (form && status) {
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const formData = new FormData(form);
+      const payload = {
+        email: String(formData.get("email") || "").trim(),
+        password: String(formData.get("password") || "").trim(),
+      };
+
+      status.className = "form-status pending";
+      status.textContent = "Validando sesion...";
+
+      try {
+        const response = await fetch("/api/cancionero/auth/login", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+
+        const data = await response.json();
+        if (!response.ok || !data.ok) {
+          throw new Error(data.error || "CANCIONERO_INVALID_CREDENTIALS");
+        }
+
+        status.className = "form-status success";
+        status.textContent = "Sesion iniciada correctamente.";
+        window.setTimeout(() => {
+          window.location.href = nextPath;
+        }, 400);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : "CANCIONERO_INVALID_CREDENTIALS";
+        status.className = "form-status error";
+        status.textContent = `No pudimos iniciar sesion (${message}).`;
+      }
+    });
+  }
+</script>

@@ -1,0 +1,53 @@
+name: Build y tipos
+
+on:
+  pull_request:
+    branches:
+      - main
+      - master
+      - dev
+  push:
+    branches:
+      - main
+      - master
+      - dev
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-types-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-types:
+    name: Ejecutar build y verificar tipos
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Obtener repositorio
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Configurar pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.2
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Instalar dependencias
+        run: pnpm install --frozen-lockfile
+
+      - name: Verificar tipos
+        run: pnpm check-types
+
+      - name: Build del workspace
+        run: pnpm build

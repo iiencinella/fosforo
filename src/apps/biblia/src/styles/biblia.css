@@ -1,0 +1,225 @@
+.biblia-app {
+  display: grid;
+  gap: var(--spacing-16);
+  padding-bottom: var(--spacing-16);
+}
+
+.biblia-page-hero {
+  padding-top: var(--spacing-12);
+}
+
+.biblia-hero {
+  display: grid;
+  gap: var(--spacing-5);
+  align-items: start;
+}
+
+.biblia-hero-copy {
+  display: grid;
+  gap: var(--spacing-4);
+  max-width: 64ch;
+}
+
+.biblia-kicker,
+.biblia-panel-label {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.biblia-title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: clamp(2.45rem, 4vw, 4rem);
+  line-height: 1.03;
+  max-width: 14ch;
+}
+
+.biblia-subtitle {
+  margin: 0;
+  color: var(--color-muted);
+  line-height: 1.75;
+  font-size: 1.02rem;
+}
+
+.biblia-meta-bar,
+.biblia-home-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-3);
+}
+
+.biblia-home-stat {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--color-line) 78%, transparent);
+  background: color-mix(in srgb, var(--color-surface-strong) 82%, transparent);
+  color: var(--color-text);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.biblia-shell {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(18rem, 0.85fr);
+  gap: var(--spacing-5);
+  align-items: start;
+}
+
+.biblia-panel {
+  display: grid;
+  gap: var(--spacing-4);
+  padding: 1.375rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid
+    color-mix(in srgb, var(--color-brand-300) 20%, var(--color-line));
+  background:
+    radial-gradient(
+      circle at top right,
+      color-mix(in srgb, var(--color-brand-300) 10%, transparent),
+      transparent 34%
+    ),
+    color-mix(in srgb, var(--color-surface) 96%, var(--color-bg));
+  box-shadow: var(--shadow-soft);
+}
+
+.biblia-callout {
+  align-content: start;
+}
+
+.biblia-home-callout {
+  min-height: 100%;
+}
+
+.biblia-stack {
+  display: grid;
+  gap: var(--spacing-4);
+}
+
+.biblia-featured-grid,
+.biblia-summary-grid,
+.biblia-related-grid {
+  display: grid;
+  gap: var(--spacing-4);
+}
+
+.biblia-featured-grid > .card,
+.biblia-summary-grid > *,
+.biblia-related-grid > * {
+  height: 100%;
+}
+
+.biblia-panel-copy,
+.biblia-meta-list,
+.biblia-highlight-card p {
+  margin: 0;
+  color: var(--color-muted);
+  line-height: 1.65;
+}
+
+.biblia-meta-list {
+  padding-left: 1rem;
+}
+
+.biblia-fact-list {
+  display: grid;
+  gap: var(--spacing-3);
+  margin: 0;
+}
+
+.biblia-fact {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-3);
+  padding-bottom: var(--spacing-3);
+  border-bottom: 1px solid
+    color-mix(in srgb, var(--color-line) 74%, transparent);
+}
+
+.biblia-fact:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.biblia-fact dt {
+  color: var(--color-muted);
+  font-size: 0.92rem;
+}
+
+.biblia-fact dd {
+  margin: 0;
+  font-weight: 700;
+  text-align: right;
+}
+
+.biblia-card-grid {
+  display: grid;
+  gap: var(--spacing-4);
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+}
+
+.biblia-card-grid > .card {
+  grid-column: span 3;
+}
+
+.biblia-count-card {
+  min-height: 9.5rem;
+  align-content: space-between;
+}
+
+.biblia-count-card p:last-child {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: clamp(1.85rem, 2vw, 2.35rem);
+  color: var(--color-text);
+}
+
+.biblia-app .portal-bible-reader-module,
+.biblia-app .portal-bible-search-module,
+.biblia-app .portal-liturgy-module {
+  border: 1px solid
+    color-mix(in srgb, var(--color-brand-300) 18%, var(--color-line));
+  box-shadow: var(--shadow-soft);
+}
+
+@media (min-width: 48rem) {
+  .biblia-hero {
+    grid-template-columns: minmax(0, 1.3fr) minmax(18rem, 0.9fr);
+  }
+
+  .biblia-featured-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .biblia-summary-grid,
+  .biblia-related-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 960px) {
+  .biblia-shell,
+  .biblia-card-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .biblia-card-grid > .card {
+    grid-column: span 1;
+  }
+}
+
+@media (max-width: 640px) {
+  .biblia-page-hero {
+    padding-top: var(--spacing-8);
+  }
+
+  .biblia-title {
+    max-width: 100%;
+  }
+}

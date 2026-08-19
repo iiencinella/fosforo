@@ -1,0 +1,22 @@
+---
+type Props = {
+  title: string;
+  description: string;
+  rootClass?: string;
+  titleClass?: string;
+  leadClass?: string;
+};
+
+const {
+  title,
+  description,
+  rootClass = "catalog-card catalog-hero",
+  titleClass = "catalog-title",
+  leadClass = "catalog-lead",
+} = Astro.props as Props;
+---
+
+<section class={rootClass}>
+  <h1 class={titleClass}>{title}</h1>
+  <p class={leadClass}>{description}</p>
+</section>

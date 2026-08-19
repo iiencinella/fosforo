@@ -1,0 +1,25 @@
+---
+type Props = {
+  href: string;
+  label: string;
+  variant?: "primary" | "secondary";
+  className?: string;
+  ariaLabel?: string;
+};
+
+const {
+  href,
+  label,
+  variant = "primary",
+  className = "",
+  ariaLabel,
+} = Astro.props as Props;
+
+const classes = ["button", variant === "secondary" ? "secondary" : "", className]
+  .filter(Boolean)
+  .join(" ");
+---
+
+<a class={classes} href={href} aria-label={ariaLabel}>
+  {label}
+</a>

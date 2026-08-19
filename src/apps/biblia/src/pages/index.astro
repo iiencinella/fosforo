@@ -1,0 +1,51 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import { BibleHub, type BibleHubMode } from "@/components/BibleHub";
+import { getBooks, getDefaultVersion } from "@/lib/data";
+import { getBibleVersionCatalog } from "@/lib/server/bible-versions";
+
+const books = getBooks();
+const fallbackVersion = getDefaultVersion();
+const versionCatalog = await getBibleVersionCatalog();
+const defaultVersionCode = versionCatalog.defaultVersionCode ?? fallbackVersion.code;
+
+const params = Astro.url.searchParams;
+const modeParam = params.get("modo");
+const initialMode: BibleHubMode =
+  modeParam === "busqueda" || modeParam === "liturgia" ? modeParam : "lectura";
+const initialBookSlug = params.get("book") ?? books[0]?.slug ?? "genesis";
+const chapterParam = Number.parseInt(params.get("chapter") ?? "1", 10);
+const initialChapter =
+  Number.isNaN(chapterParam) || chapterParam <= 0 ? 1 : chapterParam;
+const initialVersionCode = params.get("version") ?? defaultVersionCode;
+const initialQuery = params.get("q") ?? "";
+const today = new Date().toISOString().slice(0, 10);
+const initialDate = params.get("date") ?? today;
+---
+
+<Layout
+  title="Biblia · Fósforo"
+  description="Lectura bíblica, búsqueda textual y lecturas del día en una sola vista del ecosistema Fósforo."
+>
+  <div class="bible-hub-viewport">
+    <SiteHeader />
+
+    <main class="page bible-hub-main" transition:name="book-route">
+      <BibleHub
+        books={books}
+        versions={versionCatalog.versions.map((version) => ({
+          code: version.code,
+          name: version.name,
+        }))}
+        defaultMode={initialMode}
+        defaultBookSlug={initialBookSlug}
+        defaultChapter={initialChapter}
+        defaultVersionCode={initialVersionCode}
+        defaultQuery={initialQuery}
+        defaultDate={initialDate}
+        client:load
+      />
+    </main>
+  </div>
+</Layout>

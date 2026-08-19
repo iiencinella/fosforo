@@ -1,0 +1,428 @@
+.cancionero-app {
+  display: grid;
+  gap: var(--spacing-4);
+  padding-bottom: var(--spacing-4);
+}
+
+.cancionero-page-hero {
+  padding-top: var(--spacing-12);
+}
+
+.cancionero-hero {
+  display: grid;
+  gap: var(--spacing-5);
+  align-items: start;
+}
+
+.cancionero-hero-copy {
+  display: grid;
+  gap: var(--spacing-4);
+  max-width: 80%;
+}
+
+.cancionero-kicker,
+.cancionero-panel-label {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.cancionero-title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: clamp(2.45rem, 4vw, 4rem);
+  line-height: 1.03;
+}
+
+.cancionero-subtitle {
+  margin: 0;
+  color: var(--color-muted);
+  line-height: 1.75;
+  font-size: 1.02rem;
+}
+
+.cancionero-shell {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(18rem, 0.85fr);
+  gap: var(--spacing-5);
+  align-items: start;
+}
+
+.cancionero-panel {
+  display: grid;
+  gap: var(--spacing-4);
+  padding: 1.375rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid
+    color-mix(in srgb, var(--color-brand-300) 20%, var(--color-line));
+  background:
+    radial-gradient(
+      circle at top right,
+      color-mix(in srgb, var(--color-brand-300) 10%, transparent),
+      transparent 34%
+    ),
+    color-mix(in srgb, var(--color-surface) 96%, var(--color-bg));
+  box-shadow: var(--shadow-soft);
+}
+
+.cancionero-callout {
+  align-content: start;
+}
+
+.cancionero-stack {
+  display: grid;
+  gap: var(--spacing-4);
+}
+
+.cancionero-panel-copy {
+  margin: 0;
+  color: var(--color-muted);
+  line-height: 1.65;
+}
+
+.cancionero-filters-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  align-items: end;
+}
+
+.cancionero-filters-grid-span {
+  grid-column: 1 / -1;
+}
+
+.cancionero-motor-help {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.cancionero-filter-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  grid-column: 1 / -1;
+  justify-content: flex-end;
+}
+
+.cancionero-song-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.cancionero-song-card {
+  display: grid;
+  gap: 12px;
+}
+
+.cancionero-song-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.cancionero-tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.cancionero-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.cancionero-empty-card,
+.cancionero-error-card {
+  display: grid;
+  gap: 10px;
+  border-style: dashed;
+}
+
+.cancionero-results-head {
+  display: grid;
+  gap: 6px;
+}
+
+.cancionero-form {
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+}
+
+.cancionero-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.cancionero-metric-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.cancionero-song-title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+}
+
+.cancionero-lyrics-card {
+  display: grid;
+  gap: 12px;
+}
+
+.cancionero-lyrics-hint {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.9rem;
+}
+
+.cancionero-lyrics-empty {
+  margin: 0;
+  color: var(--color-muted);
+  font-style: italic;
+}
+
+.cancionero-lyrics-block {
+  display: grid;
+  gap: 12px;
+  font-family: var(--font-mono);
+  overflow-x: auto;
+  padding: 4px;
+}
+
+.cancionero-lyrics-line {
+  position: relative;
+  padding-top: 1.4em;
+  margin: 0;
+  line-height: 1.65;
+  min-height: calc(1.4em + 1.65em);
+}
+
+.cancionero-lyrics-chord-row {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1.2em;
+  pointer-events: none;
+}
+
+.cancionero-lyrics-chord {
+  position: absolute;
+  top: 0;
+  color: var(--color-accent);
+  font-weight: 700;
+  font-size: 0.95em;
+  white-space: nowrap;
+}
+
+.cancionero-lyrics-text {
+  white-space: pre;
+  word-break: break-word;
+}
+
+.cancionero-lyric-char {
+  display: inline-block;
+}
+
+.cancionero-lyric-slot {
+  display: inline-block;
+  color: var(--color-muted);
+}
+
+.cancionero-chord {
+  color: var(--color-accent);
+  font-weight: 700;
+}
+
+.cancionero-form-hint {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.cancionero-chord-editor {
+  margin-top: 8px;
+  display: grid;
+  gap: 6px;
+  padding: 12px;
+  border: 1px dashed
+    color-mix(in srgb, var(--color-accent) 30%, var(--color-line));
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--color-surface) 95%, transparent);
+  font-family: var(--font-mono);
+  min-height: 60px;
+  max-height: 360px;
+  overflow: auto;
+}
+
+.cancionero-chord-editor-empty {
+  margin: 0;
+  color: var(--color-muted);
+  font-style: italic;
+  font-family: var(--font-sans);
+}
+
+.cancionero-chord-line {
+  position: relative;
+  padding-top: 1.4em;
+  padding-bottom: 0.2em;
+  min-height: calc(1.4em + 1.65em);
+}
+
+.cancionero-chord-row {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1.2em;
+}
+
+.cancionero-chord-row-placeholder {
+  display: block;
+  height: 1.2em;
+}
+
+.cancionero-chord-token {
+  font-family: var(--font-mono);
+  color: var(--color-accent);
+  font-weight: 700;
+  font-size: 0.95em;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.cancionero-chord-token--inline {
+  position: absolute;
+  top: 0;
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+.cancionero-chord-token--inline:hover {
+  color: var(--color-accent);
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+}
+
+.cancionero-lyric-row {
+  white-space: pre;
+  line-height: 1.65;
+}
+
+.cancionero-lyric-char {
+  display: inline-block;
+}
+
+.cancionero-lyric-row .cancionero-lyric-char {
+  cursor: pointer;
+  border-radius: 2px;
+  padding: 0 1px;
+  transition: background-color 0.12s ease;
+}
+
+.cancionero-lyric-row .cancionero-lyric-char:hover {
+  background-color: color-mix(in srgb, var(--color-accent) 18%, transparent);
+}
+
+.cancionero-lyric-row .cancionero-lyric-char.is-active {
+  position: relative;
+  background-color: color-mix(in srgb, var(--color-accent) 25%, transparent);
+}
+
+.cancionero-lyric-slot {
+  display: inline-block;
+  color: var(--color-muted);
+}
+
+.cancionero-chord-popover {
+  position: absolute;
+  z-index: 20;
+  top: 100%;
+  left: 0;
+  margin-top: 4px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 8px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-soft);
+  font-family: var(--font-sans);
+  min-width: 200px;
+}
+
+.cancionero-chord-popover--flip-x {
+  right: 0;
+  left: auto;
+}
+
+.cancionero-chord-popover--flip-y {
+  top: auto;
+  bottom: 100%;
+  margin-top: 0;
+  margin-bottom: 4px;
+}
+
+.cancionero-chord-popover input {
+  flex: 1 1 120px;
+  min-width: 0;
+  padding: 6px 8px;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+.cancionero-chord-popover .button {
+  padding: 6px 10px;
+  font-size: 0.85rem;
+}
+
+@media (min-width: 48rem) {
+  .cancionero-hero {
+    grid-template-columns: minmax(0, 1.3fr) minmax(18rem, 0.9fr);
+  }
+}
+
+@media (max-width: 960px) {
+  .cancionero-filters-grid,
+  .cancionero-song-grid,
+  .cancionero-form-grid,
+  .cancionero-metric-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cancionero-shell {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .cancionero-page-hero {
+    padding-top: var(--spacing-8);
+  }
+
+  .cancionero-title {
+    max-width: 100%;
+  }
+}

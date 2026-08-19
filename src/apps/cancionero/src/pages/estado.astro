@@ -1,0 +1,67 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import { getRepositoryHealth } from "@/lib/server/repository";
+
+const health = await getRepositoryHealth();
+const apiLinks = [
+  { href: "/api/health", label: "GET /api/health" },
+  { href: "/api/cancionero/search?q=amor", label: "GET /api/cancionero/search" },
+  { href: "/api/cancionero/tiempos", label: "GET /api/cancionero/tiempos" },
+  { href: "/api/cancionero/moderacion/pendientes", label: "GET /api/cancionero/moderacion/pendientes" },
+];
+---
+
+<Layout
+  title="Estado · Cancionero Fósforo"
+  description="Estado operativo del cancionero: catálogo, moderación y endpoints internos."
+>
+  <SiteHeader />
+
+  <main class="cancionero-app">
+    <section class="section cancionero-page-hero" id="estado">
+      <div class="page cancionero-stack">
+        <div class="cancionero-hero-copy">
+          <span class="cancionero-kicker">Operación</span>
+          <h1 class="cancionero-title">Estado operativo del MVP de cancionero.</h1>
+          <p class="cancionero-subtitle">
+            Métricas rápidas de catálogo y moderación para validar salud técnica y funcional.
+          </p>
+        </div>
+
+        <div class="cancionero-metric-grid">
+          <article class="card">
+            <p class="badge">Fuente</p>
+            <h2 class="card-title">{health.source === "database" ? "Supabase" : "Fallback local"}</h2>
+          </article>
+          <article class="card">
+            <p class="badge">Canciones</p>
+            <h2 class="card-title">{health.totalCanciones}</h2>
+          </article>
+          <article class="card">
+            <p class="badge">Publicadas</p>
+            <h2 class="card-title">{health.totalPublicadas}</h2>
+          </article>
+          <article class="card">
+            <p class="badge">Pendientes</p>
+            <h2 class="card-title">{health.totalPendientes}</h2>
+          </article>
+          <article class="card">
+            <p class="badge">Tiempos litúrgicos</p>
+            <h2 class="card-title">{health.totalTiempos}</h2>
+          </article>
+        </div>
+
+        <article class="card cancionero-stack">
+          <h2 class="card-title">Endpoints disponibles</h2>
+          <div class="catalog-link-stack">
+            {apiLinks.map((link) => <a href={link.href}>{link.label}</a>)}
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter />
+</Layout>

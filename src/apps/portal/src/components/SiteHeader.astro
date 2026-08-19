@@ -1,0 +1,27 @@
+---
+import { PortalHeader } from "@repo/ui";
+import logo from "../assets/icons/fire.svg";
+
+const links = [
+  { href: "/sobre-nosotros", label: "Sobre nosotros" },
+  { href: "/apps", label: "Aplicaciones" },
+  { href: "/novedades", label: "Novedades" },
+  { href: "/contacto", label: "Contacto" },
+  { href: "/desarrolladores", label: "Desarrolladores" },
+  { href: "/feedback", label: "Dar mi opinión" },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<PortalHeader
+  logoSrcLight={logo.src}
+  logoSrcDark={logo.src}
+  logoAlt="Logo de Fósforo"
+  links={links}
+  currentPath={currentPath}
+  ctaHref="/contacto"
+  ctaLabel="Escribinos"
+  hideAuth={true}
+  client:load
+/>

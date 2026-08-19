@@ -1,0 +1,263 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import Tabs from "@repo/ui/astro/Tabs.astro";
+import { listLiturgicalTimes, listSongs } from "@/lib/server/repository";
+import { searchQuerySchema } from "@/lib/validators";
+import type { SearchEngine } from "@/lib/types";
+
+const searchParams = Astro.url.searchParams;
+const rawMotor = searchParams.get("motor");
+const motor: SearchEngine =
+  rawMotor === "A" || rawMotor === "B" || rawMotor === "C" ? rawMotor : "A";
+
+const rawQ = searchParams.get("q") ?? "";
+const rawTiempo = searchParams.get("tiempo") ?? "";
+const rawMomento = searchParams.get("momento") ?? "";
+
+const parsed = searchQuerySchema.safeParse({
+  motor,
+  q: rawQ || undefined,
+  tiempo: rawTiempo || undefined,
+  momento: rawMomento || undefined,
+});
+
+const timesPayload = await listLiturgicalTimes();
+const allMoments = Array.from(
+  new Set(timesPayload.items.flatMap((time) => time.momentosMisa)),
+).sort((a, b) => a.localeCompare(b, "es"));
+
+const selectedMoments =
+  timesPayload.items.find((time) => time.id === rawTiempo)?.momentosMisa ?? [];
+
+let errorMessage: string | null = null;
+let result = await listSongs(parsed.success ? parsed.data : {});
+
+if (!parsed.success) {
+  errorMessage = parsed.error.issues[0]?.message ?? "Parámetros inválidos";
+}
+
+const hasAnyFilter =
+  rawQ.trim().length > 0 ||
+  rawTiempo.trim().length > 0 ||
+  rawMomento.trim().length > 0;
+
+const tabs = [
+  {
+    id: "A",
+    label: "Búsqueda libre",
+    description: "Palabras en título o fragmento de letra",
+    active: motor === "A",
+    href: `/buscar?motor=A&q=${encodeURIComponent(rawQ)}`,
+  },
+  {
+    id: "B",
+    label: "Tiempo litúrgico",
+    description: "Tiempos del calendario y sus momentos",
+    active: motor === "B",
+    href: `/buscar?motor=B&tiempo=${encodeURIComponent(rawTiempo)}&momento=${encodeURIComponent(rawMomento)}`,
+  },
+  {
+    id: "C",
+    label: "Momento de misa",
+    description: "Entrada, Salmo, Comunión, etc.",
+    active: motor === "C",
+    href: `/buscar?motor=C&momento=${encodeURIComponent(rawMomento)}`,
+  },
+];
+
+const motorDescriptions: Record<SearchEngine, string> = {
+  A: "Escribí una o más palabras. El sistema devuelve canciones donde alguna aparece en el título o en la letra.",
+  B: "Elegí un tiempo litúrgico. Si querés, refiná con un momento de misa para acortar el listado.",
+  C: "Elegí un momento de misa. El sistema devuelve canciones con ese momento en cualquier tiempo litúrgico.",
+};
+
+const motorKicker: Record<SearchEngine, string> = {
+  A: "Búsqueda libre",
+  B: "Tiempo litúrgico",
+  C: "Momento de misa",
+};
+---
+
+<Layout
+  title="Buscar canción · Cancionero Fósforo"
+  description="Búsqueda libre de canciones por nombre, fragmento de letra y filtros litúrgicos."
+>
+  <SiteHeader />
+
+  <main class="cancionero-app">
+    <section class="section cancionero-page-hero" id="buscar">
+      <div class="page cancionero-stack">
+        <div class="cancionero-hero-copy">
+          <span class="cancionero-kicker">Esqueleto · 3 motores de búsqueda</span>
+          <h1 class="cancionero-title">Encuentra canciones por nombre, letra o contexto litúrgico.</h1>
+          <p class="cancionero-subtitle">
+            Elegí uno de los tres motores para explorar el catálogo de Cancionero.
+            Más motores se sumarán en próximas iteraciones.
+          </p>
+        </div>
+
+        <Tabs
+          tabs={tabs}
+          idPrefix="cancionero-buscar"
+          ariaLabel="Motores de búsqueda del cancionero"
+        >
+          <p class="cancionero-motor-help" id={`cancionero-buscar-help-${motor}`}>
+            {motorDescriptions[motor]}
+          </p>
+
+          {
+            motor === "A" ? (
+              <form method="GET" action="/buscar" class="catalog-toolbar" role="search">
+                <input type="hidden" name="motor" value="A" />
+                <div class="cancionero-filters-grid">
+                  <label class="filter-field cancionero-filters-grid-span">
+                    <span>Buscar canción o fragmento</span>
+                    <input
+                      type="search"
+                      name="q"
+                      value={rawQ}
+                      minlength="2"
+                      placeholder="Ej: ven senor, pescador, espiritu..."
+                      aria-describedby="cancionero-buscar-help-A"
+                    />
+                  </label>
+                  <div class="cancionero-filter-actions">
+                    <button class="button" type="submit">Buscar</button>
+                    <a class="button secondary" href="/buscar?motor=A">Limpiar</a>
+                  </div>
+                </div>
+              </form>
+            ) : null
+          }
+
+          {
+            motor === "B" ? (
+              <form method="GET" action="/buscar" class="catalog-toolbar">
+                <input type="hidden" name="motor" value="B" />
+                <div class="cancionero-filters-grid">
+                  <label class="filter-field">
+                    <span>Tiempo litúrgico</span>
+                    <select name="tiempo">
+                      <option value="">Todos los tiempos</option>
+                      {
+                        timesPayload.items.map((time) => (
+                          <option value={time.id} selected={time.id === rawTiempo}>
+                            {time.nombre}
+                          </option>
+                        ))
+                      }
+                    </select>
+                  </label>
+                  <label class="filter-field">
+                    <span>Momento de misa (opcional)</span>
+                    <select name="momento" disabled={selectedMoments.length === 0}>
+                      <option value="">Todos los momentos del tiempo</option>
+                      {
+                        selectedMoments.map((moment) => (
+                          <option value={moment} selected={moment === rawMomento}>
+                            {moment}
+                          </option>
+                        ))
+                      }
+                    </select>
+                  </label>
+                  <div class="cancionero-filter-actions">
+                    <button class="button" type="submit">Aplicar filtros</button>
+                    <a class="button secondary" href="/buscar?motor=B">Reiniciar</a>
+                  </div>
+                </div>
+              </form>
+            ) : null
+          }
+
+          {
+            motor === "C" ? (
+              <form method="GET" action="/buscar" class="catalog-toolbar">
+                <input type="hidden" name="motor" value="C" />
+                <div class="cancionero-filters-grid">
+                  <label class="filter-field">
+                    <span>Momento de misa</span>
+                    <select name="momento">
+                      <option value="">Todos los momentos</option>
+                      {
+                        allMoments.map((moment) => (
+                          <option value={moment} selected={moment === rawMomento}>
+                            {moment}
+                          </option>
+                        ))
+                      }
+                    </select>
+                  </label>
+                  <div class="cancionero-filter-actions">
+                    <button class="button" type="submit">Aplicar</button>
+                    <a class="button secondary" href="/buscar?motor=C">Reiniciar</a>
+                  </div>
+                </div>
+              </form>
+            ) : null
+          }
+        </Tabs>
+      </div>
+    </section>
+
+    <section class="section" id="resultados">
+      <div class="page cancionero-stack">
+        <div class="cancionero-results-head">
+          <p class="badge">{motorKicker[motor]}</p>
+          <h2 class="card-title">
+            {hasAnyFilter
+              ? `${result.total} canciones encontradas`
+              : `${result.total} canciones aprobadas`}
+          </h2>
+          <p class="app-desc">
+            {hasAnyFilter
+              ? "Aplicaste filtros. Probá limpiarlos para ver todo el catálogo."
+              : "Mostrando todo el catálogo. Aplicá un filtro para acotar."}{" "}
+            Fuente: {result.source === "database" ? "Supabase" : "Fallback local"}
+          </p>
+        </div>
+
+        {
+          errorMessage ? (
+            <article class="card cancionero-error-card">
+              <h3 class="card-title">No se pudo ejecutar la búsqueda</h3>
+              <p class="app-desc">{errorMessage}</p>
+            </article>
+          ) : result.items.length === 0 ? (
+            <article class="card cancionero-empty-card">
+              <h3 class="card-title">No se encontraron canciones</h3>
+              <p class="app-desc">
+                Ajustá la búsqueda o cambiá de motor para ampliar resultados.
+              </p>
+            </article>
+          ) : (
+            <div class="cancionero-song-grid">
+              {
+                result.items.map((song) => (
+                  <article class="card cancionero-song-card">
+                    <div class="cancionero-song-head">
+                      <h3 class="card-title">{song.titulo}</h3>
+                    </div>
+                    <p class="app-desc">{song.excerpt}</p>
+                    <div class="cancionero-tag-row">
+                      {song.etiquetas.slice(0, 3).map((tag) => <span class="pill">{tag.tiempoLiturgico} · {tag.momentoMisa}</span>)}
+                    </div>
+                    <div class="cancionero-card-actions">
+                      <a class="button secondary" href={`/canciones/${song.id}`}>
+                        Ver letra y acordes
+                      </a>
+                    </div>
+                  </article>
+                ))
+              }
+            </div>
+          )
+        }
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter />
+</Layout>

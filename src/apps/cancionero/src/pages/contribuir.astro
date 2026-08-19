@@ -1,0 +1,472 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+---
+
+<Layout
+  title="Contribuir · Cancionero Fósforo"
+  description="Envía nuevas canciones para moderación litúrgica dentro del ecosistema Fósforo."
+>
+  <SiteHeader />
+
+  <main class="cancionero-app">
+    <section class="section cancionero-page-hero" id="contribuir">
+      <div class="page cancionero-stack">
+        <div class="cancionero-hero-copy">
+          <span class="cancionero-kicker">Contribución comunitaria</span>
+          <h1 class="cancionero-title">Comparte una canción para revisión litúrgica.</h1>
+          <p class="cancionero-subtitle">
+            Escribe la letra limpia y haz click en la sílaba donde va cada acorde.
+            Tu aporte queda en estado pendiente hasta ser moderado.
+          </p>
+        </div>
+
+        <form class="cancionero-form" id="contribucion-form">
+          <label class="form-row">
+            <span>Título</span>
+            <input type="text" name="titulo" maxlength="200" required placeholder="Ej: Ven, ven Senor" />
+          </label>
+
+          <div class="form-row">
+            <span>Letra y acordes</span>
+            <p class="cancionero-form-hint">
+              Escribe la letra en el área de texto. En la vista previa, haz click sobre
+              la sílaba para colocar un acorde encima. Usa el botón × para quitarlo.
+            </p>
+            <textarea
+              id="letra-input"
+              name="letra"
+              required
+              rows="8"
+              placeholder="Ven, ven Senor no tardes&#10;Ven, ven que te esperamos"
+            ></textarea>
+            <div
+              class="cancionero-chord-editor"
+              id="chord-editor"
+              aria-label="Vista previa con acordes"
+            >
+              <p class="cancionero-chord-editor-empty">
+                Empieza a escribir la letra para ver la vista previa.
+              </p>
+            </div>
+            <input type="hidden" name="acordes" id="acordes-input" value="[]" />
+          </div>
+
+          <label class="form-row">
+            <span>Observaciones para moderación (opcional)</span>
+            <textarea
+              name="observaciones"
+              rows="3"
+              maxlength="1000"
+              placeholder="Ej: esta canción suele usarse en comunión y puede ajustarse según el tiempo litúrgico."
+            ></textarea>
+          </label>
+
+          <div class="cancionero-form-grid">
+            <label class="form-row">
+              <span>URL PDF (opcional)</span>
+              <input type="url" name="pdfUrl" placeholder="https://..." />
+            </label>
+
+            <label class="form-row">
+              <span>URL YouTube (opcional)</span>
+              <input type="url" name="youtubeUrl" placeholder="https://..." />
+            </label>
+          </div>
+
+          <div class="cancionero-filter-actions">
+            <button class="button" type="submit">Enviar a moderación</button>
+            <span id="form-status" class="form-status pending">Completa los campos requeridos</span>
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter />
+</Layout>
+
+<script>
+  import { alignChordsWithLyrics, getPopoverPlacement, isValidChordInput, normalizeChords, removeChordAt, upsertChordAt } from "@/lib/chord-parser";
+  import type { AlignedChordLine } from "@/lib/chord-parser";
+  import type { ChordPosition } from "@/lib/types";
+
+  type EditorState = {
+    letra: string;
+    acordes: ChordPosition[];
+  };
+
+  const state: EditorState = { letra: "", acordes: [] };
+
+  const letraEl = document.getElementById("letra-input");
+  const editorEl = document.getElementById("chord-editor");
+  const acordesInput = document.getElementById("acordes-input") as HTMLInputElement | null;
+  const form = document.getElementById("contribucion-form");
+  const status = document.getElementById("form-status");
+
+  function buildChordKey(linea: number, posicion: number): string {
+    return `${linea}:${posicion}`;
+  }
+
+  function syncHiddenInput(): void {
+    if (acordesInput) {
+      acordesInput.value = JSON.stringify(state.acordes);
+    }
+  }
+
+  function renderEmpty(): void {
+    if (!editorEl) return;
+    editorEl.innerHTML = "";
+    const empty = document.createElement("p");
+    empty.className = "cancionero-chord-editor-empty";
+    empty.textContent = state.letra.trim().length === 0
+      ? "Empieza a escribir la letra para ver la vista previa."
+      : "Haz click sobre una sílaba para agregar un acorde.";
+    editorEl.appendChild(empty);
+  }
+
+  function renderLines(): void {
+    if (!editorEl) return;
+    const aligned = alignChordsWithLyrics(state.letra, state.acordes);
+    editorEl.innerHTML = "";
+
+    aligned.lines.forEach((line) => {
+      editorEl!.appendChild(renderLine(line));
+    });
+  }
+
+  function renderLine(line: AlignedChordLine): HTMLElement {
+    const wrapper = document.createElement("div");
+    wrapper.className = "cancionero-chord-line";
+
+    const chordRow = document.createElement("div");
+    chordRow.className = "cancionero-chord-row";
+    chordRow.setAttribute("aria-hidden", "true");
+
+    if (line.acordesEnLinea.length > 0) {
+      for (const acorde of line.acordesEnLinea) {
+        const token = document.createElement("button");
+        token.type = "button";
+        token.className = "cancionero-chord-token cancionero-chord-token--inline";
+        token.textContent = acorde.nombre;
+        token.style.left = `${acorde.posicion}ch`;
+        token.title = `Editar acorde ${acorde.nombre}`;
+        token.dataset.linea = String(line.linea);
+        token.dataset.posicion = String(acorde.posicion);
+        token.addEventListener("click", (event) => {
+          event.stopPropagation();
+          openChordPopover(line.linea, acorde.posicion, acorde.nombre);
+        });
+        chordRow.appendChild(token);
+      }
+    } else {
+      const placeholder = document.createElement("span");
+      placeholder.className = "cancionero-chord-row-placeholder";
+      chordRow.appendChild(placeholder);
+    }
+
+    const lyricRow = document.createElement("div");
+    lyricRow.className = "cancionero-lyric-row";
+    lyricRow.dataset.linea = String(line.linea);
+
+    if (line.texto.length === 0) {
+      const slot = document.createElement("span");
+      slot.className = "cancionero-lyric-slot";
+      slot.textContent = " ";
+      lyricRow.appendChild(slot);
+    } else {
+      for (let i = 0; i <= line.texto.length; i += 1) {
+        const char = line.texto[i] ?? "·";
+        const span = document.createElement("span");
+        span.className = "cancionero-lyric-char";
+        span.textContent = char === " " ? " " : char;
+        span.dataset.posicion = String(i);
+        span.addEventListener("click", (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          const target = event.currentTarget as HTMLElement | null;
+          if (!target) return;
+          const posicion = Number(target.dataset.posicion ?? "0");
+          handleAddOrEditChord(line.linea, posicion);
+        });
+        lyricRow.appendChild(span);
+      }
+    }
+
+    wrapper.appendChild(chordRow);
+    wrapper.appendChild(lyricRow);
+    return wrapper;
+  }
+
+  function render(): void {
+    if (!editorEl) return;
+    if (state.letra.length === 0) {
+      renderEmpty();
+      return;
+    }
+    renderLines();
+  }
+
+  function handleAddOrEditChord(linea: number, posicion: number): void {
+    if (!editorEl) return;
+    const existing = state.acordes.find(
+      (acorde) => acorde.linea === linea && acorde.posicion === posicion,
+    );
+
+    if (existing) {
+      handleEditChord(existing);
+      return;
+    }
+
+    openChordPopover(linea, posicion, null);
+  }
+
+  function handleEditChord(acorde: ChordPosition): void {
+    openChordPopover(acorde.linea, acorde.posicion, acorde.nombre);
+  }
+
+  function handleRemoveChord(linea: number, posicion: number): void {
+    state.acordes = removeChordAt(state.acordes, linea, posicion);
+    syncHiddenInput();
+    render();
+  }
+
+  function openChordPopover(
+    linea: number,
+    posicion: number,
+    initial: string | null,
+  ): void {
+    closeChordPopover();
+    if (!editorEl) return;
+
+    const lineEl = editorEl.querySelector<HTMLElement>(
+      `.cancionero-lyric-row[data-linea="${linea}"]`,
+    );
+    if (!lineEl) return;
+
+    const target = lineEl.querySelector<HTMLElement>(
+      `.cancionero-lyric-char[data-posicion="${posicion}"]`,
+    );
+    if (!target) return;
+
+    const popover = document.createElement("div");
+    popover.className = "cancionero-chord-popover";
+    popover.dataset.key = buildChordKey(linea, posicion);
+    popover.setAttribute("role", "group");
+    popover.setAttribute("aria-label", "Editor de acorde");
+
+    const input = document.createElement("input");
+    input.type = "text";
+    input.placeholder = "Acorde (ej. G, D, Em)";
+    input.maxLength = 12;
+    input.value = initial ?? "";
+    input.autocomplete = "off";
+    input.spellcheck = false;
+    input.setAttribute("aria-label", "Nombre del acorde");
+
+    const saveBtn = document.createElement("button");
+    saveBtn.type = "button";
+    saveBtn.className = "button";
+    saveBtn.textContent = initial ? "Guardar" : "Agregar";
+
+    const removeBtn = document.createElement("button");
+    removeBtn.type = "button";
+    removeBtn.className = "button secondary";
+    removeBtn.textContent = "Quitar";
+    removeBtn.hidden = initial === null;
+
+    const cancelBtn = document.createElement("button");
+    cancelBtn.type = "button";
+    cancelBtn.className = "button secondary";
+    cancelBtn.textContent = "Cancelar";
+
+    popover.appendChild(input);
+    popover.appendChild(saveBtn);
+    if (initial) {
+      popover.appendChild(removeBtn);
+    }
+    popover.appendChild(cancelBtn);
+
+    const confirmChord = (): void => {
+      const nombre = input.value.trim();
+      if (!isValidChordInput(nombre)) {
+        input.focus();
+        return;
+      }
+      try {
+        const next = upsertChordAt(state.letra, state.acordes, linea, posicion, nombre);
+        state.acordes = next.acordes;
+        syncHiddenInput();
+        closeChordPopover();
+        render();
+      } catch {
+        input.focus();
+      }
+    };
+
+    saveBtn.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      confirmChord();
+    });
+
+    input.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        event.stopPropagation();
+        confirmChord();
+      } else if (event.key === "Escape") {
+        event.preventDefault();
+        event.stopPropagation();
+        closeChordPopover();
+      }
+    });
+
+    removeBtn.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      handleRemoveChord(linea, posicion);
+      closeChordPopover();
+    });
+
+    cancelBtn.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      closeChordPopover();
+    });
+
+    target.classList.add("is-active");
+    target.appendChild(popover);
+    applyPopoverPlacement(popover, target);
+    input.focus();
+    input.select();
+  }
+
+  function applyPopoverPlacement(
+    popover: HTMLElement,
+    target: HTMLElement,
+  ): void {
+    if (!editorEl) return;
+    const targetRect = target.getBoundingClientRect();
+    const popoverRect = popover.getBoundingClientRect();
+    const containerRect = editorEl.getBoundingClientRect();
+
+    const placement = getPopoverPlacement({
+      targetRect,
+      popoverSize: { width: popoverRect.width, height: popoverRect.height },
+      containerRect,
+    });
+
+    if (placement.flipX) {
+      popover.classList.add("cancionero-chord-popover--flip-x");
+    }
+    if (placement.flipY) {
+      popover.classList.add("cancionero-chord-popover--flip-y");
+    }
+  }
+
+  function closeChordPopover(): void {
+    if (!editorEl) return;
+    const popover = editorEl.querySelector(".cancionero-chord-popover");
+    const activeChar = editorEl.querySelector(".cancionero-lyric-char.is-active");
+    if (popover) {
+      popover.remove();
+    }
+    if (activeChar) {
+      activeChar.classList.remove("is-active");
+    }
+  }
+
+  if (letraEl instanceof HTMLTextAreaElement) {
+    letraEl.addEventListener("input", () => {
+      state.letra = letraEl.value;
+      const filtered = state.acordes.filter((acorde) => {
+        const lines = state.letra.split(/\r?\n/);
+        if (acorde.linea >= lines.length) return false;
+        const lineLength = lines[acorde.linea]?.length ?? 0;
+        return acorde.posicion <= lineLength;
+      });
+      if (filtered.length !== state.acordes.length) {
+        state.acordes = filtered;
+        syncHiddenInput();
+      }
+      render();
+    });
+  }
+
+  document.addEventListener("click", (event) => {
+    const target = event.target;
+    if (!(target instanceof Node)) return;
+    const popover = document.querySelector(".cancionero-chord-popover");
+    if (popover && !popover.contains(target)) {
+      closeChordPopover();
+    }
+  });
+
+  if (form instanceof HTMLFormElement && status instanceof HTMLElement) {
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      status.className = "form-status pending";
+      status.textContent = "Enviando contribución...";
+
+      const data = new FormData(form);
+      const titulo = String(data.get("titulo") ?? "").trim();
+      const observaciones = String(data.get("observaciones") ?? "").trim();
+      const normalizedAcordes = normalizeChords(state.letra, state.acordes);
+      if (normalizedAcordes.length !== state.acordes.length) {
+        state.acordes = normalizedAcordes;
+        syncHiddenInput();
+      }
+
+      const payload = {
+        titulo,
+        letra: state.letra,
+        acordes: normalizedAcordes,
+        observaciones,
+        pdfUrl: String(data.get("pdfUrl") ?? ""),
+        youtubeUrl: String(data.get("youtubeUrl") ?? ""),
+        etiquetas: [],
+      };
+
+      if (titulo.length === 0) {
+        status.className = "form-status error";
+        status.textContent = "El título de la canción es obligatorio";
+        return;
+      }
+      if (state.letra.trim().length === 0) {
+        status.className = "form-status error";
+        status.textContent = "La letra de la canción es obligatoria";
+        return;
+      }
+      try {
+        const response = await fetch("/api/cancionero/contribuciones", {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        });
+
+        const json = await response.json();
+        if (!response.ok || !json?.ok) {
+          throw new Error(json?.error ?? "No se pudo enviar la contribución");
+        }
+
+        status.className = "form-status success";
+        status.textContent = "Tu canción fue enviada para moderación.";
+        form.reset();
+        state.letra = "";
+        state.acordes = [];
+        syncHiddenInput();
+        renderEmpty();
+      } catch (error) {
+        status.className = "form-status error";
+        status.textContent =
+          error instanceof Error ? error.message : "No se pudo enviar la contribución";
+      }
+    });
+  }
+
+  renderEmpty();
+</script>

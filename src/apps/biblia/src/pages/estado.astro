@@ -1,0 +1,121 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import { getDatasetStats, getDefaultVersion, getLiturgyMeta } from "@/lib/data";
+import { getBibleVersionCatalog } from "@/lib/server/bible-versions";
+import ActionLinkList from "@repo/ui/astro/ActionLinkList.astro";
+import ApiLinkList from "@repo/ui/astro/ApiLinkList.astro";
+import MetricGrid from "@repo/ui/astro/MetricGrid.astro";
+import { Breadcrumbs } from "@repo/ui";
+
+const stats = getDatasetStats();
+const defaultVersion = getDefaultVersion();
+const liturgyMeta = getLiturgyMeta();
+const versionCatalog = await getBibleVersionCatalog();
+
+const metrics = [
+  { label: "Libros locales", value: stats.books },
+  { label: "Capítulos locales", value: stats.chapters },
+  { label: "Versículos locales", value: stats.verses },
+  { label: "Lecturas litúrgicas", value: stats.liturgyDays },
+];
+
+const apiLinks = [
+  { href: "/api/health", label: "GET /api/health", code: true },
+  { href: "/api/bible/versions", label: "GET /api/bible/versions", code: true },
+  { href: "/api/internal/ingestion/run", label: "POST /api/internal/ingestion/run", code: true },
+];
+---
+
+<Layout
+  title="Estado operativo · Fósforo"
+  description="Resumen técnico del MVP Biblia, contratos internos y estado del catálogo."
+>
+  <SiteHeader />
+
+  <main class="biblia-app" transition:name="book-route">
+    <section class="section biblia-page-hero">
+      <div class="page">
+        <Breadcrumbs
+          items={[
+            { label: "Inicio", href: "/" },
+            { label: "Biblia", href: "/" },
+            { label: "Estado" },
+          ]}
+        />
+
+        <div class="biblia-summary-grid mt-24">
+          <article class="biblia-panel biblia-stack">
+            <p class="badge">Base local</p>
+            <h1 class="section-title">Estado operativo del MVP</h1>
+            <p class="section-desc">
+              Esta superficie resume el estado actual de la app reseteada: shell compartido,
+              endpoints BFF, catálogo en Supabase y datasets locales usados para navegación y
+              soporte editorial.
+            </p>
+            <MetricGrid items={metrics} />
+          </article>
+
+          <article class="biblia-panel biblia-stack">
+            <p class="badge">Configuración</p>
+            <h2 class="card-title">Resumen de fuentes</h2>
+            <ul class="biblia-meta-list">
+              <li>Versión base local: {defaultVersion.name}</li>
+              <li>Versiones habilitadas: {versionCatalog.versions.map((version) => version.code).join(", ")}</li>
+              <li>Liturgia anual: {liturgyMeta.year}</li>
+              <li>Última generación litúrgica: {liturgyMeta.generatedAt}</li>
+              <li>Modalidad del MVP: interna privada</li>
+            </ul>
+            <ApiLinkList items={apiLinks} className="catalog-link-stack" />
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="page biblia-related-grid">
+        <article class="biblia-panel biblia-stack">
+          <p class="badge">Catálogo Supabase</p>
+          <h2 class="card-title">Versiones registradas</h2>
+          {
+            versionCatalog.errorMessage ? (
+              <p class="form-status error">
+                No se pudo consultar <code>biblia_versions</code>: {versionCatalog.errorMessage}
+              </p>
+            ) : versionCatalog.versions.length > 0 ? (
+              <ul class="biblia-meta-list">
+                {versionCatalog.versions.map((version) => (
+                  <li>
+                    {version.code} · {version.name} · {version.isEnabled ? "habilitada" : "deshabilitada"}
+                    {version.isInternalOnly ? " · interna" : ""}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p class="form-status pending">No hay versiones cargadas todavía.</p>
+            )
+          }
+        </article>
+
+        <article class="biblia-panel biblia-stack">
+          <p class="badge">Siguiente paso</p>
+          <h2 class="card-title">Qué sigue después de esta base</h2>
+          <p class="app-desc">
+            La estructura ya permite iterar sobre observabilidad, selector de versión y endurecer el
+            contrato de ingestión sin desmontar la UI construida sobre el ecosistema.
+          </p>
+          <ActionLinkList
+            items={[
+              { href: "/lectura", label: "Probar lectura", secondary: true },
+              { href: "/busqueda", label: "Probar búsqueda", secondary: true },
+              { href: "/liturgia", label: "Probar liturgia", secondary: true },
+            ]}
+          />
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter />
+</Layout>

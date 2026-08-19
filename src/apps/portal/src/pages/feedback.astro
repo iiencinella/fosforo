@@ -1,0 +1,49 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+---
+
+<BaseLayout title="Feedback · Portal Fósforo" description="Canal de ideas y sugerencias del portal.">
+  <SiteHeader />
+  <main class="section">
+    <div class="page form-center">
+      <div>
+        <h1 class="section-title">Ideas y feedback</h1>
+        <p class="section-desc">
+          Dejanos propuestas de mejora funcional, contenido o experiencia del portal.
+        </p>
+
+        <form class="form mt-24 mw-640" method="post" action="/api/feedback">
+          <div class="form-row">
+            <label for="name">Nombre</label>
+            <input id="name" name="name" required maxlength="100" />
+          </div>
+
+          <div class="form-row">
+            <label for="contact_channel">Email o medio de contacto</label>
+            <input id="contact_channel" name="contact_channel" required maxlength="120" />
+          </div>
+
+          <div class="form-row">
+            <label for="category">Categoría</label>
+            <select id="category" name="category" required>
+              <option value="">Seleccionar</option>
+              <option value="producto">Producto</option>
+              <option value="contenido">Contenido</option>
+              <option value="ux">Experiencia de usuario</option>
+            </select>
+          </div>
+
+          <div class="form-row">
+            <label for="message">Mensaje</label>
+            <textarea id="message" name="message" required maxlength="1000"></textarea>
+          </div>
+
+          <button class="button" type="submit">Enviar feedback</button>
+        </form>
+      </div>
+    </div>
+  </main>
+  <SiteFooter />
+</BaseLayout>

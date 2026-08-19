@@ -1,0 +1,27 @@
+---
+import { PortalHeader } from "@repo/ui";
+import logo from "@/assets/calendar-day.svg";
+import logoLight from "@/assets/calendar-day-light.svg";
+
+const links = [
+  { href: "/#today", label: "Hoy" },
+  { href: "/#info", label: "Info" },
+  { href: "/#ecosystem", label: "Ecosistema" },
+  { href: "/#api", label: "API" },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<PortalHeader
+  title="Calendario"
+  logoSrc={logo.src}
+  logoSrcLight={logoLight.src}
+  logoAlt="Logo de Fósforo Calendario"
+  links={links}
+  currentPath={currentPath}
+  ctaHref="/#calendar"
+  ctaLabel="Abrir calendario"
+  hideAuth={true}
+  client:load
+/>

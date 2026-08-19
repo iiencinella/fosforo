@@ -1,0 +1,87 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+
+const attemptedPath = Astro.url.pathname !== "/404" ? Astro.url.pathname : null;
+
+const quickLinks = [
+  {
+    href: "/apps",
+    title: "Explorar aplicaciónes",
+    description: "Revisa el catalogo activo y entra a las experiencias disponibles del ecosistema.",
+  },
+  {
+    href: "/novedades",
+    title: "Ver novedades",
+    description: "Consulta avances, hitos y publicaciónes manuales del portal y sus apps relaciónadas.",
+  },
+  {
+    href: "/contacto",
+    title: "Pedir ayuda",
+    description: "Si llegaste por un enlace roto o necesitas orientación, escribinos desde contacto.",
+  },
+];
+---
+
+<BaseLayout
+  title="404 · Portal Fósforo"
+  description="La pagina solicitada no existe o fue movida dentro del portal Fósforo."
+>
+  <SiteHeader />
+
+  <main class="section">
+    <div class="page not-found-page">
+      <section class="not-found-hero card" transition:animate="fade">
+        <span class="badge">Error de navegación</span>
+        <div class="not-found-grid">
+          <div class="not-found-copy">
+            <p class="not-found-code" aria-hidden="true">404</p>
+            <h1 class="section-title">Esta ruta no encontro hogar en el portal</h1>
+            <p class="section-desc">
+              Puede que el enlace este desactualizado, la ruta haya cambiado o la pagina todavia no
+              forme parte del MVP visible de Fósforo.
+            </p>
+
+            {
+              attemptedPath ? (
+                <p class="not-found-path">
+                  Ruta solicitada: <code>{attemptedPath}</code>
+                </p>
+              ) : null
+            }
+
+            <div class="not-found-actions">
+              <a class="button" href="/">Volver al inicio</a>
+              <a class="button secondary" href="/apps">Ir al catalogo</a>
+            </div>
+          </div>
+
+          <aside class="not-found-aside" aria-label="Sugerencias de recuperación">
+            <h2 class="card-title">Que podes hacer ahora</h2>
+            <ul class="not-found-list app-desc">
+              <li>Verificar si la URL se escribio correctamente.</li>
+              <li>Volver al inicio para retomar la navegación principal.</li>
+              <li>Entrar al catalogo o a novedades para encontrar la seccion buscada.</li>
+              <li>Contactarnos si llegaste desde un enlace roto.</li>
+            </ul>
+          </aside>
+        </div>
+      </section>
+
+      <section class="card-grid mt-24">
+        {quickLinks.map((item) => (
+          <article class="card">
+            <h2 class="card-title">{item.title}</h2>
+            <p class="app-desc">{item.description}</p>
+            <p>
+              <a href={item.href}>Abrir seccion</a>
+            </p>
+          </article>
+        ))}
+      </section>
+    </div>
+  </main>
+
+  <SiteFooter />
+</BaseLayout>

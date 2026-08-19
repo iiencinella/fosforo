@@ -1,0 +1,68 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import { requirePageAuth } from "@/lib/auth";
+import { supabase } from "@/db/supabase";
+
+const auth = await requirePageAuth(Astro, ["admin", "editor", "viewer"]);
+if (auth.response) {
+  return auth.response;
+}
+
+const { data: churches } = await supabase
+  .from("churches")
+  .select("id, name, city, province, status, updated_at")
+  .order("updated_at", { ascending: false })
+  .limit(50);
+---
+
+<AdminLayout title="Iglesias | Fósforo Admin" userEmail={auth.session?.email}>
+  <section>
+    <h1>Gestión de iglesias</h1>
+    <p class="app-desc">Alta, edición y seguimiento de iglesias del ecosistema.</p>
+  </section>
+
+  <section class="admin-section">
+    <div class="actions-row">
+      <a class="button-primary" href="/admin/iglesias/nueva">Nueva iglesia</a>
+    </div>
+
+    {churches && churches.length > 0 ? (
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Ciudad</th>
+              <th>Provincia</th>
+              <th>Estado</th>
+              <th>Actualizada</th>
+            </tr>
+          </thead>
+          <tbody>
+            {churches.map((church) => (
+              <tr>
+                <td>
+                  <a href={`/admin/iglesias/${church.id}`}>{church.name}</a>
+                </td>
+                <td>{church.city}</td>
+                <td>{church.province ?? "-"}</td>
+                <td>
+                  <span class="status-pill" data-status={church.status}>
+                    {church.status}
+                  </span>
+                </td>
+                <td>{new Date(church.updated_at).toLocaleString("es-AR")}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    ) : (
+      <>
+        <div class="skeleton-line" style="width:55%; margin-bottom:0.65rem;" />
+        <div class="skeleton-line" style="width:72%; margin-bottom:0.65rem;" />
+        <p class="app-desc">No hay iglesias cargadas aún.</p>
+      </>
+    )}
+  </section>
+</AdminLayout>

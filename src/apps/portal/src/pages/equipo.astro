@@ -1,0 +1,76 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import { TeamMemberAvatar } from "@repo/ui";
+import "@repo/ui/team-member-avatar.css";
+import defaultParticipantImage from "@/assets/icons/fire.svg";
+
+type Participant = {
+  name: string;
+  profession: string;
+  responsibilities: string[];
+  imageAlt: string;
+  imageSrc?: string;
+};
+
+const participants: Participant[] = [
+  {
+    name: "Iván Ezequiel Iencinella",
+    profession: "Arquitecto de software",
+    responsibilities: [
+      "Define la arquitectura técnica y el roadmap de implementación.",
+      "Mantiene la coherencia entre documentación, código y releases.",
+      "Coordina decisiones de diseño del ecosistema y estándares de calidad.",
+    ],
+    imageAlt: "Foto de Iván Ezequiel Iencinella",
+  },
+  {
+    name: "María Emilia Monzón",
+    profession: "Community manager",
+    responsibilities: [
+      "Articula la comunicación con la comúnidad y equipos de apoyo.",
+      "Canaliza feedback de usuarios y prioriza oportunidades de mejora.",
+      "Acompaña la estrategia de adopción y participación en las apps.",
+    ],
+    imageAlt: "Foto de María Emilia Monzón",
+  },
+];
+---
+
+<BaseLayout
+  title="Participantes del proyecto · Portal Fósforo"
+  description="Equipo de participantes y sus responsabilidades dentro del ecosistema Fósforo."
+>
+  <SiteHeader />
+  <main class="section">
+    <div class="page">
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <a href="/">Inicio</a>
+        <span class="breadcrumbs-sep">/</span>
+        <span class="breadcrumbs-item is-active">Participantes</span>
+      </nav>
+
+      <header>
+        <h1 class="section-title">Participantes del proyecto</h1>
+        <p class="section-desc mw-640">
+          Conocé a las personas que lideran y sostienen el ecosistema Fósforo en esta etapa del
+          portal.
+        </p>
+      </header>
+
+      <section class="participant-grid mt-24" aria-label="Listado de participantes">
+        {
+          participants.map((participant) => (
+            <TeamMemberAvatar
+              {...participant}
+              defaultImageSrc={defaultParticipantImage.src}
+              imageSrc={participant.imageSrc ?? defaultParticipantImage.src}
+            />
+          ))
+        }
+      </section>
+    </div>
+  </main>
+  <SiteFooter />
+</BaseLayout>

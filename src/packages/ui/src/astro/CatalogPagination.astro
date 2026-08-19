@@ -1,0 +1,35 @@
+---
+type Props = {
+  total: number;
+  from: number;
+  to: number;
+  previousHref: string;
+  nextHref: string;
+  previousDisabled?: boolean;
+  nextDisabled?: boolean;
+  rootClass?: string;
+  navClass?: string;
+  linkClass?: string;
+};
+
+const {
+  total,
+  from,
+  to,
+  previousHref,
+  nextHref,
+  previousDisabled = false,
+  nextDisabled = false,
+  rootClass = "catalog-pagination",
+  navClass = "catalog-pagination-nav",
+  linkClass = "catalog-page-link",
+} = Astro.props as Props;
+---
+
+<section class={rootClass}>
+  <p>Mostrando {from} - {to} de {total}</p>
+  <div class={navClass}>
+    <a class={`${linkClass} ${previousDisabled ? "disabled" : ""}`} href={previousHref}>Anterior</a>
+    <a class={`${linkClass} ${nextDisabled ? "disabled" : ""}`} href={nextHref}>Siguiente</a>
+  </div>
+</section>

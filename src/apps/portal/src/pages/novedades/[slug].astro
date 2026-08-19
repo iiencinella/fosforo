@@ -1,0 +1,67 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import { getCollection, render } from "astro:content";
+import blogPostDefault from "@/assets/blog_post_default.png";
+
+export async function getStaticPaths() {
+  const novedades = await getCollection("novedades");
+
+  return novedades.map((item) => ({
+    params: { slug: item.data.slug },
+    props: { item },
+  }));
+}
+
+const { item } = Astro.props as {
+  item: Awaited<ReturnType<typeof getCollection<"novedades">>>[number];
+};
+
+const { Content } = await render(item);
+const coverImage = item.data.image?.src;
+const socialImage = coverImage ?? blogPostDefault.src;
+const itemDescription = (item.body ?? "").slice(0, 160).trim();
+---
+
+<BaseLayout
+  title={`${item.data.titulo} · Novedades · Portal Fósforo`}
+  description={itemDescription}
+  image={socialImage}
+>
+  <SiteHeader />
+  <main class="section">
+    <div class="page dev-page">
+      <nav class="breadcrumbs" aria-label="Breadcrumbs">
+        <a href="/">Inicio</a>
+        <span class="breadcrumbs-sep">/</span>
+        <a href="/novedades">Novedades</a>
+        <span class="breadcrumbs-sep">/</span>
+        <span class="breadcrumbs-item is-active">{item.data.titulo}</span>
+      </nav>
+
+      <article class={`card detail-card${coverImage ? " detail-card--with-image" : ""}`}>
+        {
+          coverImage ? (
+            <div
+              class="detail-cover"
+              style={`background-image: url(${coverImage});`}
+              aria-hidden="true"
+            ></div>
+          ) : null
+        }
+        <div class="card-meta">
+          <time datetime={item.data.fecha_creación.toISOString().slice(0, 10)}>
+            {item.data.fecha_creación.toISOString().slice(0, 10)}
+          </time>
+          <span> · portal</span>
+        </div>
+        <h1 class="section-title">{item.data.titulo}</h1>
+        <div class="markdown-content">
+          <Content />
+        </div>
+      </article>
+    </div>
+  </main>
+  <SiteFooter />
+</BaseLayout>

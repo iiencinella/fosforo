@@ -1,0 +1,52 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import { requirePageAuth } from "@/lib/auth";
+import { supabase } from "@/db/supabase";
+
+const auth = await requirePageAuth(Astro, ["admin", "editor", "viewer"]);
+if (auth.response) {
+  return auth.response;
+}
+
+const { data: schedules } = await supabase
+  .from("celebration_schedules")
+  .select("id, celebration_type, weekday, start_time, churches(name)")
+  .order("updated_at", { ascending: false })
+  .limit(80);
+---
+
+<AdminLayout title="Horarios | Fósforo Admin" userEmail={auth.session?.email}>
+  <section>
+    <h1>Horarios de celebraciones</h1>
+    <p class="app-desc">Vista consolidada de horarios por iglesia.</p>
+  </section>
+
+  <section class="admin-section">
+    {schedules && schedules.length > 0 ? (
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Iglesia</th>
+              <th>Celebración</th>
+              <th>Día</th>
+              <th>Hora</th>
+            </tr>
+          </thead>
+          <tbody>
+            {schedules.map((row) => (
+              <tr>
+                <td>{Array.isArray(row.churches) ? (row.churches[0]?.name ?? "-") : "-"}</td>
+                <td>{row.celebration_type}</td>
+                <td>{row.weekday}</td>
+                <td>{row.start_time}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    ) : (
+      <p class="app-desc">No hay horarios cargados todavía.</p>
+    )}
+  </section>
+</AdminLayout>

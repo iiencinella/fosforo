@@ -1,0 +1,48 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import { requirePageAuth } from "@/lib/auth";
+
+const auth = await requirePageAuth(Astro, ["admin", "editor"]);
+if (auth.response) {
+  return auth.response;
+}
+---
+
+<AdminLayout title="Nueva iglesia | Fósforo Admin" userEmail={auth.session?.email}>
+  <section class="admin-section">
+    <h1>Nueva iglesia</h1>
+    <p class="app-desc">Completá los datos mínimos para dar de alta una iglesia.</p>
+
+    <form class="form" method="post" action="/api/churches">
+      <div class="form-row">
+        <label for="name">Nombre</label>
+        <input id="name" name="name" required minlength="2" maxlength="200" />
+      </div>
+      <div class="form-row">
+        <label for="address">Dirección</label>
+        <input id="address" name="address" maxlength="300" />
+      </div>
+      <div class="form-row">
+        <label for="city">Ciudad</label>
+        <input id="city" name="city" required minlength="2" maxlength="120" />
+      </div>
+      <div class="form-row">
+        <label for="province">Provincia</label>
+        <input id="province" name="province" maxlength="120" />
+      </div>
+      <div class="form-row">
+        <label for="country">País</label>
+        <input id="country" name="country" maxlength="120" value="Argentina" />
+      </div>
+      <div class="form-row">
+        <label for="latitude">Latitud</label>
+        <input id="latitude" name="latitude" type="number" step="any" min="-90" max="90" />
+      </div>
+      <div class="form-row">
+        <label for="longitude">Longitud</label>
+        <input id="longitude" name="longitude" type="number" step="any" min="-180" max="180" />
+      </div>
+      <button class="button-primary" type="submit">Crear iglesia</button>
+    </form>
+  </section>
+</AdminLayout>

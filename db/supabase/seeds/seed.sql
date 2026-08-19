@@ -1,0 +1,2 @@
+-- Seed base para entorno local.
+-- Los datos de usuarios/roles específicos se inicializan en migraciones versionadas.

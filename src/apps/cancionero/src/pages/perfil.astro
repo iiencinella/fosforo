@@ -1,0 +1,123 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+
+const session = Astro.locals.session;
+const role = Astro.locals.appRole;
+
+const profile = session!.profile;
+const userInitials = profile.name
+  .split(/\s+/)
+  .slice(0, 2)
+  .map((part) => part.charAt(0).toUpperCase())
+  .join("");
+
+const roleLabels: Record<string, string> = {
+  admin: "Administrador",
+  sacerdote: "Sacerdote",
+  coordinador: "Coordinador",
+  musico: "Musico",
+  usuario: "Usuario",
+  invitado: "Invitado",
+};
+const roleLabel = roleLabels[role] ?? role;
+---
+
+<Layout
+  title="Mi perfil - Cancionero Fosforo"
+  description="Perfil y rol del usuario autenticado en el Cancionero Fosforo."
+>
+  <SiteHeader />
+
+  <main class="cancionero-app">
+    <section class="section" id="perfil">
+      <div class="page cancionero-stack">
+        <div class="cancionero-hero-copy">
+          <span class="cancionero-kicker">Sesion activa</span>
+          <h1 class="cancionero-title">Hola, {profile.name}.</h1>
+          <p class="cancionero-subtitle">
+            Tu rol actual en el cancionero determina que acciones podes
+            realizar en la plataforma.
+          </p>
+        </div>
+
+        <article class="card surface-card cancionero-profile-card">
+          <div class="cancionero-profile-avatar" aria-hidden="true">
+            {profile.avatarUrl ? (
+              <img src={profile.avatarUrl} alt="" />
+            ) : (
+              <span>{userInitials || "U"}</span>
+            )}
+          </div>
+          <dl class="cancionero-profile-fields">
+            <div>
+              <dt>Nombre</dt>
+              <dd>{profile.name}</dd>
+            </div>
+            <div>
+              <dt>Email</dt>
+              <dd>{profile.email}</dd>
+            </div>
+            <div>
+              <dt>Rol en el cancionero</dt>
+              <dd>
+                <span class="pill">{roleLabel}</span>
+                <small class="cancionero-form-hint">
+                  {Astro.locals.canModerate
+                    ? "Podes aprobar o rechazar contribuciones."
+                    : Astro.locals.canContribute
+                      ? "Podes contribuir nuevas canciones."
+                      : "Solo lectura."}
+                </small>
+              </dd>
+            </div>
+            <div>
+              <dt>ID de usuario</dt>
+              <dd><code>{profile.id}</code></dd>
+            </div>
+          </dl>
+        </article>
+
+        <div class="cancionero-filter-actions">
+          {Astro.locals.canContribute && (
+            <a class="button" href="/contribuir">Contribuir una cancion</a>
+          )}
+          {Astro.locals.canModerate && (
+            <a class="button secondary" href="/moderacion">Ir a moderacion</a>
+          )}
+          <button class="button secondary" id="logout-button" type="button">Cerrar sesion</button>
+        </div>
+        <p id="logout-status" class="form-status pending" role="status" aria-live="polite">
+          Sesion activa.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter />
+</Layout>
+
+<script>
+  const button = document.querySelector("#logout-button") as HTMLButtonElement | null;
+  const status = document.querySelector("#logout-status") as HTMLParagraphElement | null;
+
+  if (button && status) {
+    button.addEventListener("click", async () => {
+      status.className = "form-status pending";
+      status.textContent = "Cerrando sesion...";
+      try {
+        await fetch("/api/cancionero/auth/logout", { method: "POST" });
+        status.className = "form-status success";
+        status.textContent = "Sesion cerrada.";
+        window.setTimeout(() => {
+          window.location.href = "/";
+        }, 400);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : "USERS_LOGOUT_FAILED";
+        status.className = "form-status error";
+        status.textContent = `No pudimos cerrar sesion (${message}).`;
+      }
+    });
+  }
+</script>

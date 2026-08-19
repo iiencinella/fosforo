@@ -1,0 +1,25 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import { PortalContactForm } from "@repo/ui";
+import SectionIntro from "@repo/ui/astro/SectionIntro.astro";
+---
+
+<BaseLayout title="Contacto · Portal Fósforo" description="Canal de contacto y soporte inicial del portal.">
+  <SiteHeader />
+  <main class="section">
+    <div class="page form-center">
+      <div>
+        <SectionIntro
+          title="Contacto"
+          description="Escribinos para soporte, consultas o colaboración general sobre el ecosistema."
+        />
+        <div class="mt-24 mw-640">
+          <PortalContactForm client:load />
+        </div>
+      </div>
+    </div>
+  </main>
+  <SiteFooter />
+</BaseLayout>

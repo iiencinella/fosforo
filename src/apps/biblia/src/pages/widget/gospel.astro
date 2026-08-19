@@ -1,0 +1,125 @@
+---
+import "@/styles/gospel-widget.css";
+import { GospelWidget } from "@/components/GospelWidget";
+import { getLiturgyDayRpc, readChapterRpc, type BibliaLiturgyRow, type BibliaReadRow } from "@/db/supabase";
+import { formatReadRows } from "@/lib/api-formatters";
+import { parseBibleReferenceQuery, getDefaultVersion } from "@/lib/data";
+import { getEnabledBibleVersion } from "@/lib/server/bible-versions";
+
+function getTodayIsoDate(): string {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+const params = Astro.url.searchParams;
+const theme = (params.get("theme") === "light" ? "light" : "dark") as "light" | "dark";
+const date = params.get("date") ?? getTodayIsoDate();
+const youtubeUrl = params.get("youtube") ?? undefined;
+const spotifyUrl = params.get("spotify") ?? undefined;
+
+let reading = null;
+let gospelVerses: Array<{
+  versionCode: string;
+  bookSlug: string;
+  bookName: string;
+  chapter: number;
+  verse: number;
+  reference: string;
+  text: string;
+  rank: number;
+}> = [];
+let error: string | undefined;
+
+if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+  error = "La fecha debe tener formato YYYY-MM-DD.";
+} else {
+  const { data: liturgyData, error: liturgyError } = await getLiturgyDayRpc({
+    date,
+    rite: "roman",
+    regionCode: "AR",
+  });
+
+  if (liturgyError) {
+    error = "No se pudieron obtener las lecturas litúrgicas.";
+  } else {
+    const entry = (liturgyData?.[0] as BibliaLiturgyRow | undefined) ?? null;
+
+    if (entry) {
+      reading = {
+        fecha: entry.reading_date,
+        tipo: entry.celebration_type,
+        nombre: entry.celebration_name,
+        ciclo: entry.cycle,
+        semana: entry.week,
+        primera: entry.first_reading_ref,
+        salmo: entry.psalm_ref,
+        segunda: entry.second_reading_ref,
+        evangelio: entry.gospel_ref,
+      };
+
+      if (entry.gospel_ref) {
+        const parsed = parseBibleReferenceQuery(entry.gospel_ref);
+
+        if (parsed) {
+          const { version: enabledVersion, errorMessage: versionError } =
+            await getEnabledBibleVersion(getDefaultVersion().code);
+
+          if (!versionError && enabledVersion) {
+            const { data: versesData, error: versesError } =
+              await readChapterRpc({
+                versionCode: enabledVersion.code,
+                bookSlug: parsed.bookSlug,
+                chapterNumber: parsed.chapter,
+              });
+
+            if (!versesError && versesData) {
+              gospelVerses = formatReadRows(
+                (versesData ?? []) as BibliaReadRow[],
+              )
+                .filter((row) => {
+                  if (
+                    typeof parsed.verseStart === "number" &&
+                    row.verse < parsed.verseStart
+                  ) {
+                    return false;
+                  }
+                  if (
+                    typeof parsed.verseEnd === "number" &&
+                    row.verse > parsed.verseEnd
+                  ) {
+                    return false;
+                  }
+                  return true;
+                })
+                .map((row) => ({ ...row, rank: 1 }));
+            }
+          }
+        }
+      }
+    }
+  }
+}
+---
+
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Evangelio del día · Fósforo</title>
+    <meta name="description" content="Evangelio del día según el calendario litúrgico católico (Rito Romano Argentina)." />
+  </head>
+  <body>
+    <GospelWidget
+      reading={reading}
+      gospelVerses={gospelVerses}
+      youtubeUrl={youtubeUrl}
+      spotifyUrl={spotifyUrl}
+      theme={theme}
+      error={error}
+      client:load
+    />
+  </body>
+</html>

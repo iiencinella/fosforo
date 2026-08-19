@@ -1,0 +1,39 @@
+{
+  "name": "log",
+  "private": true,
+  "type": "module",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev --host",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check-types": "astro check",
+    "test:unit": "vitest run",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/react": "^4.4.0",
+    "@astrojs/vercel": "^10.0.5",
+    "@repo/env": "workspace:*",
+    "@repo/api-utils": "workspace:*",
+    "@repo/ui": "workspace:*",
+    "@supabase/supabase-js": "^2.57.4",
+    "@tailwindcss/vite": "^4.3.0",
+    "astro": "^6.3.7",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tailwindcss": "4.2.4",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.8",
+    "@types/node": "^24.10.1",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
+    "vitest": "4.1.5",
+    "typescript": "^5.9.3"
+  }
+}

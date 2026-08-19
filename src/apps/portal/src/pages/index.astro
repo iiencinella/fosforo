@@ -1,0 +1,132 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import { getCategoryLabel, sortAppsCatalogEntries } from "@/lib/apps-catalog";
+import { getCollection } from "astro:content";
+import { PortalAppCard, PortalBlogCard, PortalHero, SectionHeader } from "@repo/ui";
+import ActionLinkList from "@repo/ui/astro/ActionLinkList.astro";
+import blogPostDefault from "@/assets/blog_post_default.png";
+import heroVideo from "@/assets/video/video_fosforo.mp4";
+
+function summarizeBody(markdown: string): string {
+  const normalized = markdown
+    .replace(/[#*_`>\-]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  if (normalized.length <= 160) {
+    return normalized;
+  }
+
+  return `${normalized.slice(0, 157).trim()}...`;
+}
+
+const heroActions = [
+  { href: "/apps", label: "Explorar aplicaciones" },
+  { href: "/novedades", label: "Ver novedades", secondary: true },
+];
+
+const allApps = sortAppsCatalogEntries(await getCollection("appsCatalog"))
+  .map((app) => ({
+    slug: app.data.slug,
+    name: app.data.name,
+    resume: app.data.resume,
+    category: getCategoryLabel(app.data.category),
+    status: app.data.status,
+    visible: app.data.visible,
+    imageSrc: app.data.image?.src,
+    imageAlt: `Imagen de portada para ${app.data.name}`,
+  }));
+
+const apps = allApps.filter((app) => app.visible !== false);
+
+const novedades = (await getCollection("novedades"))
+  .sort(
+    (a, b) =>
+      b.data.fecha_creación.getTime() - a.data.fecha_creación.getTime(),
+  )
+  .slice(0, 3)
+  .map((item) => ({
+    slug: item.data.slug,
+    title: item.data.titulo,
+    description: summarizeBody(item.body ?? ""),
+    date: item.data.fecha_creación.toISOString().slice(0, 10),
+    category: "novedad",
+    app: "portal",
+    href: `/novedades/${item.data.slug}`,
+    imageSrc: item.data.image?.src ?? blogPostDefault.src,
+    imageAlt: `Imagen de portada para ${item.data.titulo}`,
+  }));
+---
+
+<BaseLayout title="Portal Fósforo" description="Puerta de entrada del ecosistema Fósforo.">
+  <SiteHeader />
+
+  <main>
+    <PortalHero
+      kicker="Ecosistema Fosforo"
+      title="Una puerta de entrada para evangelizar en digital"
+      subtitle="Conecta aplicaciones, comunidad y formación en un solo lugar."
+      actions={heroActions}
+      videoSrc={heroVideo}
+    />
+
+    <section class="section">
+      <div class="page">
+        <SectionHeader
+          title="Aplicaciones"
+          description="Una seleccion del catalogo del ecosistema, organizada por tipo de experiencia."
+        />
+
+        <div class="apps-grid">{apps.map((app) => <PortalAppCard {...app} />)}</div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="page">
+        <SectionHeader
+          title="Novedades"
+          description="Publicaciones manuales versionadas desde contenido del portal."
+        />
+
+        {
+          novedades.length > 0 ? (
+            <div class="card-grid blog-grid">
+              {novedades.map((item) => <PortalBlogCard {...item} />)}
+            </div>
+          ) : (
+            <article class="card">
+              <h2 class="card-title">Sin novedades publicadas</h2>
+              <p class="app-desc">Cuando se publique contenido, aparecerá en esta sección.</p>
+            </article>
+          )
+        }
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="page two-column">
+        <article class="card">
+          <h2 class="card-title">Contacto y soporte</h2>
+          <p class="app-desc">
+            Canal público para consultas, soporte y seguimiento inicial de casos del ecosistema.
+          </p>
+          <ActionLinkList items={[{ href: "/contacto", label: "Ir a contacto", secondary: true }]} />
+        </article>
+
+        <article class="card">
+          <h2 class="card-title">Contribución técnica</h2>
+          <p class="app-desc">
+            Las propuestas técnicas se gestionan con pull requests en el repositorio oficial.
+          </p>
+          <ActionLinkList
+            items={[{ href: "/desarrolladores", label: "Guía para desarrolladores", secondary: true }]}
+          />
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter />
+</BaseLayout>

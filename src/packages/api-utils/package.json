@@ -1,0 +1,10 @@
+{
+  "name": "@repo/api-utils",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./log-client": "./src/log-client.ts"
+  }
+}

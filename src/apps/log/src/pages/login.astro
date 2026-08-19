@@ -1,0 +1,53 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+---
+
+<BaseLayout title="Login · Fosforo Log" description="Acceso al panel de observabilidad.">
+  <SiteHeader />
+  <main id="main-content" class="page log-main">
+    <section class="log-hero">
+      <p class="log-hero__kicker">Control de acceso</p>
+      <h1 class="log-hero__title">Ingresar al panel de logs</h1>
+      <p class="log-hero__subtitle">
+        Inicia sesion con Supabase. Solo usuarios con rol `dev` u `ops` (en
+        `app_metadata.role`) pueden acceder a la aplicacion.
+      </p>
+    </section>
+
+    <section class="surface-grid">
+      <article class="surface-card form-center">
+        <form class="form" method="post" action="/api/auth/login">
+          <div class="form-row">
+            <label for="email">Email</label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              required
+              autocomplete="email"
+              placeholder="dev@fosforo.com"
+            />
+          </div>
+          <div class="form-row">
+            <label for="password">Password</label>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              required
+              autocomplete="current-password"
+              placeholder="Tu password"
+            />
+          </div>
+          <button class="button" type="submit">Entrar</button>
+        </form>
+        <p class="form-status pending">
+          Si no tienes rol autorizado, la app mostrara acceso denegado.
+        </p>
+      </article>
+    </section>
+  </main>
+  <SiteFooter />
+</BaseLayout>

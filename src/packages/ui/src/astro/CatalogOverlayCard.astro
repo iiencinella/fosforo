@@ -1,0 +1,46 @@
+---
+type Props = {
+  title: string;
+  excerpt: string;
+  href: string;
+  hrefLabel?: string;
+  chips?: string[];
+  backgroundImage: string;
+  rootClass?: string;
+  bodyClass?: string;
+  chipListClass?: string;
+  chipClass?: string;
+  linkClass?: string;
+};
+
+const {
+  title,
+  excerpt,
+  href,
+  hrefLabel = "Ver ficha",
+  chips = [],
+  backgroundImage,
+  rootClass = "catalog-card",
+  bodyClass = "",
+  chipListClass = "catalog-chip-list",
+  chipClass = "catalog-chip",
+  linkClass = "",
+} = Astro.props as Props;
+---
+
+<article class={rootClass} style={`--card-bg: url(${backgroundImage})`}>
+  <div class={bodyClass}>
+    <h2>{title}</h2>
+    <p>{excerpt}</p>
+    {
+      chips.length > 0 && (
+        <div class={chipListClass}>
+          {chips.map((chip) => <span class={chipClass}>{chip}</span>)}
+        </div>
+      )
+    }
+    <p>
+      <a class={linkClass} href={href}>{hrefLabel}</a>
+    </p>
+  </div>
+</article>

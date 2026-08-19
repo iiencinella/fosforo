@@ -1,0 +1,102 @@
+{
+  "$schema": "https://turborepo.dev/schema.json",
+  "ui": "tui",
+  "globalEnv": [
+    "CANCIONERO_GITHUB_TOKEN",
+    "CANCIONERO_GITHUB_OWNER",
+    "CANCIONERO_GITHUB_REPO",
+    "CANCIONERO_GITHUB_BRANCH",
+    "CANCIONERO_GITHUB_PATH_PREFIX",
+    "CANCIONERO_GIT_PUBLISH",
+    "CANCIONERO_GIT_REPO_ROOT",
+    "CANCIONERO_GIT_REMOTE",
+    "CANCIONERO_GIT_BRANCH",
+    "CANCIONERO_EXAMINER_CODE",
+    "GITHUB_TOKEN",
+    "GITHUB_OWNER",
+    "GITHUB_ORG",
+    "GITHUB_REPO",
+    "GITHUB_BRANCH",
+    "GITHUB_REF_NAME",
+    "GITHUB_PATH_PREFIX",
+    "GITHUB_REPOSITORY",
+    "SUPABASE_URL",
+    "PUBLIC_SUPABASE_URL",
+    "SUPABASE_ANON_KEY",
+    "PUBLIC_SUPABASE_ANON_KEY",
+    "SUPABASE_KEY",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_PROJECT_REF",
+    "SUPABASE_ACCESS_TOKEN",
+    "SUPABASE_DB_PASSWORD",
+    "LOGS_INGEST_API_KEY",
+    "PUBLIC_PORTAL_WHATSAPP_NUMBER",
+    "BIBLIA_INTERNAL_INGESTION_KEY"
+  ],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
+    },
+    "lint": {
+      "dependsOn": ["^lint"]
+    },
+    "check-types": {
+      "dependsOn": ["^check-types"]
+    },
+    "test:unit": {
+      "dependsOn": ["^test:unit"],
+      "outputs": ["coverage/**"]
+    },
+    "mobile-buscador#test:unit": {
+      "outputs": []
+    },
+    "mobile-cancionero#test:unit": {
+      "outputs": []
+    },
+    "mobile-chatbot#test:unit": {
+      "outputs": []
+    },
+    "mobile-donaciónes#test:unit": {
+      "outputs": []
+    },
+    "mobile-emprendedor#test:unit": {
+      "outputs": []
+    },
+    "mobile-formación#test:unit": {
+      "outputs": []
+    },
+    "mobile-lectio-divina#test:unit": {
+      "outputs": []
+    },
+    "mobile-meditvoz#test:unit": {
+      "outputs": []
+    },
+    "mobile-motus#test:unit": {
+      "outputs": []
+    },
+    "mobile-peticionario#test:unit": {
+      "outputs": []
+    },
+    "@repo/mobile-auth-client#test:unit": {
+      "outputs": []
+    },
+    "biblia-desktop#test:unit": {
+      "outputs": []
+    },
+    "lectio-divina-desktop#test:unit": {
+      "outputs": []
+    },
+    "fosforo-desktop#test:unit": {
+      "outputs": []
+    },
+    "admin-parroquial-desktop#test:unit": {
+      "outputs": []
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    }
+  }
+}

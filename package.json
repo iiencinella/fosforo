@@ -1,0 +1,45 @@
+{
+  "name": "fosforo",
+  "private": true,
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "check-types": "turbo run check-types",
+    "test:unit": "turbo run test:unit",
+    "db:scripts:validate": "node db/scripts/validate.js",
+    "db:link": "node db/scripts/supabase-cli.js link",
+    "db:migrate": "node db/scripts/supabase-cli.js migrate",
+    "db:push": "node db/scripts/supabase-cli.js push",
+    "db:reset": "node db/scripts/supabase-cli.js reset",
+    "db:seed": "node db/scripts/supabase-cli.js seed",
+    "db:generate-types": "node db/scripts/supabase-cli.js generate-types",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "docs:new-app": "node scripts/docs-new-app.mjs",
+    "docs:sync-app-status": "node scripts/docs-sync-app-status.mjs"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "4.1.5",
+    "prettier": "3.8.3",
+    "prettier-plugin-tailwindcss": "0.7.3",
+    "tslib": "2.8.1",
+    "turbo": "2.9.6",
+    "vitest": "4.1.5"
+  },
+  "packageManager": "pnpm@10.33.2",
+  "engines": {
+    "node": ">=18"
+  },
+  "pnpm": {
+    "packageExtensions": {
+      "@tailwindcss/cli@*": {
+        "dependencies": {
+          "mri": "^1.2.0"
+        }
+      }
+    },
+    "onlyBuiltDependencies": [
+      "electron"
+    ]
+  }
+}

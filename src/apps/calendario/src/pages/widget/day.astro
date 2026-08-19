@@ -1,0 +1,132 @@
+---
+import "@/styles/cal-widget.css";
+import { getDayByDate } from "@/lib/calendar";
+
+const params = Astro.url.searchParams;
+const theme = (params.get("theme") === "light" ? "light" : "dark") as "light" | "dark";
+
+let day = null;
+let error: string | undefined;
+
+try {
+  const now = new Date();
+  const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+  day = await getDayByDate(today);
+} catch {
+  error = "No se pudo resolver el calendario en este momento.";
+}
+
+const COLOR_HEX: Record<string, string> = {
+  verde: "#1e7a4b",
+  blanco: "#e7d9bb",
+  morado: "#6a2b73",
+  rojo: "#b03a2e",
+  rosa: "#c07b63",
+};
+
+const COLOR_LABEL: Record<string, string> = {
+  verde: "Verde",
+  blanco: "Blanco / dorado",
+  morado: "Morado",
+  rojo: "Rojo",
+  rosa: "Rosa",
+};
+---
+
+<html lang="es" data-theme={theme}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Jornada del día · Calendario Fósforo</title>
+    <meta name="description" content="Jornada litúrgica del día con celebración, lecturas y santos. Calendario del ecosistema Fósforo." />
+  </head>
+  <body>
+    <div class="cal-widget">
+      <div class="cal-widget-header">
+        <div class="cal-widget-date-block">
+          <p class="cal-widget-kicker">Calendario litúrgico</p>
+          <p class="cal-widget-date">{day ? day.weekdayLabel : "—"}</p>
+        </div>
+        <button
+          class="cal-widget-theme-toggle"
+          id="cal-widget-theme-btn"
+          aria-label={theme === "dark" ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
+        >
+          {theme === "dark" ? <>&#9728;</> : <>&#9790;</>}
+        </button>
+      </div>
+
+      {error ? (
+        <div class="cal-widget-error">
+          <p>{error}</p>
+        </div>
+      ) : !day ? (
+        <div class="cal-widget-empty">
+          No hay jornada litúrgica disponible para hoy.
+        </div>
+      ) : (
+        <>
+          <div class="cal-widget-celebration liturgical-{day.liturgicalColor}">
+            <h1 class="cal-widget-celebration-title">{day.celebrationTitle}</h1>
+
+            <div class="cal-widget-tags">
+              {day.rankLabel ? (
+                <span class="cal-widget-tag">{day.rankLabel}</span>
+              ) : null}
+              <span class="cal-widget-tag">
+                <span class="cal-widget-tag-dot" style={`background: ${COLOR_HEX[day.liturgicalColor] ?? "#1e7a4b"}`}></span>
+                {COLOR_LABEL[day.liturgicalColor] ?? day.liturgicalColor}
+              </span>
+              <span class="cal-widget-tag">{day.liturgicalSeason}</span>
+              {day.cycle ? <span class="cal-widget-tag">Ciclo {day.cycle}</span> : null}
+              {day.isMarian ? <span class="cal-widget-tag">Mariana</span> : null}
+              {day.isArgentina ? <span class="cal-widget-tag">Argentina</span> : null}
+            </div>
+          </div>
+
+          {day.readings.length > 0 ? (
+            <div class="cal-widget-readings">
+              <p class="cal-widget-readings-title">Lecturas del día</p>
+              {day.readings.map((reading) => (
+                <a class="cal-widget-reading" href={`/?date=${day!.requestedDate}`} target="_blank" rel="noopener noreferrer">
+                  <span class="cal-widget-reading-label">{reading.label}</span>
+                  <span class="cal-widget-reading-ref">{reading.reference}</span>
+                </a>
+              ))}
+            </div>
+          ) : (
+            <div class="cal-widget-empty">
+              Esta jornada aún no tiene lecturas publicadas.
+            </div>
+          )}
+
+          <div class="cal-widget-footer">
+            <span class="cal-widget-brand">
+              <a href="/" target="_blank" rel="noopener noreferrer">Calendario Fósforo</a>
+            </span>
+            <a class="cal-widget-cta" href={`/?date=${day.requestedDate}`} target="_blank" rel="noopener noreferrer">
+              Ver calendario →
+            </a>
+          </div>
+        </>
+      )}
+    </div>
+
+    <script is:inline>
+      (() => {
+        const btn = document.getElementById('cal-widget-theme-btn');
+        if (!btn) return;
+
+        btn.addEventListener('click', () => {
+          const html = document.documentElement;
+          const current = html.dataset.theme === 'light' ? 'light' : 'dark';
+          const next = current === 'dark' ? 'light' : 'dark';
+          html.dataset.theme = next;
+          html.style.colorScheme = next;
+          btn.setAttribute('aria-label', next === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro');
+          btn.textContent = next === 'dark' ? '\u263C' : '\u263E';
+        });
+      })();
+    </script>
+  </body>
+</html>

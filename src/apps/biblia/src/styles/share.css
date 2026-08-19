@@ -1,0 +1,304 @@
+.share-page {
+  display: grid;
+  gap: var(--spacing-6);
+  padding: var(--spacing-6);
+  max-width: 800px;
+  margin: 0 auto;
+  min-height: 100vh;
+}
+
+.share-page-header {
+  display: grid;
+  gap: var(--spacing-2);
+}
+
+.share-back {
+  color: var(--color-muted);
+  font-size: 0.875rem;
+  text-decoration: none;
+  transition: color var(--transition-fast, 0.15s ease);
+}
+
+.share-back:hover {
+  color: var(--color-accent);
+}
+
+.share-page-title {
+  font-family: var(--font-serif);
+  font-size: clamp(1.75rem, 5vw, 2.5rem);
+  color: var(--color-text);
+  margin: 0;
+}
+
+.share-page-date {
+  color: var(--color-muted);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+/* Reading card */
+.share-reading {
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-6);
+  display: grid;
+  gap: var(--spacing-5);
+}
+
+.share-reading-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  flex-wrap: wrap;
+}
+
+.share-reading-celebration {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  color: var(--color-text);
+  margin: 0;
+  flex: 1;
+}
+
+.share-reading-badge {
+  display: inline-block;
+  padding: var(--spacing-1) var(--spacing-3);
+  background: color-mix(in srgb, var(--color-accent) 15%, transparent);
+  color: var(--color-accent);
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.share-reading-section {
+  display: grid;
+  gap: var(--spacing-2);
+}
+
+.share-reading-section-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  margin: 0;
+}
+
+.share-reading-ref {
+  font-size: 1rem;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.share-reading-ref--gospel {
+  font-size: 1.1rem;
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+.share-reading-gospel {
+  background: color-mix(in srgb, var(--color-accent) 5%, transparent);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-4);
+  border-left: 3px solid var(--color-accent);
+}
+
+.share-reading-verses {
+  display: grid;
+  gap: var(--spacing-3);
+  margin-top: var(--spacing-3);
+}
+
+.share-reading-verse {
+  line-height: 1.7;
+  color: var(--color-text);
+  margin: 0;
+  text-align: justify;
+}
+
+.share-reading-verse strong {
+  display: inline-block;
+  min-width: 1.5em;
+  color: var(--color-accent);
+  font-size: 0.85em;
+  font-weight: 700;
+  text-align: right;
+  margin-right: 0.3em;
+}
+
+.share-empty {
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-8);
+  text-align: center;
+  color: var(--color-muted);
+}
+
+/* Share section */
+.share-section {
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-6);
+}
+
+.share-buttons {
+  display: grid;
+  gap: var(--spacing-4);
+}
+
+.share-title {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.share-subtitle {
+  color: var(--color-muted);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.share-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--spacing-3);
+}
+
+.share-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-3) var(--spacing-4);
+  background: color-mix(in srgb, var(--brand-color, #666) 12%, transparent);
+  border: 1px solid
+    color-mix(in srgb, var(--brand-color, #666) 25%, transparent);
+  border-radius: var(--radius-md);
+  color: var(--color-text);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast, 0.15s ease);
+}
+
+.share-btn:hover {
+  background: color-mix(in srgb, var(--brand-color, #666) 20%, transparent);
+  border-color: color-mix(in srgb, var(--brand-color, #666) 40%, transparent);
+  transform: translateY(-1px);
+}
+
+.share-btn-icon {
+  font-size: 1.25rem;
+}
+
+.share-btn-label {
+  font-size: 0.9rem;
+}
+
+.share-actions {
+  display: flex;
+  gap: var(--spacing-3);
+  flex-wrap: wrap;
+}
+
+.share-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-2) var(--spacing-4);
+  background: var(--color-surface-strong, #1e293b);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-sm);
+  color: var(--color-text);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all var(--transition-fast, 0.15s ease);
+}
+
+.share-action-btn:hover {
+  background: color-mix(
+    in srgb,
+    var(--color-accent) 10%,
+    var(--color-surface-strong, #1e293b)
+  );
+}
+
+/* Link preview */
+.share-preview {
+  margin-top: var(--spacing-2);
+}
+
+.share-preview-label {
+  font-size: 0.8rem;
+  color: var(--color-muted);
+  margin: 0 0 var(--spacing-2) 0;
+}
+
+.share-preview-card {
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--color-bg);
+}
+
+.share-preview-image {
+  width: 100%;
+  aspect-ratio: 1200 / 630;
+  overflow: hidden;
+  background: #1a1a2e;
+}
+
+.share-preview-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.share-preview-info {
+  padding: var(--spacing-3);
+  display: grid;
+  gap: var(--spacing-1);
+}
+
+.share-preview-domain {
+  font-size: 0.75rem;
+  color: var(--color-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0;
+}
+
+.share-preview-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.share-preview-text {
+  font-size: 0.85rem;
+  color: var(--color-muted);
+  margin: 0;
+}
+
+/* Footer */
+.share-footer {
+  text-align: center;
+  padding: var(--spacing-4) 0;
+  border-top: 1px solid var(--color-line);
+  color: var(--color-muted);
+  font-size: 0.85rem;
+}
+
+.share-footer a {
+  color: var(--color-accent);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.share-footer a:hover {
+  text-decoration: underline;
+}

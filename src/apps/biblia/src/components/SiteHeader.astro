@@ -1,0 +1,28 @@
+---
+import { PortalHeader } from "@repo/ui";
+import bibleLogoDark from "@/assets/bible-dark.svg";
+import bibleLogoLight from "@/assets/bible-light.svg";
+
+const links = [
+  { href: "/", label: "Inicio" },
+  { href: "/?modo=lectura", label: "Lectura" },
+  { href: "/?modo=busqueda", label: "Búsqueda" },
+  { href: "/?modo=liturgia", label: "Lecturas del día" },
+  { href: "/compartir", label: "Compartir" },
+  { href: "/estado", label: "Estado" },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<PortalHeader
+  title="Biblia"
+  logoSrc={bibleLogoDark.src}
+  logoSrcLight={bibleLogoLight.src}
+  logoAlt="Logo de Biblia"
+  links={links}
+  currentPath={currentPath}
+  ctaHref="/?modo=busqueda"
+  ctaLabel="Buscar pasaje"
+  client:load
+/>

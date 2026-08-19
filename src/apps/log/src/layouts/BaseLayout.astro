@@ -1,0 +1,26 @@
+---
+import Head from "@/components/Head.astro";
+
+type Props = {
+  title: string;
+  description?: string;
+  image?: string;
+};
+
+const {
+  title,
+  description = "Panel de observabilidad del ecosistema Fosforo.",
+  image,
+} = Astro.props as Props;
+---
+
+<!doctype html>
+<html lang="es">
+  <Head title={title} description={description} image={image} />
+  <body class="log-app">
+    <a class="skip-link" href="#main-content">Saltar al contenido</a>
+    <div class="app-shell" transition:animate="fade">
+      <slot />
+    </div>
+  </body>
+</html>

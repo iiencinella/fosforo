@@ -1,0 +1,5 @@
+packages:
+  - "src/apps/*"
+  - "src/mobile/*"
+  - "src/desktop/*"
+  - "src/packages/*"

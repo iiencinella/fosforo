@@ -1,0 +1,93 @@
+.eco-tabs {
+  display: grid;
+  gap: var(--spacing-4);
+}
+
+.eco-tablist {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.4rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid
+    color-mix(in srgb, var(--color-brand-300) 18%, var(--color-line));
+  background: color-mix(
+    in srgb,
+    var(--color-surface) 92%,
+    color-mix(in srgb, var(--color-bg) 96%, transparent)
+  );
+  box-shadow: var(--shadow-soft);
+}
+
+.eco-tab {
+  display: grid;
+  gap: 0.15rem;
+  padding: 0.55rem 0.9rem;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  color: var(--color-muted);
+  text-decoration: none;
+  transition:
+    background-color 0.18s ease,
+    color 0.18s ease,
+    border-color 0.18s ease;
+  min-width: 9rem;
+}
+
+.eco-tab:hover,
+.eco-tab:focus-visible {
+  color: var(--color-text);
+  border-color: color-mix(
+    in srgb,
+    var(--color-brand-300) 28%,
+    var(--color-line)
+  );
+  background: color-mix(in srgb, var(--color-brand-300) 8%, transparent);
+  outline: none;
+}
+
+.eco-tab--active {
+  color: var(--color-text);
+  background: color-mix(in srgb, var(--color-brand-300) 18%, transparent);
+  border-color: color-mix(
+    in srgb,
+    var(--color-brand-300) 50%,
+    var(--color-line)
+  );
+  box-shadow: inset 0 0 0 1px
+    color-mix(in srgb, var(--color-brand-300) 22%, transparent);
+}
+
+.eco-tab--active .eco-tab-label {
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+.eco-tab-label {
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+}
+
+.eco-tab-description {
+  font-size: 0.75rem;
+  line-height: 1.35;
+  color: var(--color-muted);
+}
+
+.eco-tabpanel {
+  display: grid;
+  gap: var(--spacing-4);
+}
+
+@media (max-width: 48rem) {
+  .eco-tablist {
+    flex-direction: column;
+  }
+
+  .eco-tab {
+    min-width: 0;
+    width: 100%;
+  }
+}

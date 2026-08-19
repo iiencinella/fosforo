@@ -1,0 +1,115 @@
+---
+import { ClientRouter } from "astro:transitions";
+import "@/styles/global.css";
+
+type Props = {
+  title: string;
+  description?: string;
+  image?: string;
+  canonicalUrl?: string;
+};
+
+const {
+  title,
+  description = "Buscador de horarios de Misa para encontrar celebraciones por templo, ciudad y cercania.",
+  image = "/favicon.svg",
+  canonicalUrl = Astro.url.href,
+} = Astro.props as Props;
+
+const siteName = "Horarios de Misas · Fosforo";
+---
+
+<head>
+  <ClientRouter />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonicalUrl} />
+  <meta name="theme-color" content="#121216" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="icon" href="/favicon.ico" />
+
+  <title>{title}</title>
+
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content={canonicalUrl} />
+  <meta property="og:site_name" content={siteName} />
+  <meta property="og:image" content={new URL(image, Astro.url.origin).href} />
+
+  <script is:inline>
+    (() => {
+      const THEME_STORAGE_KEY = "portal-theme";
+
+      function isTheme(value) {
+        return value === "light" || value === "dark";
+      }
+
+      function applyTheme(theme, persist = false) {
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.style.colorScheme = theme;
+
+        if (persist) {
+          try {
+            localStorage.setItem(THEME_STORAGE_KEY, theme);
+          } catch {}
+        }
+
+        document.querySelectorAll(".theme-switch").forEach((button) => {
+          button.setAttribute("data-theme-mode", theme);
+          button.setAttribute("aria-checked", theme === "light" ? "true" : "false");
+          button.setAttribute(
+            "aria-label",
+            theme === "dark" ? "Cambiar a modo claro" : "Cambiar a modo oscuro",
+          );
+        });
+      }
+
+      function resolveInitialTheme() {
+        try {
+          const stored = localStorage.getItem(THEME_STORAGE_KEY);
+          if (isTheme(stored)) return stored;
+        } catch {}
+
+        return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      }
+
+      const initialTheme = resolveInitialTheme();
+      applyTheme(initialTheme, false);
+
+      function syncThemeFromStorage() {
+        const nextTheme = resolveInitialTheme();
+        applyTheme(nextTheme, false);
+      }
+
+      document.addEventListener(
+        "click",
+        (event) => {
+          if (document.documentElement.dataset.themeToggleHydrated === "true") {
+            return;
+          }
+
+          const target = event.target;
+          if (!(target instanceof Element)) return;
+
+          const button = target.closest(".theme-switch");
+          if (!(button instanceof HTMLElement)) return;
+
+          const island = button.closest("astro-island");
+          if (island && !island.hasAttribute("ssr")) return;
+
+          event.preventDefault();
+
+          const current = document.documentElement.dataset.theme === "light" ? "light" : "dark";
+          const next = current === "dark" ? "light" : "dark";
+          applyTheme(next, true);
+        },
+        { capture: true },
+      );
+
+      document.addEventListener("DOMContentLoaded", syncThemeFromStorage);
+      document.addEventListener("astro:page-load", syncThemeFromStorage);
+    })();
+  </script>
+</head>

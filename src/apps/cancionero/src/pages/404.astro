@@ -1,0 +1,52 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+
+const attemptedPath =
+  Astro.url.pathname !== "/404" ? Astro.url.pathname : null;
+---
+
+<Layout
+  title="404 · Cancionero Fósforo"
+  description="La pagina solicitada no existe o no esta disponible para tu rol."
+>
+  <SiteHeader />
+
+  <main class="cancionero-app">
+    <section class="section cancionero-page-hero" id="404">
+      <div class="page cancionero-stack">
+        <div class="cancionero-hero-copy">
+          <p class="not-found-code cancionero-kicker" aria-hidden="true">404</p>
+          <h1 class="cancionero-title">Pagina no encontrada</h1>
+          <p class="cancionero-subtitle">
+            La ruta solicitada no existe o no esta disponible para tu perfil
+            dentro del cancionero.
+          </p>
+
+          {attemptedPath ? (
+            <p class="not-found-path">
+              Ruta solicitada: <code>{attemptedPath}</code>
+            </p>
+          ) : null}
+
+          <div class="cancionero-filter-actions">
+            <a class="button" href="/">Volver al inicio</a>
+            <a class="button secondary" href="/buscar">Ir a busqueda</a>
+          </div>
+        </div>
+
+        <aside class="card cancionero-stack" aria-label="Sugerencias">
+          <h2 class="card-title">Que podes hacer ahora</h2>
+          <ul class="app-desc">
+            <li>Verificar si la URL se escribio correctamente.</li>
+            <li>Volver al inicio del cancionero para retomar la navegacion.</li>
+            <li>Usar la busqueda para encontrar canciones.</li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter />
+</Layout>

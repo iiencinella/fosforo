@@ -1,0 +1,22 @@
+---
+type ApiLinkItem = {
+  href: string;
+  label: string;
+  code?: boolean;
+};
+
+type Props = {
+  items: ApiLinkItem[];
+  className?: string;
+};
+
+const { items, className = "catalog-link-stack" } = Astro.props as Props;
+---
+
+<div class={className}>
+  {
+    items.map((item) => (
+      <a href={item.href}>{item.code ? <code>{item.label}</code> : item.label}</a>
+    ))
+  }
+</div>

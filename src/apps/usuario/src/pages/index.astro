@@ -1,0 +1,64 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Usuarios - Fósforo"
+  description="Gestión de identidad, autenticación, perfiles y roles del ecosistema Fósforo."
+>
+  <main>
+    <section class="hero section-free">
+      <div class="page hero-grid">
+        <article class="hero-copy">
+          <span class="pill">Gestion de usuarios</span>
+          <h1 class="hero-title">Una sola identidad para todo el ecosistema</h1>
+          <p class="hero-desc">
+            Registro, inicio de sesion, perfil y administración de roles para
+            habilitar acceso seguro entre aplicaciones de Fósforo.
+          </p>
+          <div class="hero-actions">
+            <a class="button-primary" href="/auth/register">Crear cuenta</a>
+            <a class="button-secondary" href="/auth/login">Iniciar sesion</a>
+          </div>
+        </article>
+
+        <article class="surface-card hero-panel">
+          <h2>Estado del MVP</h2>
+          <ul class="status-list">
+            <li><strong>Activo:</strong> registro, login, perfil y endpoints base.</li>
+            <li><strong>En progreso:</strong> administración de usuarios y roles.</li>
+            <li><strong>Siguiente:</strong> auditoría extendida y permisos por app.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="page card-grid users-grid">
+        <article class="card">
+          <h2 class="card-title">Autenticación</h2>
+          <p class="app-desc">
+            Soporta registro y login con email + contraseña mediante Supabase Auth.
+          </p>
+          <a class="button-secondary" href="/auth/login">Ir a login</a>
+        </article>
+
+        <article class="card">
+          <h2 class="card-title">Perfil</h2>
+          <p class="app-desc">
+            Consulta y edición de datos básicos del usuario autenticado.
+          </p>
+          <a class="button-secondary" href="/perfil">Ver perfil</a>
+        </article>
+
+        <article class="card">
+          <h2 class="card-title">Administración</h2>
+          <p class="app-desc">
+            Listado de usuarios, revisión de roles y acceso a endpoints administrativos.
+          </p>
+          <a class="button-secondary" href="/admin/usuarios">Abrir panel admin</a>
+        </article>
+      </div>
+    </section>
+  </main>
+</BaseLayout>

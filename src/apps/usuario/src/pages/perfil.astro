@@ -1,0 +1,134 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Perfil - Usuarios Fósforo"
+  description="Consulta y edición del perfil de usuario."
+>
+  <main>
+    <section class="section">
+      <div class="page two-column">
+        <article class="card surface-card">
+          <h1 class="section-title">Mi perfil</h1>
+          <p class="section-desc">Visualizá tu información de cuenta y rol actual.</p>
+
+          <dl id="profile-details" class="profile-grid">
+            <div>
+              <dt>Nombre</dt>
+              <dd data-profile="name">-</dd>
+            </div>
+            <div>
+              <dt>Email</dt>
+              <dd data-profile="email">-</dd>
+            </div>
+            <div>
+              <dt>Rol</dt>
+              <dd data-profile="role">-</dd>
+            </div>
+          </dl>
+
+          <p id="profile-status" class="form-status pending" role="status" aria-live="polite">
+            Cargando perfil...
+          </p>
+        </article>
+
+        <article class="card surface-card">
+          <h2 class="card-title">Editar perfil</h2>
+          <form id="profile-form" class="form" novalidate>
+            <div class="form-row">
+              <label for="profile-name">Nombre</label>
+              <input id="profile-name" name="name" minlength="2" maxlength="80" required />
+            </div>
+
+            <div class="form-row">
+              <label for="profile-avatar">Avatar URL (opcional)</label>
+              <input id="profile-avatar" name="avatarUrl" type="url" />
+            </div>
+
+            <button class="button-primary" type="submit">Guardar cambios</button>
+          </form>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const status = document.querySelector("#profile-status") as HTMLParagraphElement | null;
+    const form = document.querySelector("#profile-form") as HTMLFormElement | null;
+    const nameInput = document.querySelector("#profile-name") as HTMLInputElement | null;
+    const avatarInput = document.querySelector("#profile-avatar") as HTMLInputElement | null;
+
+    const nameField = document.querySelector('[data-profile="name"]') as HTMLElement | null;
+    const emailField = document.querySelector('[data-profile="email"]') as HTMLElement | null;
+    const roleField = document.querySelector('[data-profile="role"]') as HTMLElement | null;
+
+    async function loadProfile() {
+      if (!status) return;
+
+      status.className = "form-status pending";
+      status.textContent = "Cargando perfil...";
+
+      try {
+        const response = await fetch("/api/users/profile");
+        const data = await response.json();
+
+        if (!response.ok || !data.ok) {
+          throw new Error(data.error || "USERS_PROFILE_NOT_FOUND");
+        }
+
+        const profile = data.data;
+        if (nameField) nameField.textContent = profile.name || "-";
+        if (emailField) emailField.textContent = profile.email || "-";
+        if (roleField) roleField.textContent = profile.roleSlug || "usuario";
+        if (nameInput) nameInput.value = profile.name || "";
+        if (avatarInput) avatarInput.value = profile.avatarUrl || "";
+
+        status.className = "form-status success";
+        status.textContent = "Perfil cargado.";
+      } catch (error) {
+        const message = error instanceof Error ? error.message : "USERS_PROFILE_NOT_FOUND";
+        status.className = "form-status error";
+        status.textContent = `No pudimos cargar el perfil (${message}).`;
+      }
+    }
+
+    if (form) {
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        if (!status) return;
+
+        const payload = {
+          name: String(nameInput?.value || "").trim(),
+          avatarUrl: String(avatarInput?.value || "").trim() || null,
+        };
+
+        status.className = "form-status pending";
+        status.textContent = "Guardando cambios...";
+
+        try {
+          const response = await fetch("/api/users/profile", {
+            method: "PUT",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+
+          const data = await response.json();
+          if (!response.ok || !data.ok) {
+            throw new Error(data.error || "USERS_PROFILE_UPDATE_FAILED");
+          }
+
+          status.className = "form-status success";
+          status.textContent = "Perfil actualizado correctamente.";
+          await loadProfile();
+        } catch (error) {
+          const message = error instanceof Error ? error.message : "USERS_PROFILE_UPDATE_FAILED";
+          status.className = "form-status error";
+          status.textContent = `No pudimos guardar los cambios (${message}).`;
+        }
+      });
+    }
+
+    loadProfile();
+  </script>
+</BaseLayout>

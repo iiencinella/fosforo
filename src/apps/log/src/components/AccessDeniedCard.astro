@@ -1,0 +1,21 @@
+---
+type Props = {
+  title?: string;
+  message?: string;
+};
+
+const {
+  title = "Acceso restringido",
+  message = "Solo usuarios con rol dev u ops pueden ingresar a esta seccion.",
+} = Astro.props as Props;
+---
+
+<article class="surface-card" aria-live="polite">
+  <p class="surface-card__label">Permisos</p>
+  <h1 class="section-title">{title}</h1>
+  <p class="section-desc">{message}</p>
+  <div class="inline-actions mt-24">
+    <a class="button" href="/login">Iniciar sesion</a>
+    <a class="button secondary" href="/logs">Ir a logs</a>
+  </div>
+</article>

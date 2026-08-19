@@ -1,0 +1,105 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import { getSongById } from "@/lib/server/repository";
+import { alignChordsWithLyrics } from "@/lib/chord-parser";
+
+const songId = Astro.params.id ?? "";
+const song = songId ? await getSongById(songId) : null;
+const alignedLyrics = song
+  ? alignChordsWithLyrics(song.letra, song.acordes)
+  : { lines: [], invalid: [] };
+---
+
+<Layout
+  title={song ? `${song.titulo} · Cancionero Fósforo` : "Canción no encontrada · Cancionero Fósforo"}
+  description={
+    song
+      ? `Letra con acordes de ${song.titulo} dentro del cancionero litúrgico.`
+      : "La canción solicitada no existe o no está publicada."
+  }
+>
+  <SiteHeader />
+
+  <main class="cancionero-app">
+    <section class="section cancionero-page-hero" id="detalle-cancion">
+      <div class="page cancionero-stack">
+        {
+          !song ? (
+            <article class="card cancionero-empty-card">
+              <h1 class="card-title">Canción no encontrada</h1>
+              <p class="app-desc">La canción no existe o aún no fue publicada.</p>
+              <a class="button secondary" href="/buscar">
+                Volver a búsqueda
+              </a>
+            </article>
+          ) : (
+            <>
+              <article class="card cancionero-stack">
+                <p class="badge">Cancionero</p>
+                <h1 class="cancionero-song-title">{song.titulo}</h1>
+                <p class="app-desc">
+                  Etiquetas litúrgicas: {song.etiquetas.map((tag) => `${tag.tiempoLiturgico} · ${tag.momentoMisa}`).join(" · ")}
+                </p>
+                <div class="cancionero-tag-row">
+                  {song.etiquetas.map((tag) => <span class="pill">{tag.tiempoLiturgico} · {tag.momentoMisa}</span>)}
+                </div>
+                <div class="cancionero-card-actions">
+                  {song.pdfUrl ? (
+                    <a class="button secondary" href={song.pdfUrl} target="_blank" rel="noreferrer">
+                      Abrir PDF
+                    </a>
+                  ) : null}
+                  {song.youtubeUrl ? (
+                    <a class="button secondary" href={song.youtubeUrl} target="_blank" rel="noreferrer">
+                      Abrir YouTube
+                    </a>
+                  ) : null}
+                </div>
+              </article>
+
+              <article class="card cancionero-lyrics-card" aria-label="Letra con acordes">
+                <h2 class="card-title">Letra y acordes</h2>
+                <p class="cancionero-lyrics-hint">
+                  Los acordes se muestran alineados sobre la sílaba correspondiente.
+                </p>
+                <div class="cancionero-lyrics-block">
+                  {alignedLyrics.lines.length === 0 ? (
+                    <p class="cancionero-lyrics-empty">Esta canción no tiene letra cargada.</p>
+                  ) : (
+                    alignedLyrics.lines.map((line) => (
+                      <div class="cancionero-lyrics-line">
+                        <div class="cancionero-lyrics-chord-row" aria-hidden="true">
+                          {line.acordesEnLinea.map((acorde) => (
+                            <span
+                              class="cancionero-lyrics-chord"
+                              style={`left: ${acorde.posicion}ch;`}
+                            >
+                              {acorde.nombre}
+                            </span>
+                          ))}
+                        </div>
+                        <div class="cancionero-lyrics-text">
+                          {line.texto.length === 0 ? (
+                            <span class="cancionero-lyric-slot">·</span>
+                          ) : (
+                            Array.from(line.texto).map((char) => (
+                              <span class="cancionero-lyric-char">{char === " " ? " " : char}</span>
+                            ))
+                          )}
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </article>
+            </>
+          )
+        }
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter />
+</Layout>

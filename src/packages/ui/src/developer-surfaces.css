@@ -1,0 +1,128 @@
+@import "@repo/ui/foundation.css";
+
+.dev-page {
+  display: grid;
+  gap: 10px;
+}
+
+.not-found-page {
+  display: grid;
+  gap: 24px;
+}
+
+.not-found-hero {
+  gap: 18px;
+  padding: 24px;
+}
+
+.not-found-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(280px, 0.9fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.not-found-copy {
+  display: grid;
+  gap: 14px;
+}
+
+.not-found-code {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: clamp(4rem, 12vw, 7.5rem);
+  line-height: 0.9;
+  letter-spacing: 0.04em;
+  color: color-mix(in srgb, var(--color-brand-300) 85%, var(--color-text));
+  text-shadow: 0 0 24px
+    color-mix(in srgb, var(--color-brand-500) 25%, transparent);
+}
+
+.not-found-path {
+  margin: 0;
+  color: var(--color-muted);
+}
+
+.not-found-path code {
+  color: var(--color-text);
+}
+
+.not-found-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 6px;
+}
+
+.not-found-aside {
+  display: grid;
+  gap: 10px;
+  padding: 18px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-line);
+  background: color-mix(in srgb, var(--color-surface-strong) 72%, transparent);
+}
+
+.not-found-list {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.not-found-list li + li {
+  margin-top: 8px;
+}
+
+.dev-code-block {
+  margin-top: 24px;
+}
+
+.api-playground {
+  gap: 14px;
+}
+
+.api-playground-skeleton-shell {
+  min-height: 360px;
+}
+
+.api-playground-skeleton {
+  display: grid;
+  gap: var(--spacing-3);
+  margin-top: var(--spacing-2);
+}
+
+.api-playground-skeleton__pre {
+  min-height: 7rem;
+  border-radius: var(--radius-sm);
+}
+
+.api-payload {
+  min-height: 220px;
+  font-family: "IBM Plex Mono", "Consolas", monospace;
+}
+
+pre {
+  margin: 0;
+  border-radius: 12px;
+  border: 1px solid var(--color-line);
+  background: rgba(0, 0, 0, 0.32);
+  padding: 14px;
+  overflow-x: auto;
+}
+
+code {
+  font-family: "IBM Plex Mono", "Consolas", monospace;
+  font-size: 0.86rem;
+  color: color-mix(in srgb, var(--color-brand-100) 55%, var(--color-text));
+}
+
+button[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+  filter: saturate(0.9);
+}
+
+@media (max-width: 900px) {
+  .not-found-grid {
+    grid-template-columns: 1fr;
+  }
+}
