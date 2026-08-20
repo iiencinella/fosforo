@@ -47,9 +47,9 @@ Como core system del ecosistema, esta app garantiza que cada usuario tenga una i
 
 ## Estado de implementación
 
-- **Completado:** scaffolding documental inicial, workspace en `src/apps/usuario/` con Supabase Auth y RLS, helpers de auth/profile/roles extraídos al paquete compartido `@repo/auth` (`src/packages/auth/`) para consumo del resto del ecosistema.
-- **En curso:** definición de alcance y documentación.
-- **Pendiente:** administración de usuarios y panel admin como ruta dedicada, recuperación de contraseña, integración con `mobile-auth-client`, refinamiento del RBAC.
+- **Completado:** workspace Astro, Supabase Auth y RLS, cookies de sesión, administración base, recuperación de contraseña con actualización, clientes Supabase ligados al JWT y helpers RBAC en `@repo/auth`.
+- **En curso:** integración E2E con un usuario de pruebas, configuración de URLs de recovery en Supabase y despliegue Linux/Vercel.
+- **Pendiente:** integración completa con `mobile-auth-client`, auditoría/alertas operativas y cierre de pruebas con tokens de staging.
 
 ## Ubicación del codigo
 

@@ -3,6 +3,7 @@ import { z } from "zod";
 import { jsonError, jsonOk, parseJsonBody } from "@repo/api-utils";
 import { log } from "@/lib/log";
 import { loginUser } from "@/lib/auth";
+import { consumeAuthRateLimit, getClientIp } from "@/lib/rate-limit";
 
 const bodySchema = z.object({
   email: z
@@ -13,6 +14,10 @@ const bodySchema = z.object({
 });
 
 export const POST: APIRoute = async ({ request }) => {
+  if (!consumeAuthRateLimit("mobile-login", getClientIp(request))) {
+    return jsonError("USERS_RATE_LIMITED", 429);
+  }
+
   let email: string | undefined;
   try {
     const payload = await parseJsonBody<unknown>(request);
@@ -40,9 +45,7 @@ export const POST: APIRoute = async ({ request }) => {
     });
   } catch (error) {
     log.warn("Mobile login failed", { error });
-    const message =
-      error instanceof Error ? error.message : "USERS_INVALID_CREDENTIALS";
-    return jsonError(message, 401);
+    return jsonError("USERS_INVALID_CREDENTIALS", 401);
   }
 };
 

@@ -16,7 +16,7 @@ Paquete compartido del ecosistema Fósforo que centraliza la autenticación, ses
 
 ## Politica de cookies
 
-Las cookies son `Path=/` y `SameSite=Lax`. En produccion (`NODE_ENV=production`) se setean con `Secure`. Esto asume que las apps del ecosistema viven bajo el mismo dominio (o subdominios del mismo eTLD+1). En el deploy actual de Vercel cada app vive en su propio subdominio; si en el futuro las cookies deben compartirse entre subdominios, hay que migrar a `SameSite=None; Secure` y agregar el atributo `Domain=.fosforo.org`.
+Las cookies son `Path=/` y `SameSite=Lax`. En produccion (`NODE_ENV=production`) se setean con `Secure`. Para compartirlas entre subdominios, configurar `AUTH_COOKIE_DOMAIN=.fosforo.com.ar` en producción; en local y previews se deja vacío para evitar compartir cookies entre proyectos.
 
 ## Reglas de roles
 

@@ -31,17 +31,17 @@ related:
 
 ## 3. Checklist de controles
 
-| ID                    | Control                                                                                                                            | Estado    | Evidencia                                                                   |
-| --------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | --------- | --------------------------------------------------------------------------- |
-| SEC-0104-USUARIOS-001 | Autenticación y sesión seguras: JWT firmado, httpOnly cookies, expiración configurable, refresh tokens.                            | Pendiente | Definido en ADR-0104-USUARIOS-004 y especificación técnica.                 |
-| SEC-0104-USUARIOS-002 | Autorización por rol/recurso: validación de permisos en backend (UserService + RLS), no solo en frontend.                          | Pendiente | Definido en ADR-0104-USUARIOS-005 y reglas de negocio RB-0104-USUARIOS-003. |
-| SEC-0104-USUARIOS-003 | Validación y sanitización de entradas: Zod en endpoints, validación server-side en todos los formularios.                          | Pendiente | Por implementar en servicios y endpoints de la API.                         |
-| SEC-0104-USUARIOS-004 | Protección de datos sensibles: no almacenar contraseñas en tablas propias (delegado a Supabase Auth), cifrado en tránsito (HTTPS). | Pendiente | Cumplimiento por diseño (ADR-0104-USUARIOS-001).                            |
-| SEC-0104-USUARIOS-005 | Logging y auditoría de seguridad: registro de login, logout, cambios de rol, accesos denegados en audit_log (append-only).         | Pendiente | Definido en FR-0104-USUARIOS-010 y esquema de datos.                        |
-| SEC-0104-USUARIOS-006 | Rate limiting y anti-abuso: protección contra fuerza bruta en login y registro, límite por IP.                                     | Pendiente | Por implementar en endpoints de auth.                                       |
-| SEC-0104-USUARIOS-007 | Manejo de sesiones entre apps (SSO): validación de JWT en cada app, verificación de firma y expiración.                            | Pendiente | Definido en ADR-0104-USUARIOS-004 y flujos de SSO.                          |
-| SEC-0104-USUARIOS-008 | Seguridad en recuperación de contraseña: enlace de un solo uso con expiración (15 min), enviado solo al email registrado.          | Pendiente | Por implementar en flujo de recovery.                                       |
-| SEC-0104-USUARIOS-009 | RLS en tablas de usuarios: políticas de acceso row-level para profiles, roles, permissions y audit_log.                            | Pendiente | Por implementar en migraciones de base de datos.                            |
+| ID                    | Control                                                                                                                            | Estado       | Evidencia                                                                 |
+| --------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | ------------ | ------------------------------------------------------------------------- |
+| SEC-0104-USUARIOS-001 | Autenticación y sesión seguras: JWT firmado, httpOnly cookies, expiración configurable, refresh tokens.                            | Implementado | `src/packages/auth/src/cookies.ts`, endpoints de auth.                    |
+| SEC-0104-USUARIOS-002 | Autorización por rol/recurso: validación de permisos en backend (UserService + RLS), no solo en frontend.                          | Implementado | `requireAdminSession`, `requireAppPermission`, migración RBAC.            |
+| SEC-0104-USUARIOS-003 | Validación y sanitización de entradas: Zod en endpoints, validación server-side en todos los formularios.                          | Implementado | Schemas de auth/admin/profile y tests unitarios.                          |
+| SEC-0104-USUARIOS-004 | Protección de datos sensibles: no almacenar contraseñas en tablas propias (delegado a Supabase Auth), cifrado en tránsito (HTTPS). | Pendiente    | Cumplimiento por diseño (ADR-0104-USUARIOS-001).                          |
+| SEC-0104-USUARIOS-005 | Logging y auditoría de seguridad: registro de login, logout, cambios de rol, accesos denegados en audit_log (append-only).         | Parcial      | Auditoría de registro y roles; faltan eventos completos de login/logout.  |
+| SEC-0104-USUARIOS-006 | Rate limiting y anti-abuso: protección contra fuerza bruta en login y registro, límite por IP.                                     | Pendiente    | Requiere implementar rate limiting distribuido en auth.                   |
+| SEC-0104-USUARIOS-007 | Manejo de sesiones entre apps (SSO): validación de JWT en cada app, verificación de firma y expiración.                            | Parcial      | JWT y cookies implementados; falta validar staging multi-subdominio.      |
+| SEC-0104-USUARIOS-008 | Seguridad en recuperación de contraseña: enlace de un solo uso con expiración (15 min), enviado solo al email registrado.          | Parcial      | Flujo Supabase implementado; expiración/plantillas se configuran en Auth. |
+| SEC-0104-USUARIOS-009 | RLS en tablas de usuarios: políticas de acceso row-level para profiles, roles, permissions y audit_log.                            | Implementado | Migración base y `20260820002000_harden_users_rbac.sql`.                  |
 
 ## 4. Riesgo aceptado
 

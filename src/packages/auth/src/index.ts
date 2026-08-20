@@ -14,12 +14,15 @@ export {
   getSessionFromRequest,
   requireSession,
   requireAdminSession,
+  hasAppPermission,
+  requireAppPermission,
 } from "./session.js";
 export type {
   ProfileRow,
   RoleRow,
   UserProfile,
   SessionBundle,
+  SupabaseAuthClientOptions,
 } from "./session.js";
 
 export {

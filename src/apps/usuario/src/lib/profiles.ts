@@ -10,12 +10,13 @@ export const getUserProfileById = sharedGetUserProfileById;
 
 export async function updateUserProfile(
   userId: string,
+  accessToken: string,
   payload: {
     name?: string;
     avatarUrl?: string | null;
   },
 ) {
-  const supabase = getSupabaseAuthClient();
+  const supabase = getSupabaseAuthClient({ accessToken });
   const updates: Record<string, unknown> = {
     updated_at: new Date().toISOString(),
   };
@@ -39,5 +40,5 @@ export async function updateUserProfile(
     throw new Error("USERS_PROFILE_UPDATE_FAILED");
   }
 
-  return getUserProfileById(userId);
+  return getUserProfileById(userId, accessToken);
 }
