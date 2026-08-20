@@ -6,16 +6,15 @@ import { requireAdminSession } from "@/lib/authz";
 
 export const GET: APIRoute = async ({ request, url }) => {
   try {
-    await requireAdminSession(request);
+    const session = await requireAdminSession(request);
 
     const limitParam = Number(url.searchParams.get("limit") || "100");
-    const events = await listAuditEvents(limitParam);
+    const events = await listAuditEvents(limitParam, session.token);
 
     return jsonOk({ data: events });
   } catch (error) {
     log.error("Audit log fetch failed", { error });
-    const message =
-      error instanceof Error ? error.message : "USERS_AUDIT_LOG_FAILED";
+    const message = error instanceof Error ? error.message : "";
 
     if (message === "USERS_SESSION_EXPIRED") {
       return jsonError(message, 401);
@@ -25,7 +24,7 @@ export const GET: APIRoute = async ({ request, url }) => {
       return jsonError(message, 403);
     }
 
-    return jsonError(message, 400);
+    return jsonError("USERS_AUDIT_LOG_FAILED", 500);
   }
 };
 

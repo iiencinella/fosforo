@@ -39,16 +39,15 @@ export const PUT: APIRoute = async ({ request, params }) => {
     const result = await assignRole(
       userId,
       parsed.data,
-      session.user.id,
       extractIp(request),
+      session.token,
     );
 
     log.info("User role updated", { id: userId, role: result.roleSlug });
     return jsonOk({ data: result });
   } catch (error) {
     log.error("Role update failed", { id: params.id, error });
-    const message =
-      error instanceof Error ? error.message : "USERS_ROLE_ASSIGNMENT_FAILED";
+    const message = error instanceof Error ? error.message : "";
 
     if (message === "USERS_SESSION_EXPIRED") {
       return jsonError(message, 401);
@@ -65,7 +64,7 @@ export const PUT: APIRoute = async ({ request, params }) => {
       return jsonError(message, 404);
     }
 
-    return jsonError(message, 400);
+    return jsonError("USERS_ROLE_ASSIGNMENT_FAILED", 500);
   }
 };
 

@@ -39,6 +39,11 @@ type LoginResult = {
   email: string;
 };
 
+export const passwordSchema = z
+  .string()
+  .min(8, "La contraseña debe tener al menos 8 caracteres")
+  .max(72, "La contraseña supera el maximo permitido");
+
 export async function registerUser(
   input: RegisterInput,
 ): Promise<RegisterResult> {
@@ -69,21 +74,6 @@ export async function registerUser(
       error: new Error("USERS_REGISTER_FAILED"),
     });
     throw new Error("USERS_REGISTER_FAILED");
-  }
-
-  const { error: profileError } = await supabase
-    .from("profiles")
-    .upsert({
-      id: data.user.id,
-      email: parsed.email,
-      name: parsed.name,
-    })
-    .select("id")
-    .single();
-
-  if (profileError) {
-    log.error("Auth service error", { error: profileError });
-    throw new Error("USERS_PROFILE_CREATE_FAILED");
   }
 
   return {
@@ -124,7 +114,7 @@ export async function logoutUser(accessToken: string): Promise<void> {
     throw new Error("USERS_LOGOUT_FAILED");
   }
 
-  const supabase = getSupabaseAuthClient();
+  const supabase = getSupabaseAuthClient({ accessToken });
   const { error } = await supabase.auth.signOut();
   if (error) {
     log.error("Auth service error", { error });
@@ -143,20 +133,39 @@ export async function getSessionFromToken(token: string) {
   return data.user;
 }
 
-export async function requestPasswordReset(email: string) {
+export async function requestPasswordReset(email: string, redirectTo: string) {
   const supabase = getSupabaseAuthClient();
   const parsedEmail = z
     .string()
     .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Email invalido")
     .parse(email);
-  const { error } = await supabase.auth.resetPasswordForEmail(parsedEmail);
+  const { error } = await supabase.auth.resetPasswordForEmail(parsedEmail, {
+    redirectTo,
+  });
 
   if (error) {
-    log.error("Auth service error", { error });
+    log.error("Auth service error", { error: "reset_password_failed" });
     throw new Error("USERS_RESET_PASSWORD_FAILED");
   }
 
   return {
     message: "Te enviamos un enlace para recuperar tu contraseña.",
   };
+}
+
+export async function updatePassword(accessToken: string, password: string) {
+  const parsedPassword = passwordSchema.parse(password);
+  if (!accessToken) throw new Error("USERS_SESSION_EXPIRED");
+
+  const supabase = getSupabaseAuthClient({ accessToken });
+  const { error } = await supabase.auth.updateUser({
+    password: parsedPassword,
+  });
+
+  if (error) {
+    log.error("Auth service error", { error: "update_password_failed" });
+    throw new Error("USERS_UPDATE_PASSWORD_FAILED");
+  }
+
+  return { message: "Contraseña actualizada correctamente." };
 }

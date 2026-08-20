@@ -41,7 +41,9 @@ related:
   - `@repo/api-utils`: helpers para endpoints Astro (safeHandler, jsonOk, jsonError).
   - `@repo/ui`: componentes compartidos del design system.
   - `@repo/tailwind-config`: tokens de diseño compartidos.
-  - `@repo/auth`: paquete compartido del ecosistema que encapsula `getSupabaseAuthClient`, `getSessionFromToken`, `getUserProfileById`, helpers de cookies cross-app (`fosforo_access_token` / `fosforo_refresh_token`) y un role-mapping reutilizable. Es la fuente única de identidad que consumen las apps del ecosistema (ej. 0401 Cancionero). Tests unitarios (14) corren en CI.
+- `@repo/auth`: paquete compartido del ecosistema que encapsula `getSupabaseAuthClient`, `getSessionFromToken`, `getUserProfileById`, helpers de cookies cross-app (`fosforo_access_token` / `fosforo_refresh_token`) y un role-mapping reutilizable. Es la fuente única de identidad que consumen las apps del ecosistema (ej. 0401 Cancionero). Tests unitarios (14) corren en CI.
+- Los accesos de datos autenticados usan clientes Supabase ligados al access token de la request; el cliente anónimo base no se reutiliza para consultas protegidas.
+- La asignación de roles se ejecuta mediante `public.assign_user_role`, que delega en una función `security definer` privada y registra cambio de perfil, historial y auditoría de forma transaccional.
 
 ## Modelos de datos
 
@@ -68,6 +70,8 @@ related:
 | PUT    | `/api/admin/users/:id/role` | Asignar rol a un usuario.                                         |
 | GET    | `/api/admin/audit-log`      | Consultar registros de auditoría.                                 |
 | POST   | `/api/auth/mobile-login`    | Login desde cliente móvil (usado por `@repo/mobile-auth-client`). |
+
+El flujo de recovery recibe el `access_token` temporal en el fragmento de la URL, lo envía una sola vez al endpoint `update-password` y limpia el fragmento del historial del navegador tras completar la operación.
 
 ## Consideraciónes UI/UX
 

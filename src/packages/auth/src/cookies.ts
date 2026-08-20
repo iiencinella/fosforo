@@ -39,8 +39,10 @@ export function getRefreshCookieName() {
 
 function buildCookieAttributes() {
   const isProduction = process.env.NODE_ENV === "production";
+  const cookieDomain = process.env.AUTH_COOKIE_DOMAIN?.trim();
   const common = [
     "Path=/",
+    cookieDomain ? `Domain=${cookieDomain}` : "",
     "HttpOnly",
     "SameSite=Lax",
     isProduction ? "Secure" : "",

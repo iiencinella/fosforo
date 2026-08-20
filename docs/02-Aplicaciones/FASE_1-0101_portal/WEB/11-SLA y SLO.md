@@ -45,6 +45,6 @@ related:
 
 ## 5. Alertas y observabilidad
 
-- Dashboard principal: pendiente de definir cuando exista implementación y stack de observabilidad activo.
+- Dashboard principal: pendiente de configurar en staging/producción; `/api/health` ya comprueba la conectividad de Supabase.
 - Alertas P1/P2: pendientes de definir; mínimo requerido sobre caída total, submit fallido y degradación severa.
 - Owner de guardia: Iván Ezequiel Iencinella

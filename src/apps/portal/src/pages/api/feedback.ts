@@ -1,7 +1,30 @@
 import type { APIRoute } from "astro";
 import { Resend } from "resend";
+import { z } from "zod";
 import { getPortalEnv } from "@repo/env";
 import { log } from "@/lib/log";
+import { createFeedbackSubmission } from "@/lib/submissions";
+
+const feedbackSchema = z.object({
+  name: z.string().trim().min(1).max(100),
+  contact_channel: z.string().trim().min(1).max(120),
+  category: z.enum(["producto", "contenido", "ux"]),
+  message: z.string().trim().min(20).max(1000),
+});
+
+function escapeHtml(value: string): string {
+  return value.replace(
+    /[&<>"']/g,
+    (character) =>
+      ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;",
+      })[character] ?? character,
+  );
+}
 
 function jsonResponse(body: Record<string, unknown>, status = 200): Response {
   return new Response(JSON.stringify(body), {
@@ -28,10 +51,10 @@ function buildEmailHtml(payload: {
   return `
     <h2>Nuevo feedback recibido</h2>
     <table border="0" cellpadding="8" cellspacing="0" style="font-family:sans-serif">
-      <tr><td style="font-weight:700;padding-right:12px">Nombre</td><td>${payload.name}</td></tr>
-      <tr><td style="font-weight:700;padding-right:12px">Contacto</td><td>${payload.contact_channel}</td></tr>
-      <tr><td style="font-weight:700;padding-right:12px">Categoría</td><td>${labels[payload.category] ?? payload.category}</td></tr>
-      <tr><td style="font-weight:700;padding-right:12px;vertical-align:top">Mensaje</td><td>${payload.message}</td></tr>
+      <tr><td style="font-weight:700;padding-right:12px">Nombre</td><td>${escapeHtml(payload.name)}</td></tr>
+      <tr><td style="font-weight:700;padding-right:12px">Contacto</td><td>${escapeHtml(payload.contact_channel)}</td></tr>
+      <tr><td style="font-weight:700;padding-right:12px">Categoría</td><td>${escapeHtml(labels[payload.category] ?? payload.category)}</td></tr>
+      <tr><td style="font-weight:700;padding-right:12px;vertical-align:top">Mensaje</td><td>${escapeHtml(payload.message)}</td></tr>
     </table>
     <hr>
     <p style="font-size:12px;color:#666">Enviado desde el formulario de feedback del Portal Fósforo</p>
@@ -79,26 +102,35 @@ export const POST: APIRoute = async ({ request }) => {
       message?: string;
     } | null;
 
-    if (
-      !payload?.name ||
-      !payload.contact_channel ||
-      !payload.category ||
-      !payload.message
-    ) {
+    const parsed = feedbackSchema.safeParse(payload);
+    if (!parsed.success) {
       return jsonResponse({ success: false, message: "Datos invalidos" }, 400);
     }
 
-    const validated = payload as {
-      name: string;
-      contact_channel: string;
-      category: string;
-      message: string;
-    };
+    const validated = parsed.data;
 
-    log.info("[portal-feedback] nuevo feedback", {
-      ...validated,
-      timestamp: new Date().toISOString(),
-    });
+    let submissionId: string;
+    try {
+      ({ id: submissionId } = await createFeedbackSubmission({
+        name: validated.name,
+        contactChannel: validated.contact_channel,
+        category: validated.category,
+        message: validated.message,
+      }));
+    } catch (error) {
+      log.error("[portal-feedback] persistence failed", {
+        error: error instanceof Error ? error.message : "unknown_error",
+      });
+      return jsonResponse(
+        {
+          success: false,
+          message: "No pudimos registrar tu feedback. Intenta nuevamente.",
+        },
+        503,
+      );
+    }
+
+    log.info("[portal-feedback] submission persisted", { submissionId });
 
     await sendEmail(validated);
 
@@ -116,21 +148,30 @@ export const POST: APIRoute = async ({ request }) => {
     message: String(form.get("message") ?? "").trim(),
   };
 
-  if (
-    !payload.name ||
-    !payload.contact_channel ||
-    !payload.category ||
-    !payload.message
-  ) {
+  const parsed = feedbackSchema.safeParse(payload);
+  if (!parsed.success) {
     return new Response("Datos invalidos", { status: 400 });
   }
 
-  log.info("[portal-feedback] nuevo feedback", {
-    ...payload,
-    timestamp: new Date().toISOString(),
-  });
+  const validated = parsed.data;
+  let submissionId: string;
+  try {
+    ({ id: submissionId } = await createFeedbackSubmission({
+      name: validated.name,
+      contactChannel: validated.contact_channel,
+      category: validated.category,
+      message: validated.message,
+    }));
+  } catch (error) {
+    log.error("[portal-feedback] persistence failed", {
+      error: error instanceof Error ? error.message : "unknown_error",
+    });
+    return new Response("No pudimos registrar tu feedback", { status: 503 });
+  }
 
-  await sendEmail(payload);
+  log.info("[portal-feedback] submission persisted", { submissionId });
+
+  await sendEmail(validated);
 
   return new Response(null, {
     status: 303,

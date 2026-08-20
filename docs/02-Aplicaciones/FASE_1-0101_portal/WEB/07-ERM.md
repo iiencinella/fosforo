@@ -33,7 +33,7 @@ related:
 
 ## 3. Runbooks
 
-- P1: pendiente de crear runbook para caída de formularios o abuso masivo.
+- P1: en preparación; debe cubrir caída de Supabase, caída de formularios o abuso masivo.
 - P2: pendiente de crear runbook para catálogo/novedades desactualizados o enlaces rotos.
 - P3: pendiente de crear runbook para backlog operativo de soporte y contribuciones.
 

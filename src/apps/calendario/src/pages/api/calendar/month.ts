@@ -1,11 +1,17 @@
 import type { APIRoute } from "astro";
 
 import {
+  CalendarMonthInputError,
   CalendarInputError,
   getMonthCalendar,
   parseDateParam,
   parseMonthParams,
 } from "@/lib/calendar";
+import { logCalendarError } from "@/lib/observability";
+
+const CACHE_HEADERS = {
+  "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600",
+};
 
 export const GET: APIRoute = async ({ url }) => {
   try {
@@ -17,27 +23,36 @@ export const GET: APIRoute = async ({ url }) => {
     );
     const month = await getMonthCalendar(monthDate, selectedDate);
 
-    return Response.json(month);
+    return Response.json(month, { headers: CACHE_HEADERS });
   } catch (error) {
-    if (error instanceof CalendarInputError) {
+    if (error instanceof CalendarMonthInputError) {
       return Response.json(
         {
           code: "CALENDAR_INVALID_MONTH",
           message: error.message,
         },
-        { status: 400 },
+        { status: 400, headers: CACHE_HEADERS },
       );
     }
+
+    if (error instanceof CalendarInputError) {
+      return Response.json(
+        {
+          code: "CALENDAR_INVALID_DATE",
+          message: "La fecha seleccionada no es válida.",
+        },
+        { status: 400, headers: CACHE_HEADERS },
+      );
+    }
+
+    logCalendarError("calendar_month_failed", error);
 
     return Response.json(
       {
         code: "CALENDAR_MONTH_ERROR",
-        message:
-          error instanceof Error
-            ? error.message
-            : "No se pudo resolver la vista mensual solicitada.",
+        message: "No se pudo resolver la vista mensual solicitada.",
       },
-      { status: 500 },
+      { status: 503, headers: { "Cache-Control": "no-store" } },
     );
   }
 };

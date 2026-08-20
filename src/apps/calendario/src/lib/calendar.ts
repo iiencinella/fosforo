@@ -108,6 +108,8 @@ let cachedProfiles:
   | undefined;
 
 export class CalendarInputError extends Error {}
+export class CalendarDateInputError extends CalendarInputError {}
+export class CalendarMonthInputError extends CalendarInputError {}
 export class CalendarConfigError extends Error {}
 
 function getSupabaseClient() {
@@ -152,7 +154,7 @@ export function parseDateParam(value: string | null | undefined) {
   }
 
   if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
-    throw new CalendarInputError(
+    throw new CalendarDateInputError(
       "La fecha solicitada no tiene un formato ISO válido.",
     );
   }
@@ -165,7 +167,7 @@ export function parseDateParam(value: string | null | undefined) {
     parsed.getUTCMonth() + 1 !== month ||
     parsed.getUTCDate() !== day
   ) {
-    throw new CalendarInputError(
+    throw new CalendarDateInputError(
       "La fecha solicitada no existe dentro del calendario.",
     );
   }
@@ -192,10 +194,12 @@ export function parseMonthParams(
   if (
     !Number.isInteger(year) ||
     !Number.isInteger(month) ||
+    year < 1900 ||
+    year > 2100 ||
     month < 1 ||
     month > 12
   ) {
-    throw new CalendarInputError("El mes solicitado no es válido.");
+    throw new CalendarMonthInputError("El mes solicitado no es válido.");
   }
 
   return createUtcDate(year, month, 1);
@@ -839,9 +843,18 @@ export async function getCalendarHealth() {
   const profileToday = profiles.some(
     (record) => record.month_day_key === toMonthDayKey(getTodayDate()),
   );
+  const missingCelebrationNames = dataset.filter(
+    (record) => !record.celebration_name,
+  ).length;
+  const missingGospelReferences = dataset.filter(
+    (record) => !record.gospel_ref,
+  ).length;
 
   return {
-    status: "ok" as const,
+    status:
+      dataset.length > 0 && (exactToday || profileToday)
+        ? ("ok" as const)
+        : ("degraded" as const),
     rite: RITE,
     region: REGION,
     totalDays: dataset.length,
@@ -854,5 +867,7 @@ export async function getCalendarHealth() {
     hasExactToday: exactToday,
     hasProfileToday: profileToday,
     totalProfiles: profiles.length,
+    missingCelebrationNames,
+    missingGospelReferences,
   };
 }

@@ -12,6 +12,8 @@
     "preview": "astro preview",
     "check-types": "astro check",
     "test:unit": "vitest run",
+    "test:integration": "vitest run tests/integration",
+    "test:e2e": "vitest run tests/e2e",
     "astro": "astro"
   },
   "dependencies": {

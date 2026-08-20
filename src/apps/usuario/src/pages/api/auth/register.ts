@@ -3,6 +3,7 @@ import { z } from "zod";
 import { jsonError, jsonOk, parseJsonBody } from "@repo/api-utils";
 import { log } from "@/lib/log";
 import { registerUser } from "@/lib/auth";
+import { consumeAuthRateLimit, getClientIp } from "@/lib/rate-limit";
 
 const registerBodySchema = z.object({
   email: z
@@ -17,6 +18,10 @@ const registerBodySchema = z.object({
 });
 
 export const POST: APIRoute = async ({ request }) => {
+  if (!consumeAuthRateLimit("register", getClientIp(request))) {
+    return jsonError("USERS_RATE_LIMITED", 429);
+  }
+
   let email: string | undefined;
   try {
     const payload = await parseJsonBody<unknown>(request);
@@ -38,14 +43,13 @@ export const POST: APIRoute = async ({ request }) => {
     return jsonOk({ data: result }, 201);
   } catch (error) {
     log.warn("Registration failed", { email, error });
-    const message =
-      error instanceof Error ? error.message : "USERS_REGISTER_FAILED";
+    const message = error instanceof Error ? error.message : "";
 
     if (message === "USERS_DUPLICATE_EMAIL") {
       return jsonError(message, 409);
     }
 
-    return jsonError(message, 400);
+    return jsonError("USERS_REGISTER_FAILED", 400);
   }
 };
 
