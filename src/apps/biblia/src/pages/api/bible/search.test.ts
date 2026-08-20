@@ -113,4 +113,20 @@ describe("GET /api/bible/search", () => {
     expect(body.results[0]?.reference).toBe("Juan 3,16");
     expect(readChapterRpc).not.toHaveBeenCalled();
   });
+
+  it("returns a controlled error when Supabase search fails", async () => {
+    vi.mocked(parseBibleReferenceQuery).mockReturnValue(null);
+    vi.mocked(searchVersesRpc).mockResolvedValue({
+      data: null,
+      error: new Error("database unavailable"),
+    } as any);
+
+    const response = await GET({
+      request: new Request("http://localhost/api/bible/search?query=amor"),
+    } as Parameters<typeof GET>[0]);
+    const body = await response.json();
+
+    expect(response.status).toBe(500);
+    expect(body.code).toBe("BIBLIA_SEARCH_ERROR");
+  });
 });
