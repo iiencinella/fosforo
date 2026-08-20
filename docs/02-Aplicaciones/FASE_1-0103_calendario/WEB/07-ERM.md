@@ -33,9 +33,9 @@ related:
 
 ## 3. Runbooks
 
-- P1: pendiente de crear runbook para caída de lectura diaria, error de contrato o mala configuración RLS.
-- P2: pendiente de crear runbook para fechas inválidas, links rotos o huecos de calendario detectados en producción.
-- P3: pendiente de crear runbook para inconsistencias editoriales o degradación no crítica del servicio mensual.
+- P1: ejecutar runbook para caída de lectura diaria, error de contrato o mala configuración RLS; la suite E2E cubre la detección básica.
+- P2: ejecutar runbook para fechas inválidas, links rotos o huecos de calendario detectados en producción.
+- P3: documentar runbook para inconsistencias editoriales o degradación no crítica del servicio mensual.
 
 ## 4. Continuidad operativa
 
