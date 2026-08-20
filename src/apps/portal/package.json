@@ -11,6 +11,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "check-types": "astro check",
+    "test:unit": "vitest run --config vitest.config.ts",
     "astro": "astro"
   },
   "dependencies": {
@@ -19,6 +20,7 @@
     "@repo/api-utils": "workspace:*",
     "@repo/env": "workspace:*",
     "@repo/ui": "workspace:*",
+    "@supabase/supabase-js": "^2.106.1",
     "@tailwindcss/vite": "^4.2.4",
     "astro": "^6.3.1",
     "react": "^19.0.0",

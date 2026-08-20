@@ -2,6 +2,7 @@ import { z } from "zod";
 import { Resend } from "resend";
 import { getPortalEnv } from "@repo/env";
 import { log } from "@/lib/log";
+import { createContactSubmission } from "@/lib/submissions";
 
 const contactSchema = z.object({
   name: z.string().min(1).max(100),
@@ -81,12 +82,25 @@ function buildContactEmailHtml(payload: {
   email: string;
   message: string;
 }): string {
+  const escapeHtml = (value: string) =>
+    value.replace(
+      /[&<>"']/g,
+      (character) =>
+        ({
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#39;",
+        })[character] ?? character,
+    );
+
   return `
     <h2>Nuevo mensaje de contacto</h2>
     <table border="0" cellpadding="8" cellspacing="0" style="font-family:sans-serif">
-      <tr><td style="font-weight:700;padding-right:12px">Nombre</td><td>${payload.name}</td></tr>
-      <tr><td style="font-weight:700;padding-right:12px">Email</td><td>${payload.email}</td></tr>
-      <tr><td style="font-weight:700;padding-right:12px;vertical-align:top">Mensaje</td><td>${payload.message}</td></tr>
+      <tr><td style="font-weight:700;padding-right:12px">Nombre</td><td>${escapeHtml(payload.name)}</td></tr>
+      <tr><td style="font-weight:700;padding-right:12px">Email</td><td>${escapeHtml(payload.email)}</td></tr>
+      <tr><td style="font-weight:700;padding-right:12px;vertical-align:top">Mensaje</td><td>${escapeHtml(payload.message)}</td></tr>
     </table>
     <hr>
     <p style="font-size:12px;color:#666">Enviado desde el formulario de contacto del Portal Fósforo</p>
@@ -164,12 +178,27 @@ export async function handleContactPost(request: Request): Promise<Response> {
 
     const { name, email, message } = parsed.data;
 
-    log.info("[portal-contact] nuevo mensaje", {
-      name,
-      email,
-      message,
-      timestamp: new Date().toISOString(),
-    });
+    let submissionId: string;
+    try {
+      ({ id: submissionId } = await createContactSubmission({
+        name,
+        email,
+        message,
+      }));
+    } catch (error) {
+      log.error("[portal-contact] persistence failed", {
+        error: error instanceof Error ? error.message : "unknown_error",
+      });
+      return jsonResponse(
+        {
+          success: false,
+          message: "No pudimos registrar tu mensaje. Intenta nuevamente.",
+        },
+        503,
+      );
+    }
+
+    log.info("[portal-contact] submission persisted", { submissionId });
 
     await sendContactEmail({ name, email, message });
 
@@ -200,12 +229,21 @@ export async function handleContactPost(request: Request): Promise<Response> {
 
   const { name, email, message } = parsed.data;
 
-  log.info("[portal-contact] nuevo mensaje", {
-    name,
-    email,
-    message,
-    timestamp: new Date().toISOString(),
-  });
+  let submissionId: string;
+  try {
+    ({ id: submissionId } = await createContactSubmission({
+      name,
+      email,
+      message,
+    }));
+  } catch (error) {
+    log.error("[portal-contact] persistence failed", {
+      error: error instanceof Error ? error.message : "unknown_error",
+    });
+    return new Response("No pudimos registrar tu mensaje", { status: 503 });
+  }
+
+  log.info("[portal-contact] submission persisted", { submissionId });
 
   await sendContactEmail({ name, email, message });
 
