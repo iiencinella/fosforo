@@ -29,19 +29,19 @@ related:
 
 ## 3. Matriz de pruebas
 
-| ID                   | Requisito trazado    | Tipo     | Estado    |
-| -------------------- | -------------------- | -------- | --------- |
-| TC-0104-USUARIOS-001 | FR-0104-USUARIOS-001 | Unitario | Pendiente |
-| TC-0104-USUARIOS-002 | FR-0104-USUARIOS-002 | Unitario | Pendiente |
-| TC-0104-USUARIOS-003 | FR-0104-USUARIOS-003 | Unitario | Pendiente |
-| TC-0104-USUARIOS-004 | FR-0104-USUARIOS-004 | Unitario | Pendiente |
-| TC-0104-USUARIOS-005 | FR-0104-USUARIOS-005 | Unitario | Pendiente |
-| TC-0104-USUARIOS-006 | FR-0104-USUARIOS-006 | Unitario | Pendiente |
-| TC-0104-USUARIOS-007 | FR-0104-USUARIOS-007 | Unitario | Pendiente |
-| TC-0104-USUARIOS-008 | FR-0104-USUARIOS-008 | Unitario | Pendiente |
-| TC-0104-USUARIOS-009 | FR-0104-USUARIOS-009 | Unitario | Pendiente |
-| TC-0104-USUARIOS-010 | FR-0104-USUARIOS-010 | Unitario | Pendiente |
-| TC-0104-USUARIOS-011 | FR-0104-USUARIOS-011 | Unitario | Pendiente |
+| ID                   | Requisito trazado    | Tipo                 | Estado  |
+| -------------------- | -------------------- | -------------------- | ------- |
+| TC-0104-USUARIOS-001 | FR-0104-USUARIOS-001 | Unitario             | Parcial |
+| TC-0104-USUARIOS-002 | FR-0104-USUARIOS-002 | Unitario             | Parcial |
+| TC-0104-USUARIOS-003 | FR-0104-USUARIOS-003 | Unitario/E2E         | Parcial |
+| TC-0104-USUARIOS-004 | FR-0104-USUARIOS-004 | Unitario/E2E         | Parcial |
+| TC-0104-USUARIOS-005 | FR-0104-USUARIOS-005 | Unitario/E2E         | Parcial |
+| TC-0104-USUARIOS-006 | FR-0104-USUARIOS-006 | Unitario/E2E         | Parcial |
+| TC-0104-USUARIOS-007 | FR-0104-USUARIOS-007 | Unitario             | Parcial |
+| TC-0104-USUARIOS-008 | FR-0104-USUARIOS-008 | Unitario/Integración | Parcial |
+| TC-0104-USUARIOS-009 | FR-0104-USUARIOS-009 | Unitario/Integración | Parcial |
+| TC-0104-USUARIOS-010 | FR-0104-USUARIOS-010 | Unitario/Integración | Parcial |
+| TC-0104-USUARIOS-011 | FR-0104-USUARIOS-011 | Unitario/E2E         | Parcial |
 
 ### Detalle de casos de prueba
 
@@ -72,3 +72,11 @@ related:
 - [ ] Tests unitarios criticos en verde (TC-001 al TC-011).
 - [ ] Cobertura minima alcanzada.
 - [ ] Trazabilidad FR -> TC actualizada.
+
+## 6. Comandos adicionales
+
+```bash
+pnpm --filter=usuario test:unit
+USUARIO_RUN_INTEGRATION=true pnpm --filter=usuario test:integration
+USUARIO_E2E_BASE_URL=http://localhost:4321 pnpm --filter=usuario test:e2e
+```

@@ -17,14 +17,16 @@ const updateProfileBodySchema = z.object({
 export const GET: APIRoute = async ({ request }) => {
   try {
     const session = await requireSession(request);
-    const profile = await getUserProfileById(session.user.id);
+    const profile = await getUserProfileById(session.user.id, session.token);
     return jsonOk({ data: profile });
   } catch (error) {
     log.error("Profile operation failed", { error });
-    const message =
-      error instanceof Error ? error.message : "USERS_PROFILE_NOT_FOUND";
+    const message = error instanceof Error ? error.message : "";
     const status = message === "USERS_SESSION_EXPIRED" ? 401 : 404;
-    return jsonError(message, status);
+    return jsonError(
+      message === "USERS_SESSION_EXPIRED" ? message : "USERS_PROFILE_NOT_FOUND",
+      status,
+    );
   }
 };
 
@@ -44,18 +46,21 @@ export const PUT: APIRoute = async ({ request }) => {
       );
     }
 
-    const profile = await updateUserProfile(session.user.id, parsed.data);
+    const profile = await updateUserProfile(
+      session.user.id,
+      session.token,
+      parsed.data,
+    );
     return jsonOk({ data: profile });
   } catch (error) {
     log.error("Profile operation failed", { error });
-    const message =
-      error instanceof Error ? error.message : "USERS_PROFILE_UPDATE_FAILED";
+    const message = error instanceof Error ? error.message : "";
 
     if (message === "USERS_SESSION_EXPIRED") {
       return jsonError(message, 401);
     }
 
-    return jsonError(message, 400);
+    return jsonError("USERS_PROFILE_UPDATE_FAILED", 400);
   }
 };
 

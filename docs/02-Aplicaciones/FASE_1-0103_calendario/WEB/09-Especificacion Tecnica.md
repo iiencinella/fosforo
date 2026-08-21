@@ -22,7 +22,7 @@ related:
 - Framework principal: Astro para routing, render híbrido y endpoints.
 - Lenguaje principal: TypeScript.
 - Herramientas de build: Astro build, pnpm y Turborepo.
-- Testing: Vitest para lógica, servicios, validadores y adaptadores; integración y smoke tests a definir en la siguiente etapa.
+- Testing: Vitest para lógica, servicios, validadores y adaptadores; integración Supabase y E2E HTTP opt-in en `tests/integration` y `tests/e2e`.
 
 ## Arquitectura tecnica
 
@@ -46,6 +46,8 @@ related:
 | GET    | `/api/calendar/month` | Devolver la estructura mensual normalizada con metadata de cada fecha disponible y un resumen agregado del mes. |
 
 Los endpoints del MVP se implementan como capa pública y de consumo interno del ecosistema. La UI debe consumir esta capa o servicios server-side equivalentes, sin acceso directo del cliente a Supabase.
+
+Las respuestas exitosas de `day` y `month` usan cache compartido de 5 minutos con stale-while-revalidate; errores y health usan `no-store`. Los errores de infraestructura se registran como eventos JSON server-side y se responden con mensajes genéricos y estado `503`.
 
 La resolución diaria sigue este orden: 1) match exacto en `liturgy_daily_readings`, 2) fallback por `MM-DD` en `liturgy_day_profiles`, 3) fallback heurístico final sobre el dataset base si el perfil mensual no existiera. Cuando la resolución usa perfil mensual, el contrato debe exponer metadata complementaria como rango litúrgico, banderas marianas/argentinas y nota de fuente. La vista mensual también debe publicar `metadataSummary` para simplificar consumidores que necesiten métricas o badges agregados sin reprocesar cada día en cliente.
 
