@@ -1,0 +1,33 @@
+---
+type AlertApp = { app: string; count: number };
+
+type Props = {
+  triggered: AlertApp[];
+  threshold: number;
+  showOkState?: boolean;
+};
+
+const { triggered, threshold, showOkState = false } = Astro.props;
+---
+
+{
+  triggered.length > 0 ? (
+    <div class="alert-banner" role="status">
+      <strong>Alerta activa:</strong>
+      <span>
+        {triggered.length === 1
+          ? `${triggered[0]?.app} supero el threshold`
+          : `${triggered.length} apps superaron el threshold`}{" "}
+        de {threshold} errores por minuto.
+      </span>
+      <a class="alert-banner__link" href={`/logs?level=error`}>
+        Ver logs
+      </a>
+    </div>
+  ) : showOkState ? (
+    <div class="alert-banner alert-banner--ok" role="status">
+      <strong>Sin alertas activas:</strong>
+      <span>No se detectaron apps por encima del threshold actual.</span>
+    </div>
+  ) : null
+}

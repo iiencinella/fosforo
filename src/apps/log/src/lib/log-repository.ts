@@ -36,6 +36,7 @@ type LogRepository = {
   getById(id: string): Promise<LogEntry | null>;
   insert(payload: LogIngestPayload, apiKeyHash: string): Promise<LogEntry>;
   verifyApiKey(apiKeyHash: string): Promise<ApiKeyRow | null>;
+  checkRateLimit(apiKeyId: string): Promise<boolean>;
   metrics(): Promise<{
     metrics: ReturnType<typeof getDashboardMetrics>;
     hourlySeries: ReturnType<typeof getHourlySeries>;
@@ -61,9 +62,19 @@ const fallbackLogs: LogEntry[] = getMockLogs();
 const LOCAL_DEV_API_KEY_HASH =
   "218a5c7eac0214246106fbf58a961a06c473a752056912befd1dc29f39f6d739";
 
+// El fallback en memoria existe solo para desarrollo local sin DB.
+// En produccion un fallo de DB debe propagarse como error real (sin datos falsos).
+const allowMemoryFallback = !import.meta.env.PROD;
+
+export const RATE_LIMIT_PER_MINUTE = 100;
+export const RATE_LIMIT_WINDOW_SECONDS = 60;
+
 let warnedFallback = false;
 
 function warnFallbackOnce(message: string) {
+  if (!allowMemoryFallback) {
+    return;
+  }
   if (warnedFallback) {
     return;
   }
@@ -189,28 +200,75 @@ async function verifyApiKeyFromDb(apiKeyHash: string) {
     throw error;
   }
 
+  if (data?.is_active) {
+    // Tracking de uso por API key (SEC-0105-LOG-005).
+    await supabase
+      .from("api_keys")
+      .update({ last_used_at: new Date().toISOString() })
+      .eq("id", data.id);
+  }
+
   return data ?? null;
 }
 
-async function metricsFromDb() {
+async function checkRateLimitFromDb(apiKeyId: string) {
   const supabase = getSupabaseServiceClient();
-  const { data, error } = await supabase
-    .from("log_entries")
-    .select(
-      "id, app, level, message, timestamp, metadata, stack_trace, app_version, environment",
-    )
-    .order("timestamp", { ascending: false });
+  const { data, error } = await supabase.rpc("check_api_key_rate_limit", {
+    p_api_key_id: apiKeyId,
+    p_limit: RATE_LIMIT_PER_MINUTE,
+    p_window_seconds: RATE_LIMIT_WINDOW_SECONDS,
+  });
 
   if (error) {
     throw error;
   }
 
-  const logs = ((data ?? []) as LogRow[]).map(mapRowToLogEntry);
-  return {
-    metrics: getDashboardMetrics(logs),
-    hourlySeries: getHourlySeries(logs, 24),
-    alerts: getAlertSummary(logs),
-  };
+  return data === true;
+}
+
+type DashboardMetricsRpc = {
+  totalLogs: number;
+  errorCount24h: number;
+  topApps: Array<{ app: string; count: number }>;
+  hourlySeries: Array<{ label: string; count: number }>;
+  alerts: Array<{ app: string; count: number }>;
+  alertThreshold: number;
+};
+
+async function metricsFromDb() {
+  const supabase = getSupabaseServiceClient();
+
+  // Agregacion en Postgres (NFR-0105-LOG-003): evita descargar toda la tabla.
+  const { data, error } = await supabase.rpc("get_log_dashboard_metrics", {
+    p_hours: 24,
+    p_alert_threshold: 10,
+  });
+
+  if (!error && data) {
+    const rpc = data as DashboardMetricsRpc;
+    return {
+      metrics: {
+        totalLogs: Number(rpc.totalLogs ?? 0),
+        errorCount24h: Number(rpc.errorCount24h ?? 0),
+        errorRate:
+          Number(rpc.totalLogs ?? 0) > 0
+            ? (Number(rpc.errorCount24h ?? 0) / Number(rpc.totalLogs)) * 100
+            : 0,
+        topApps: rpc.topApps ?? [],
+      },
+      hourlySeries: rpc.hourlySeries ?? [],
+      alerts: {
+        threshold: Number(rpc.alertThreshold ?? 10),
+        triggered: rpc.alerts ?? [],
+      },
+    };
+  }
+
+  if (error) {
+    throw error;
+  }
+
+  throw new Error("LOG_METRICS_RPC_EMPTY");
 }
 
 function createFallbackRepository(): LogRepository {
@@ -247,6 +305,10 @@ function createFallbackRepository(): LogRepository {
       }
       return null;
     },
+    async checkRateLimit(_apiKeyId) {
+      // Sin limite en el fallback de desarrollo local.
+      return true;
+    },
     async metrics() {
       return {
         metrics: getDashboardMetrics(fallbackLogs),
@@ -263,6 +325,9 @@ export function createLogRepository(): LogRepository {
       try {
         return await listFromDb(filters);
       } catch (error) {
+        if (!allowMemoryFallback) {
+          throw error;
+        }
         warnFallbackOnce(
           `DB list failed, using memory fallback: ${String(error)}`,
         );
@@ -273,6 +338,9 @@ export function createLogRepository(): LogRepository {
       try {
         return await getByIdFromDb(id);
       } catch (error) {
+        if (!allowMemoryFallback) {
+          throw error;
+        }
         warnFallbackOnce(
           `DB getById failed, using memory fallback: ${String(error)}`,
         );
@@ -286,6 +354,9 @@ export function createLogRepository(): LogRepository {
         if (error instanceof Error && error.message === "LOG_INVALID_API_KEY") {
           throw error;
         }
+        if (!allowMemoryFallback) {
+          throw error;
+        }
         warnFallbackOnce(
           `DB insert failed, using memory fallback: ${String(error)}`,
         );
@@ -296,14 +367,31 @@ export function createLogRepository(): LogRepository {
       try {
         return await verifyApiKeyFromDb(apiKeyHash);
       } catch (error) {
+        if (!allowMemoryFallback) {
+          throw error;
+        }
         warnFallbackOnce(`DB verifyApiKey failed: ${String(error)}`);
         return createFallbackRepository().verifyApiKey(apiKeyHash);
+      }
+    },
+    async checkRateLimit(apiKeyId) {
+      try {
+        return await checkRateLimitFromDb(apiKeyId);
+      } catch (error) {
+        // Si el rate limit no puede evaluarse, se permite el request pero
+        // queda registrado: fallar abierto evita bloquear la ingesta por un
+        // problema transitorio de la tabla de contadores.
+        console.warn(`[log] rate limit check failed: ${String(error)}`);
+        return true;
       }
     },
     async metrics() {
       try {
         return await metricsFromDb();
       } catch (error) {
+        if (!allowMemoryFallback) {
+          throw error;
+        }
         warnFallbackOnce(
           `DB metrics failed, using memory fallback: ${String(error)}`,
         );

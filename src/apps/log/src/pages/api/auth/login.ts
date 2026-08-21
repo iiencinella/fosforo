@@ -1,22 +1,27 @@
 import type { APIRoute } from "astro";
-import { jsonError } from "@repo/api-utils";
 import { loginUser } from "@/lib/auth-supabase";
 import { buildSessionCookies } from "@/lib/session";
 
 export const POST: APIRoute = async ({ request }) => {
+  const redirectToError = (code: string) =>
+    new Response(null, {
+      status: 303,
+      headers: { location: `/login?error=${code}` },
+    });
+
   try {
     const formData = await request.formData();
     const email = formData.get("email");
     const password = formData.get("password");
 
     if (typeof email !== "string" || typeof password !== "string") {
-      return jsonError("Credenciales invalidas", 400);
+      return redirectToError("invalid_credentials");
     }
 
     const session = await loginUser({ email, password });
 
     if (session.role !== "dev" && session.role !== "ops") {
-      return jsonError("LOG_ACCESS_DENIED", 403);
+      return redirectToError("access_denied");
     }
 
     const headers = new Headers({
@@ -36,7 +41,7 @@ export const POST: APIRoute = async ({ request }) => {
       headers,
     });
   } catch {
-    return jsonError("LOG_INVALID_CREDENTIALS", 401);
+    return redirectToError("invalid_credentials");
   }
 };
 

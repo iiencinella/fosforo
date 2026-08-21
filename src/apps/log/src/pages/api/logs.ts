@@ -67,6 +67,23 @@ export const POST: APIRoute = async ({ request }) => {
     return jsonError("Invalid or missing API key", 401);
   }
 
+  const allowed = await repository.checkRateLimit(apiKey.id);
+  if (!allowed) {
+    return new Response(
+      JSON.stringify({
+        error: "Rate limit exceeded. Max 100 requests per minute per API key.",
+      }),
+      {
+        status: 429,
+        headers: {
+          "content-type": "application/json",
+          "cache-control": "no-store",
+          "retry-after": "60",
+        },
+      },
+    );
+  }
+
   const payload = await parseJsonBody<unknown>(request);
   if (!payload) {
     return jsonError("Invalid JSON payload", 400);
