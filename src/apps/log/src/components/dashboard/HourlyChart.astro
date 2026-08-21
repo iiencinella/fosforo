@@ -1,0 +1,39 @@
+---
+type HourPoint = {
+  label: string;
+  count: number;
+};
+
+type Props = {
+  series: HourPoint[];
+};
+
+const { series } = Astro.props;
+
+const maxCount = Math.max(1, ...series.map((point) => point.count));
+const bars = series.map((point) => ({
+  ...point,
+  height: `${Math.max(10, Math.round((point.count / maxCount) * 100))}%`,
+}));
+---
+
+<section class="surface-card" aria-label="Grafico de evolucion por hora">
+  <p class="surface-card__label">Evolucion 12h</p>
+  <div class="hourly-chart" role="img" aria-label="Cantidad de eventos por hora">
+    {
+      bars.map((item) => (
+        <div class="hourly-chart__item">
+          <div
+            class="hourly-chart__bar"
+            style={`height: ${item.height}`}
+            title={`${item.label} - ${item.count} eventos`}
+          >
+            <span class="hourly-chart__value">{item.count}</span>
+          </div>
+          <span class="hourly-chart__label">{item.label}</span>
+        </div>
+      ))
+    }
+  </div>
+  <p class="surface-card__meta">Maximo de referencia: {maxCount} eventos/hora</p>
+</section>

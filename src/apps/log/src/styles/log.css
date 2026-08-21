@@ -316,6 +316,10 @@
 }
 
 @media (min-width: 48rem) {
+  .dashboard-split > * {
+    grid-column: span 6;
+  }
+
   .surface-card--metric {
     grid-column: span 6;
   }

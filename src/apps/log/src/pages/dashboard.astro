@@ -4,7 +4,7 @@ import SiteHeader from "@/components/SiteHeader.astro";
 import SiteFooter from "@/components/SiteFooter.astro";
 import AccessDeniedCard from "@/components/AccessDeniedCard.astro";
 import AlertBanner from "@/components/AlertBanner.astro";
-import OpsDashboardPanel from "@/components/dashboard/OpsDashboardPanel.astro";
+import HourlyChart from "@/components/dashboard/HourlyChart.astro";
 import { getAccessTokenFromRequest } from "@/lib/auth";
 import { getSessionFromToken } from "@/lib/auth-supabase";
 import { createLogRepository } from "@/lib/log-repository";
@@ -89,8 +89,8 @@ const alerts = metricsResult.alerts;
             </article>
           </section>
 
-          <section class="surface-grid" aria-label="Top apps y serie temporal">
-            <article class="surface-card" style="grid-column: span 6;">
+          <section class="surface-grid dashboard-split" aria-label="Top apps y serie temporal">
+            <article class="surface-card dashboard-split__item">
               <p class="surface-card__label">Top apps por volumen</p>
               <div class="log-table-wrap">
                 <table class="log-table">
@@ -101,31 +101,28 @@ const alerts = metricsResult.alerts;
                     </tr>
                   </thead>
                   <tbody>
-                    {metrics.topApps.map((item) => (
-                      <tr>
-                        <td>{item.app}</td>
-                        <td>{item.count}</td>
-                      </tr>
-                    ))}
+                    {
+                      metrics.topApps.length > 0 ? (
+                        metrics.topApps.map((item) => (
+                          <tr>
+                            <td>{item.app}</td>
+                            <td>{item.count}</td>
+                          </tr>
+                        ))
+                      ) : (
+                        <tr>
+                          <td colspan={2} class="surface-card__meta">
+                            Sin eventos registrados todavia.
+                          </td>
+                        </tr>
+                      )
+                    }
                   </tbody>
                 </table>
               </div>
             </article>
 
-            <div style="grid-column: span 6;" class="portal-island-stack portal-island-stack--card">
-              <div data-portal-skeleton aria-hidden="true">
-                <div class="portal-skeleton-card">
-                  <div class="skeleton-pulse skeleton-bar skeleton-bar--sm"></div>
-                  <div class="portal-skeleton-card-rows">
-                    <div class="skeleton-pulse skeleton-bar"></div>
-                    <div class="skeleton-pulse skeleton-bar"></div>
-                    <div class="skeleton-pulse skeleton-bar"></div>
-                    <div class="skeleton-pulse skeleton-bar portal-skeleton-card-rows__short"></div>
-                  </div>
-                </div>
-              </div>
-              <OpsDashboardPanel series={series} />
-            </div>
+            <HourlyChart series={series} />
           </section>
 
           <section class="surface-card" aria-label="API debug endpoints">
