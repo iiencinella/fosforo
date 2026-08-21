@@ -8,7 +8,7 @@ type: app-readme
 area: aplicaciones
 status: vigente
 created: 2026-05-26
-updated: 2026-05-26
+updated: 2026-08-21
 related:
   - "[[../00-README|Indice de aplicaciones]]"
 ---
@@ -46,9 +46,11 @@ El acceso está restringido exclusivamente a usuarios con roles `dev` u `ops` me
 
 ## Estado de implementación
 
-- **Completado:** Documentación y diseño
-- **En curso:** N/A (inicio)
-- **Pendiente:** Implementación completa
+- **Completado:** MVP funcional de punta a punta: ingesta con API key + rate limiting (100 req/min), listado con paginación y filtros (nivel, app, fechas, texto), vista detalle, dashboard ops con métricas agregadas en SQL, alertas por threshold, auth dev/ops con revocación de sesión, secure headers y matriz de tests unitarios completa (29 tests). Integración de envío activa en portal, biblia, cancionero, usuario, administracion, calendario y horarios via `@repo/api-utils/log-client`.
+- **En curso:** Verificación E2E con Supabase remoto (ingesta real desde cada app).
+- **Pendiente:** Alertas por email/Slack/webhook; exportación; trazas distribuidas (fuera de MVP).
+
+Detalle del proceso: [12-Plan-Desarrollo-MVP](12-Plan-Desarrollo-MVP.md).
 
 ## Ubicación del codigo
 
