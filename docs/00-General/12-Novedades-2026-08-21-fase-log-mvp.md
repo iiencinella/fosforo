@@ -54,4 +54,13 @@ La documentación definía un MVP (SRS/FRD/OWASP/Tests) que la prueba de concept
 
 ## Pendiente
 
-- Verificación E2E con Supabase remoto: aplicar migraciones nuevas, generar keys por entorno y confirmar ingesta real desde cada app (CA-0105-LOG-003).
+- Configurar `LOGS_API_URL` + `LOGS_API_KEY` en Vercel para calendario, horarios y administracion cuando cada app se despliegue (portal, biblia, cancionero y usuario ya tienen sus keys vigentes en produccion).
+
+## Resultados E2E en produccion (2026-08-21)
+
+- Deploy inicial de la app log: `https://fosforo-log.vercel.app` (proyecto Vercel `fosforo-log`, env vars Supabase configuradas).
+- Migraciones aplicadas al proyecto remoto via MCP: `log_rate_limit` y `log_dashboard_metrics`; RPC de metricas verificada (24 buckets, threshold 10).
+- Usuario panel: `eze14_12@hotmail.com` promovido a rol `ops` en `app_metadata`.
+- API keys: se detectaron keys vigentes para portal, biblia, cancionero y usuario; se generaron e insertaron hashes nuevos para calendario, horarios y administracion.
+- Verificacion funcional: health OK; ingesta con key real → 201 y persistencia en DB; key invalida → 401; rafaga paralela de 120 requests → 100x201 + 20x429 (rate limit verificado); `last_used_at` actualizado; logs de prueba eliminados luego de la verificacion.
+- Cobertura de tests elevada a 95.5% statements / 90.8% branches (51 tests) con umbrales configurados; workflow `security-audit.yml` agregado (pnpm audit no bloqueante hasta remediar inventario preexistente).

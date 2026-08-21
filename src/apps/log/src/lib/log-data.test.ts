@@ -1,8 +1,12 @@
 import { describe, expect, it } from "vitest";
 import {
+  addMockLog,
   formatLogMetadata,
   getAlertSummary,
   getDashboardMetrics,
+  getHourlySeries,
+  getLogById,
+  getMockLogs,
   logIngestPayloadSchema,
   logLevelSchema,
   queryLogs,
@@ -246,5 +250,83 @@ describe("formatLogMetadata", () => {
   it("TC-011: falls back to empty object for null or undefined", () => {
     expect(formatLogMetadata(null)).toBe("{}");
     expect(formatLogMetadata(undefined)).toBe("{}");
+  });
+});
+
+describe("getHourlySeries", () => {
+  it("buckets logs into hourly counts within the window", () => {
+    const now = Date.now();
+    const logs: LogEntry[] = [
+      {
+        id: "1",
+        app: "portal",
+        level: "info",
+        message: "a",
+        timestamp: new Date(now - 30 * 60 * 1000).toISOString(),
+      },
+      {
+        id: "2",
+        app: "portal",
+        level: "error",
+        message: "b",
+        timestamp: new Date(now - 45 * 60 * 1000).toISOString(),
+      },
+      {
+        id: "3",
+        app: "biblia",
+        level: "warn",
+        message: "c",
+        timestamp: new Date(now - 3 * 60 * 60 * 1000).toISOString(),
+      },
+    ];
+
+    const series = getHourlySeries(logs, 24);
+
+    expect(series.length).toBe(24);
+    expect(series.reduce((acc, bucket) => acc + bucket.count, 0)).toBe(3);
+    // Los ultimos buckets (hora actual y hora previa) concentran los 2 primeros logs.
+    expect(
+      series.slice(-2).reduce((acc, bucket) => acc + bucket.count, 0),
+    ).toBe(2);
+  });
+
+  it("returns empty series without logs", () => {
+    const series = getHourlySeries([], 12);
+
+    expect(series.length).toBe(12);
+    expect(series.every((bucket) => bucket.count === 0)).toBe(true);
+  });
+});
+
+describe("mock log store", () => {
+  it("getMockLogs returns a sorted copy without mutating source", () => {
+    const first = getMockLogs();
+    first.pop();
+
+    expect(getMockLogs().length).toBeGreaterThan(first.length);
+  });
+
+  it("addMockLog prepends the new entry", () => {
+    const before = getMockLogs().length;
+    const entry = addMockLog({
+      app: "test-app",
+      level: "warn",
+      message: "mock entry",
+    });
+
+    const after = getMockLogs();
+    expect(after.length).toBe(before + 1);
+    expect(after[0]?.id).toBe(entry.id);
+    expect(after[0]?.app).toBe("test-app");
+  });
+
+  it("getLogById finds seeded entries and returns null for unknown ids", () => {
+    const seeded = getMockLogs()[0];
+    if (!seeded) {
+      return;
+    }
+
+    expect(getLogById(seeded.id)?.id).toBe(seeded.id);
+    expect(getLogById("id-inexistente")).toBeNull();
   });
 });

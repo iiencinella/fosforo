@@ -4,7 +4,10 @@ const repoMocks = vi.hoisted(() => ({
   verifyApiKey: vi.fn(),
   checkRateLimit: vi.fn(),
   insert: vi.fn(),
+  list: vi.fn(),
 }));
+
+const requireRoleMock = vi.hoisted(() => vi.fn());
 
 vi.mock("@/lib/log-repository", () => {
   return {
@@ -14,12 +17,18 @@ vi.mock("@/lib/log-repository", () => {
   };
 });
 
-import { POST } from "@/pages/api/logs";
+vi.mock("@/lib/authz", () => ({
+  requireRole: requireRoleMock,
+  requireSession: vi.fn(),
+}));
+
+import { GET, POST } from "@/pages/api/logs";
 
 const {
   verifyApiKey: verifyApiKeyMock,
   checkRateLimit: checkRateLimitMock,
   insert: insertMock,
+  list: listMock,
 } = repoMocks;
 
 function buildPostRequest(body: unknown, headers: Record<string, string> = {}) {
@@ -41,6 +50,8 @@ describe("POST /api/logs", () => {
     verifyApiKeyMock.mockReset();
     checkRateLimitMock.mockReset();
     insertMock.mockReset();
+    listMock.mockReset();
+    requireRoleMock.mockReset();
   });
 
   it("TC-005: returns 401 when API key header is missing", async () => {
@@ -144,5 +155,92 @@ describe("POST /api/logs", () => {
     expect(body.ok).toBe(true);
     expect(body.id).toBe("log-123");
     expect(insertMock).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("GET /api/logs", () => {
+  beforeEach(() => {
+    listMock.mockReset();
+    requireRoleMock.mockReset();
+  });
+
+  function buildGetRequest(query = "") {
+    return new Request(`http://localhost/api/logs${query}`);
+  }
+
+  it("TC-006: returns paginated data with total", async () => {
+    requireRoleMock.mockResolvedValue({ role: "dev" });
+    listMock.mockResolvedValue({
+      data: [
+        {
+          id: "a",
+          app: "portal",
+          level: "error",
+          message: "x",
+          timestamp: new Date().toISOString(),
+        },
+      ],
+      total: 120,
+      page: 1,
+      limit: 50,
+    });
+
+    const response = await GET({
+      request: buildGetRequest(),
+      url: new URL("http://localhost/api/logs"),
+    } as never);
+
+    expect(response.status).toBe(200);
+    const body = (await response.json()) as {
+      ok: boolean;
+      data: unknown[];
+      total: number;
+      page: number;
+      limit: number;
+    };
+    expect(body.ok).toBe(true);
+    expect(body.total).toBe(120);
+    expect(body.limit).toBe(50);
+    expect(listMock).toHaveBeenCalledWith(
+      expect.objectContaining({ page: 1, limit: 50 }),
+    );
+  });
+
+  it("TC-007/009: forwards level and date filters to repository", async () => {
+    requireRoleMock.mockResolvedValue({ role: "ops" });
+    listMock.mockResolvedValue({ data: [], total: 0, page: 2, limit: 20 });
+
+    const response = await GET({
+      request: buildGetRequest(
+        "?level=error&app=portal&since=2026-08-01T00:00&until=2026-08-02T00:00&page=2&limit=20",
+      ),
+      url: new URL(
+        "http://localhost/api/logs?level=error&app=portal&since=2026-08-01T00:00&until=2026-08-02T00:00&page=2&limit=20",
+      ),
+    } as never);
+
+    expect(response.status).toBe(200);
+    expect(listMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        level: "error",
+        app: "portal",
+        since: "2026-08-01T00:00",
+        until: "2026-08-02T00:00",
+        page: 2,
+        limit: 20,
+      }),
+    );
+  });
+
+  it("returns 403 when role check fails", async () => {
+    requireRoleMock.mockRejectedValue(new Error("LOG_ACCESS_DENIED"));
+
+    const response = await GET({
+      request: buildGetRequest(),
+      url: new URL("http://localhost/api/logs"),
+    } as never);
+
+    expect(response.status).toBe(403);
+    expect(listMock).not.toHaveBeenCalled();
   });
 });

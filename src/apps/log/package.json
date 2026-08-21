@@ -12,6 +12,7 @@
     "preview": "astro preview",
     "check-types": "astro check",
     "test:unit": "vitest run",
+    "test:coverage": "vitest run --coverage",
     "astro": "astro"
   },
   "dependencies": {

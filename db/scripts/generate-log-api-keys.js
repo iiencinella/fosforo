@@ -11,7 +11,11 @@
  * solo hashes, por lo que puede versionarse o aplicarse con seguridad.
  *
  * Uso:
- *   node db/scripts/generate-log-api-keys.js
+ *   node db/scripts/generate-log-api-keys.js [app1 app2 ...]
+ *
+ * Sin argumentos genera para todas las apps del ecosistema.
+ * Con argumentos genera solo para las apps indicadas (utiles cuando
+ * algunas apps ya tienen key vigente en produccion).
  */
 
 const crypto = require("node:crypto");
@@ -28,6 +32,23 @@ const APPS = [
   "administracion",
 ];
 
+const requested = process.argv.slice(2);
+const appsToGenerate =
+  requested.length > 0
+    ? requested.filter((app) => {
+        if (!APPS.includes(app)) {
+          console.warn(`App desconocida (ignorada): ${app}`);
+          return false;
+        }
+        return true;
+      })
+    : APPS;
+
+if (appsToGenerate.length === 0) {
+  console.error("No hay apps validas para generar keys.");
+  process.exit(1);
+}
+
 const OUTPUT_DIR = path.join(__dirname, "generated");
 const OUTPUT_FILE = path.join(OUTPUT_DIR, "log-api-keys.sql");
 
@@ -40,7 +61,7 @@ function hashKey(rawKey) {
 }
 
 function main() {
-  const generated = APPS.map((app) => {
+  const generated = appsToGenerate.map((app) => {
     const rawKey = generateKey();
     return { app, rawKey, keyHash: hashKey(rawKey) };
   });

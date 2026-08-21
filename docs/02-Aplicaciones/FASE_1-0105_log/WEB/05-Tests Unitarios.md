@@ -58,8 +58,8 @@ related:
 
 ## 5. Criterios de aprobacion
 
-- [x] Tests unitarios criticos en verde (29 tests en 3 suites: `log-data.test.ts`, `logs.test.ts`, `authz.test.ts`)
-- [ ] Cobertura minima alcanzada (medicion con `@vitest/coverage-v8` pendiente de integrar al pipeline)
+- [x] Tests unitarios criticos en verde (51 tests en 5 suites: log-data, logs API, authz/middleware, routes, session)
+- [x] Cobertura minima alcanzada: 95.5% statements / 90.8% branches / 97.6% functions (umbral 80/70/70 en vitest.config.ts; script pnpm test:coverage). Excluidos con justificacion los wrappers de integracion Supabase (supabase.ts, auth-supabase.ts, log-repository.ts), cubiertos por E2E.
 - [x] Trazabilidad FR -> TC actualizada
 - [ ] No hay regresiones en tests existentes del monorepo (validado en apps log/calendario; resto sin cambios)
 

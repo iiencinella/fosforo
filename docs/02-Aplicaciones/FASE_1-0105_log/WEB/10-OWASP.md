@@ -40,7 +40,7 @@ related:
 | SEC-0105-LOG-007 | Seguridad en API keys                 | Hecho     | Almacen con hash SHA-256; desactivacion inmediata via DB; rotacion documentada                |
 | SEC-0105-LOG-008 | Proteccion contra CSRF                | Hecho     | Mismo-origin policy; API endpoints de escritura requieren API key (no cookies de sesion)      |
 | SEC-0105-LOG-009 | Secure headers                        | Hecho     | Content-Security-Policy, X-Content-Type-Options, Strict-Transport-Security via Astro o Vercel |
-| SEC-0105-LOG-010 | Gestion de dependencias               | Pendiente | Dependencias auditadas via `pnpm audit` en CI                                                 |
+| SEC-0105-LOG-010 | Gestion de dependencias               | Hecho*    | Workflow security-audit.yml con pnpm audit --prod --audit-level high (no bloqueante hasta remediar 55 vulns preexistentes) |
 
 Notas de evidencia (2026-08-21):
 
@@ -51,6 +51,7 @@ Notas de evidencia (2026-08-21):
 - SEC-007: claves generadas por `db/scripts/generate-log-api-keys.js`; solo hashes en DB.
 - SEC-008: escritura de ingesta requiere API key, no cookies; logout revoca token server-side.
 - SEC-009: CSP, X-Content-Type-Options, Referrer-Policy, X-Frame-Options y HSTS (prod) en middleware.
+- SEC-010: (* ) no bloqueante mientras se remedia el inventario preexistente; volver bloqueante al llegar a cero high/critical.
 
 ## 4. Riesgo aceptado
 

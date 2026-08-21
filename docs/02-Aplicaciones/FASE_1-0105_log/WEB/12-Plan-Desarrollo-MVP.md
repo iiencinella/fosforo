@@ -80,7 +80,7 @@ y agrega la integración final: envío de logs desde las apps del ecosistema.
 | Paso                                   | Estado    |
 | -------------------------------------- | --------- |
 | check-types / test:unit / build        | Hecho     |
-| Verificación manual E2E                | Pendiente de entorno con Supabase remoto |
+| Verificación manual E2E                | Hecho (2026-08-21 contra producción)     |
 | Actualizar README, OWASP, matriz tests | Hecho     |
 | Registro de novedades                  | Hecho     |
 
@@ -92,7 +92,7 @@ y agrega la integración final: envío de logs desde las apps del ecosistema.
 | Agregar LOGS_API_URL a env                             | IR-0105-LOG-003 | Hecho    |
 | Script generador de API keys + migración por app       | SEC-007         | Hecho    |
 | Instrumentar administracion, calendario, horarios      | FR-OBS-001      | Hecho    |
-| Verificación E2E por app                               | CA-0105-LOG-003 | Pendiente de entorno con DB remota |
+| Verificación E2E por app                               | CA-0105-LOG-003 | Hecho via curl; ingesta automática activa al desplegar cada app emisora |
 
 ## Decisiones tomadas
 
