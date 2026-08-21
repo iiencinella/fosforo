@@ -2,6 +2,7 @@ import type { APIRoute } from "astro";
 import { ZodError } from "zod";
 import { getSearchDataSource } from "@/lib/repository";
 import { parseSearchParams, searchCelebrationsFromSource } from "@/lib/search";
+import { log } from "@/lib/log";
 
 export const GET: APIRoute = async ({ url }) => {
   try {
@@ -40,6 +41,11 @@ export const GET: APIRoute = async ({ url }) => {
         },
       );
     }
+
+    await log.error("Fallo en busqueda de celebraciones", {
+      error: error instanceof Error ? error.message : String(error),
+      query: url.searchParams.toString(),
+    });
 
     return new Response(
       JSON.stringify({

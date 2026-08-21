@@ -6,11 +6,9 @@ import {
   getDayByDate,
   parseDateParam,
 } from "@/lib/calendar";
-import { logCalendarError } from "@/lib/observability";
 
-const CACHE_HEADERS = {
-  "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600",
-};
+import { log } from "@/lib/log";
+
 
 export const GET: APIRoute = async ({ url }) => {
   try {
@@ -49,7 +47,11 @@ export const GET: APIRoute = async ({ url }) => {
       );
     }
 
-    logCalendarError("calendar_day_failed", error);
+    await log.error("Fallo resolviendo jornada diaria", {
+      date: url.searchParams.get("date"),
+      error: error instanceof Error ? error.message : String(error),
+    });
+
 
     return Response.json(
       {

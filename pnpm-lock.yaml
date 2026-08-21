@@ -153,6 +153,9 @@ importers:
       '@astrojs/vercel':
         specifier: ^10.0.5
         version: 10.0.7(astro@6.3.6(@types/node@24.12.4)(@vercel/functions@3.6.0)(jiti@2.7.0)(lightningcss@1.32.0)(rollup@4.60.4)(yaml@2.9.0))(react@19.2.6)(rollup@4.60.4)
+      '@repo/api-utils':
+        specifier: workspace:*
+        version: link:../../packages/api-utils
       '@repo/env':
         specifier: workspace:*
         version: link:../../packages/env
@@ -266,6 +269,9 @@ importers:
       '@astrojs/vercel':
         specifier: ^10.0.5
         version: 10.0.7(astro@6.3.8(@types/node@24.12.4)(@vercel/functions@3.6.0)(jiti@2.7.0)(lightningcss@1.32.0)(rollup@4.60.4)(yaml@2.9.0))(react@19.2.6)(rollup@4.60.4)
+      '@repo/api-utils':
+        specifier: workspace:*
+        version: link:../../packages/api-utils
       '@repo/env':
         specifier: workspace:*
         version: link:../../packages/env

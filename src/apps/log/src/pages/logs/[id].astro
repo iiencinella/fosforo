@@ -6,6 +6,7 @@ import AccessDeniedCard from "@/components/AccessDeniedCard.astro";
 import { getAccessTokenFromRequest } from "@/lib/auth";
 import { getSessionFromToken } from "@/lib/auth-supabase";
 import { createLogRepository } from "@/lib/log-repository";
+import { formatLogMetadata } from "@/lib/log-data";
 
 const token = getAccessTokenFromRequest(Astro.request);
 let role: "dev" | "ops" | null = null;
@@ -46,7 +47,7 @@ if (canAccess && !entry) {
           <section class="log-detail-grid">
             <article class="surface-card">
               <p class="surface-card__label">Metadata</p>
-              <pre class="json-block">{JSON.stringify(entry.metadata ?? {}, null, 2)}</pre>
+              <pre class="json-block">{formatLogMetadata(entry.metadata)}</pre>
             </article>
 
             <article class="surface-card">
