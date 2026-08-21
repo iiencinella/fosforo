@@ -6,6 +6,7 @@ import {
   parseDateParam,
   parseMonthParams,
 } from "@/lib/calendar";
+import { log } from "@/lib/log";
 
 export const GET: APIRoute = async ({ url }) => {
   try {
@@ -28,6 +29,13 @@ export const GET: APIRoute = async ({ url }) => {
         { status: 400 },
       );
     }
+
+    await log.error("Fallo resolviendo vista mensual", {
+      date: url.searchParams.get("date"),
+      year: url.searchParams.get("year"),
+      month: url.searchParams.get("month"),
+      error: error instanceof Error ? error.message : String(error),
+    });
 
     return Response.json(
       {

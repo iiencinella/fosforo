@@ -16,6 +16,7 @@
   "dependencies": {
     "@astrojs/react": "^4.4.0",
     "@astrojs/vercel": "^10.0.5",
+    "@repo/api-utils": "workspace:*",
     "@repo/env": "workspace:*",
     "@repo/ui": "workspace:*",
     "@supabase/supabase-js": "^2.57.4",

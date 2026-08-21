@@ -16,13 +16,25 @@ type LogClientOptions = {
   apiKey?: string;
 };
 
+// Timeout acotado para no degradar el flujo principal (NFR-OBS-001).
+const REQUEST_TIMEOUT_MS = 3000;
+
 let cachedConfig: { url: string; key: string } | null = null;
 
-function resolveConfig(appName: string): { url: string; key: string } | null {
+function resolveConfig(
+  options?: LogClientOptions,
+): { url: string; key: string } | null {
+  if (options?.apiUrl && options?.apiKey) {
+    return { url: options.apiUrl, key: options.apiKey };
+  }
+
   if (cachedConfig) return cachedConfig;
 
-  const url = process.env.LOGS_API_URL;
-  const key = process.env.LOGS_API_KEY ?? process.env.LOGS_INGEST_API_KEY;
+  const url = options?.apiUrl ?? process.env.LOGS_API_URL;
+  const key =
+    options?.apiKey ??
+    process.env.LOGS_API_KEY ??
+    process.env.LOGS_INGEST_API_KEY;
 
   if (!url || !key) return null;
 
@@ -30,10 +42,10 @@ function resolveConfig(appName: string): { url: string; key: string } | null {
   return cachedConfig;
 }
 
-export function createLogClient(appName: string) {
+export function createLogClient(appName: string, options?: LogClientOptions) {
   return {
     async send(payload: Omit<LogPayload, "app">): Promise<void> {
-      const config = resolveConfig(appName);
+      const config = resolveConfig(options);
       if (!config) return;
 
       const body: LogPayload = {
@@ -50,9 +62,10 @@ export function createLogClient(appName: string) {
             "X-API-Key": config.key,
           },
           body: JSON.stringify(body),
+          signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
         });
       } catch {
-        // Silently ignore - logging failures should never crash the app
+        // Fire-and-forget: un fallo de logging nunca debe romper la app emisora.
       }
     },
 

@@ -5,6 +5,7 @@ import {
   getDayByDate,
   parseDateParam,
 } from "@/lib/calendar";
+import { log } from "@/lib/log";
 
 export const GET: APIRoute = async ({ url }) => {
   try {
@@ -32,6 +33,11 @@ export const GET: APIRoute = async ({ url }) => {
         { status: 400 },
       );
     }
+
+    await log.error("Fallo resolviendo jornada diaria", {
+      date: url.searchParams.get("date"),
+      error: error instanceof Error ? error.message : String(error),
+    });
 
     return Response.json(
       {

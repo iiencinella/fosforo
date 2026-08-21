@@ -2,6 +2,7 @@ import type { APIRoute } from "astro";
 import { ZodError } from "zod";
 import { trackSearchEvent } from "@/lib/repository";
 import { searchEventSchema } from "@/lib/search";
+import { log } from "@/lib/log";
 
 export const POST: APIRoute = async ({ request }) => {
   try {
@@ -37,6 +38,10 @@ export const POST: APIRoute = async ({ request }) => {
         },
       );
     }
+
+    await log.error("Fallo registrando evento de busqueda", {
+      error: error instanceof Error ? error.message : String(error),
+    });
 
     return new Response(
       JSON.stringify({
