@@ -4,6 +4,7 @@ import { createAuditLog } from "@/lib/admin-data";
 import { requireApiAuth } from "@/lib/auth";
 import { churchSchema, patchChurchStatusSchema } from "@/lib/validators";
 import { supabase } from "@/db/supabase";
+import { log } from "@/lib/log";
 
 export const GET: APIRoute = async ({ request, params }) => {
   const auth = await requireApiAuth(request, ["admin", "editor", "viewer"]);
@@ -17,7 +18,10 @@ export const GET: APIRoute = async ({ request, params }) => {
     .select("*")
     .eq("id", id)
     .maybeSingle();
-  if (error) return jsonError(error.message, 500);
+  if (error) {
+    log.error("Fallo obteniendo iglesia", { error: error.message, id });
+    return jsonError(error.message, 500);
+  }
   if (!data) return jsonError("Church not found", 404);
   return jsonOk({ church: data });
 };
@@ -42,8 +46,13 @@ export const PUT: APIRoute = async ({ request, params }) => {
     .select("id")
     .single();
 
-  if (error || !data)
+  if (error || !data) {
+    log.error("Fallo actualizando iglesia", {
+      error: error?.message,
+      id,
+    });
     return jsonError(error?.message ?? "Cannot update church", 500);
+  }
 
   await createAuditLog({
     userId: auth.session.userId,
@@ -75,8 +84,14 @@ export const PATCH: APIRoute = async ({ request, params }) => {
     .select("id")
     .single();
 
-  if (error || !data)
+  if (error || !data) {
+    log.error("Fallo cambiando estado de iglesia", {
+      error: error?.message,
+      id,
+      status: parsed.data.status,
+    });
     return jsonError(error?.message ?? "Cannot change status", 500);
+  }
 
   await createAuditLog({
     userId: auth.session.userId,

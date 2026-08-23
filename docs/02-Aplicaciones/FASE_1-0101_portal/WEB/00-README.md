@@ -46,8 +46,8 @@ El portal debe servir tanto a usuarios finales como a contribuidores: permite de
 ## Estado de implementación
 
 - **Completado:** scaffolding documental y workspace web base en `src/apps/portal/` con landing, catálogo, novedades, contacto, feedback y guía para desarrolladores.
-- **En curso:** ajustes visuales y de experiencia (hero con video, responsive, tema claro/oscuro), consolidación de integraciónes y robustecimiento operativo del MVP.
-- **Pendiente:** cierre completo de modelos de datos productivos, endurecimiento de endpoints y despliegue final con observabilidad y runbooks operativos.
+- **En curso:** integración server-side con Supabase para persistencia de envíos y auditoría, junto con el cierre operativo del despliegue.
+- **Pendiente:** aplicar la migración en staging/producción, completar pruebas de integración, protección anti-abuso distribuida, observabilidad y runbooks operativos.
 
 ## Ubicación del codigo
 

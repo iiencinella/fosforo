@@ -35,6 +35,8 @@ related:
 - Modelo 1: catálogo de aplicaciónes manual en `src/content/apps-catalog/` con frontmatter versionado (`slug`, `name`, `resume`, `category`, `status`) y cuerpo Markdown por app.
 - Modelo 2: novedades editoriales manuales en `src/content/novedades/` con frontmatter versionado (`titulo`, `slug`, `autor`, `fecha_creación`, `fecha_modificación`, `tags`) y cuerpo Markdown.
 - Modelo 3: modelos de envíos (`portal_contact_requests`, `portal_feedback_items`) y auditoría de procesamiento (`portal_submission_audit`).
+- La escritura de los modelos de envíos se realiza únicamente desde endpoints server-side mediante `SUPABASE_SERVICE_ROLE_KEY`; las claves privilegiadas nunca se exponen al navegador.
+- El catálogo y las novedades continúan siendo contenido versionado en Git durante el MVP; `portal_app_registry` queda reservado para una futura necesidad de administración operativa y no se usa como segunda fuente de verdad.
 
 ## Endpoints (si aplica)
 
@@ -44,6 +46,8 @@ related:
 | POST   | `/api/contact`  | Recibir consultas de soporte o contacto general.                                               |
 | POST   | `/api/feedback` | Recibir ideas, sugerencias o feedback general.                                                 |
 | GET    | `/api/health`   | Exponer salud básica y versión desplegada del portal.                                          |
+
+Los endpoints de escritura persisten primero el envío y su evento `created` en `portal_submission_audit`. Un resultado exitoso sólo se devuelve después de completar ambas operaciones. Resend se ejecuta como notificación opcional posterior y no reemplaza la persistencia.
 
 El catálogo y las novedades del MVP pueden renderizarse directamente desde archivos locales sin endpoint dedicado adicional, salvo que en implementación se justifique exponer rutas de lectura internas.
 

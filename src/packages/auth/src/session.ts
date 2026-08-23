@@ -31,7 +31,26 @@ export type UserProfile = {
 
 let cachedClient: SupabaseClient | null = null;
 
-export function getSupabaseAuthClient(): SupabaseClient {
+export type SupabaseAuthClientOptions = {
+  accessToken?: string;
+};
+
+export function getSupabaseAuthClient(
+  options: SupabaseAuthClientOptions = {},
+): SupabaseClient {
+  if (options.accessToken) {
+    const { url, anonKey } = getSupabaseEnv();
+    return createClient(url, anonKey, {
+      global: {
+        headers: { Authorization: `Bearer ${options.accessToken}` },
+      },
+      auth: {
+        persistSession: false,
+        autoRefreshToken: false,
+      },
+    });
+  }
+
   if (cachedClient) return cachedClient;
   const { url, anonKey } = getSupabaseEnv();
   cachedClient = createClient(url, anonKey, {
@@ -53,8 +72,11 @@ export async function getSessionFromToken(token: string) {
   return data.user;
 }
 
-export async function getUserProfileById(userId: string): Promise<UserProfile> {
-  const supabase = getSupabaseAuthClient();
+export async function getUserProfileById(
+  userId: string,
+  accessToken?: string,
+): Promise<UserProfile> {
+  const supabase = getSupabaseAuthClient({ accessToken });
   const { data, error } = await supabase
     .from("profiles")
     .select("id, email, name, avatar_url, role_id")
@@ -105,7 +127,7 @@ export async function getSessionFromRequest(
 
   try {
     const user = await getSessionFromToken(token);
-    const profile = await getUserProfileById(user.id);
+    const profile = await getUserProfileById(user.id, token);
     return { token, user, profile };
   } catch {
     return null;
@@ -127,5 +149,43 @@ export async function requireAdminSession(
   if (session.profile.roleSlug !== "admin") {
     throw new Error("USERS_ROLE_ASSIGNMENT_DENIED");
   }
+  return session;
+}
+
+export async function hasAppPermission(
+  userId: string,
+  appSlug: string,
+  accessToken: string,
+): Promise<boolean> {
+  const supabase = getSupabaseAuthClient({ accessToken });
+  const { data: profile, error: profileError } = await supabase
+    .from("profiles")
+    .select("role_id")
+    .eq("id", userId)
+    .single<{ role_id: number | null }>();
+
+  if (profileError || !profile?.role_id) return false;
+
+  const { data: permission, error } = await supabase
+    .from("permissions")
+    .select("can_access")
+    .eq("role_id", profile.role_id)
+    .eq("app_slug", appSlug)
+    .maybeSingle<{ can_access: boolean }>();
+
+  return !error && permission?.can_access === true;
+}
+
+export async function requireAppPermission(
+  request: Request,
+  appSlug: string,
+): Promise<SessionBundle> {
+  const session = await requireSession(request);
+  if (session.profile.roleSlug === "admin") return session;
+
+  if (!(await hasAppPermission(session.user.id, appSlug, session.token))) {
+    throw new Error("USERS_UNAUTHORIZED_APP");
+  }
+
   return session;
 }

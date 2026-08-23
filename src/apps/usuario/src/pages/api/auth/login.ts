@@ -4,6 +4,7 @@ import { jsonError, parseJsonBody } from "@repo/api-utils";
 import { log } from "@/lib/log";
 import { loginUser } from "@/lib/auth";
 import { buildSessionCookies } from "@/lib/session";
+import { consumeAuthRateLimit, getClientIp } from "@/lib/rate-limit";
 
 const loginBodySchema = z.object({
   email: z
@@ -14,6 +15,10 @@ const loginBodySchema = z.object({
 });
 
 export const POST: APIRoute = async ({ request }) => {
+  if (!consumeAuthRateLimit("login", getClientIp(request))) {
+    return jsonError("USERS_RATE_LIMITED", 429);
+  }
+
   let email: string | undefined;
   try {
     const payload = await parseJsonBody<unknown>(request);
@@ -55,9 +60,7 @@ export const POST: APIRoute = async ({ request }) => {
     );
   } catch (error) {
     log.warn("Login failed: invalid credentials", { email });
-    const message =
-      error instanceof Error ? error.message : "USERS_INVALID_CREDENTIALS";
-    return jsonError(message, 401);
+    return jsonError("USERS_INVALID_CREDENTIALS", 401);
   }
 };
 

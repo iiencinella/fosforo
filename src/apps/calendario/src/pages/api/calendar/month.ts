@@ -1,11 +1,14 @@
 import type { APIRoute } from "astro";
 
 import {
+  CalendarMonthInputError,
   CalendarInputError,
   getMonthCalendar,
   parseDateParam,
   parseMonthParams,
 } from "@/lib/calendar";
+
+import { log } from "@/lib/log";
 
 export const GET: APIRoute = async ({ url }) => {
   try {
@@ -17,27 +20,31 @@ export const GET: APIRoute = async ({ url }) => {
     );
     const month = await getMonthCalendar(monthDate, selectedDate);
 
-    return Response.json(month);
+    return Response.json(month, { headers: CACHE_HEADERS });
   } catch (error) {
-    if (error instanceof CalendarInputError) {
+    if (error instanceof CalendarMonthInputError) {
       return Response.json(
         {
           code: "CALENDAR_INVALID_MONTH",
           message: error.message,
         },
-        { status: 400 },
+        { status: 400, headers: CACHE_HEADERS },
       );
     }
+
+    await log.error("Fallo resolviendo vista mensual", {
+      date: url.searchParams.get("date"),
+      year: url.searchParams.get("year"),
+      month: url.searchParams.get("month"),
+      error: error instanceof Error ? error.message : String(error),
+    });
 
     return Response.json(
       {
         code: "CALENDAR_MONTH_ERROR",
-        message:
-          error instanceof Error
-            ? error.message
-            : "No se pudo resolver la vista mensual solicitada.",
+        message: "No se pudo resolver la vista mensual solicitada.",
       },
-      { status: 500 },
+      { status: 503, headers: { "Cache-Control": "no-store" } },
     );
   }
 };

@@ -3,6 +3,7 @@ import { z } from "zod";
 import { jsonError, jsonOk, parseJsonBody } from "@repo/api-utils";
 import { log } from "@/lib/log";
 import { requestPasswordReset } from "@/lib/auth";
+import { consumeAuthRateLimit, getClientIp } from "@/lib/rate-limit";
 
 const bodySchema = z.object({
   email: z
@@ -12,6 +13,10 @@ const bodySchema = z.object({
 });
 
 export const POST: APIRoute = async ({ request }) => {
+  if (!consumeAuthRateLimit("reset-password", getClientIp(request))) {
+    return jsonError("USERS_RATE_LIMITED", 429);
+  }
+
   let email: string | undefined;
   try {
     const payload = await parseJsonBody<unknown>(request);
@@ -28,14 +33,17 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     email = parsed.data.email;
-    const result = await requestPasswordReset(parsed.data.email);
+    const redirectTo = new URL("/auth/reset-password", request.url).toString();
+    const result = await requestPasswordReset(parsed.data.email, redirectTo);
     log.info("Password reset requested", { email });
     return jsonOk({ data: result });
   } catch (error) {
     log.error("Password reset failed", { error });
-    const message =
-      error instanceof Error ? error.message : "USERS_RESET_PASSWORD_FAILED";
-    return jsonError(message, 400);
+    return jsonOk({
+      data: {
+        message: "Si la cuenta existe, recibirás instrucciones por email.",
+      },
+    });
   }
 };
 

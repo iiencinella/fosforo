@@ -45,6 +45,6 @@ related:
 
 ## 5. Alertas y observabilidad
 
-- Dashboard principal: pendiente de definir cuando se active el stack de observabilidad del workspace.
+- Dashboard principal: pendiente de configurar; `/api/health` ya expone cobertura, rango, perfiles, presencia del día actual y referencias incompletas.
 - Alertas P1/P2: mínimas sobre caída total de lectura diaria, degradación severa de endpoints y fallos persistentes de contrato o RLS.
 - Owner de guardia: Iván Ezequiel Iencinella

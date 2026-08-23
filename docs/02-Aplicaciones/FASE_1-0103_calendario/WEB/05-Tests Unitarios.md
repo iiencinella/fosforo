@@ -29,15 +29,15 @@ related:
 
 ## 3. Matriz de pruebas
 
-| ID                     | Requisito trazado                              | Tipo     | Estado    |
-| ---------------------- | ---------------------------------------------- | -------- | --------- |
-| TC-0103-CALENDARIO-001 | FR-0103-CALENDARIO-001                         | Unitario | Pendiente |
-| TC-0103-CALENDARIO-002 | FR-0103-CALENDARIO-002, FR-0103-CALENDARIO-008 | Unitario | Pendiente |
-| TC-0103-CALENDARIO-003 | FR-0103-CALENDARIO-003                         | Unitario | Pendiente |
-| TC-0103-CALENDARIO-004 | FR-0103-CALENDARIO-004, FR-0103-CALENDARIO-006 | Unitario | Pendiente |
-| TC-0103-CALENDARIO-005 | FR-0103-CALENDARIO-005, RB-0103-CALENDARIO-002 | Unitario | Pendiente |
-| TC-0103-CALENDARIO-006 | FR-0103-CALENDARIO-007, RB-0103-CALENDARIO-006 | Unitario | Pendiente |
-| TC-0103-CALENDARIO-007 | FR-0103-CALENDARIO-009, RB-0103-CALENDARIO-001 | Unitario | Pendiente |
+| ID                     | Requisito trazado                              | Tipo            | Estado  |
+| ---------------------- | ---------------------------------------------- | --------------- | ------- |
+| TC-0103-CALENDARIO-001 | FR-0103-CALENDARIO-001                         | Unitario        | Parcial |
+| TC-0103-CALENDARIO-002 | FR-0103-CALENDARIO-002, FR-0103-CALENDARIO-008 | Unitario/E2E    | Parcial |
+| TC-0103-CALENDARIO-003 | FR-0103-CALENDARIO-003                         | Unitario/E2E    | Parcial |
+| TC-0103-CALENDARIO-004 | FR-0103-CALENDARIO-004, FR-0103-CALENDARIO-006 | Integración/E2E | Parcial |
+| TC-0103-CALENDARIO-005 | FR-0103-CALENDARIO-005, RB-0103-CALENDARIO-002 | Integración     | Parcial |
+| TC-0103-CALENDARIO-006 | FR-0103-CALENDARIO-007, RB-0103-CALENDARIO-006 | Unitario        | Parcial |
+| TC-0103-CALENDARIO-007 | FR-0103-CALENDARIO-009, RB-0103-CALENDARIO-001 | Integración     | Parcial |
 
 ## 4. Cobertura objetivo
 
@@ -51,3 +51,11 @@ related:
 - [ ] Trazabilidad FR -> TC actualizada
 - [ ] Casos de fecha inválida, ausencia de jornada y errores de contrato cubiertos
 - [ ] Metadata enriquecida de perfiles mensuales cubierta en DTOs y vista mensual
+
+## 6. Comandos adicionales
+
+```bash
+pnpm --filter=calendario test:unit
+CALENDARIO_RUN_INTEGRATION=true pnpm --filter=calendario test:integration
+CALENDARIO_E2E_BASE_URL=http://localhost:4321 pnpm --filter=calendario test:e2e
+```

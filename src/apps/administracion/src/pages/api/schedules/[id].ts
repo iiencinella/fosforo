@@ -4,6 +4,7 @@ import { createAuditLog } from "@/lib/admin-data";
 import { requireApiAuth } from "@/lib/auth";
 import { scheduleSchema } from "@/lib/validators";
 import { supabase } from "@/db/supabase";
+import { log } from "@/lib/log";
 
 export const PUT: APIRoute = async ({ request, params }) => {
   const auth = await requireApiAuth(request, ["admin", "editor"]);
@@ -25,8 +26,10 @@ export const PUT: APIRoute = async ({ request, params }) => {
     .select("id")
     .single();
 
-  if (error || !data)
+  if (error || !data) {
+    log.error("Fallo actualizando horario", { error: error?.message, id });
     return jsonError(error?.message ?? "Cannot update schedule", 500);
+  }
 
   await createAuditLog({
     userId: auth.session.userId,
@@ -49,7 +52,10 @@ export const DELETE: APIRoute = async ({ request, params }) => {
     .from("celebration_schedules")
     .delete()
     .eq("id", id);
-  if (error) return jsonError(error.message, 500);
+  if (error) {
+    log.error("Fallo eliminando horario", { error: error.message, id });
+    return jsonError(error.message, 500);
+  }
 
   await createAuditLog({
     userId: auth.session.userId,

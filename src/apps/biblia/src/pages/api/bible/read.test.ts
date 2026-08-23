@@ -93,4 +93,30 @@ describe("GET /api/bible/read", () => {
     expect(body.verses).toHaveLength(1);
     expect(body.verses[0]?.verse).toBe(26);
   });
+
+  it("returns a controlled error when Supabase read fails", async () => {
+    vi.mocked(getEnabledBibleVersion).mockResolvedValue({
+      version: {
+        code: "pd",
+        name: "Pueblo",
+        isEnabled: true,
+        isInternalOnly: true,
+      },
+      errorMessage: null,
+    });
+    vi.mocked(readChapterRpc).mockResolvedValue({
+      data: null,
+      error: new Error("database unavailable"),
+    } as any);
+
+    const response = await GET({
+      request: new Request(
+        "http://localhost/api/bible/read?book=lucas&chapter=1",
+      ),
+    } as Parameters<typeof GET>[0]);
+    const body = await response.json();
+
+    expect(response.status).toBe(500);
+    expect(body.code).toBe("BIBLIA_READ_ERROR");
+  });
 });

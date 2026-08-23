@@ -153,6 +153,9 @@ importers:
       '@astrojs/vercel':
         specifier: ^10.0.5
         version: 10.0.7(astro@6.3.6(@types/node@24.12.4)(@vercel/functions@3.6.0)(jiti@2.7.0)(lightningcss@1.32.0)(rollup@4.60.4)(yaml@2.9.0))(react@19.2.6)(rollup@4.60.4)
+      '@repo/api-utils':
+        specifier: workspace:*
+        version: link:../../packages/api-utils
       '@repo/env':
         specifier: workspace:*
         version: link:../../packages/env
@@ -266,6 +269,9 @@ importers:
       '@astrojs/vercel':
         specifier: ^10.0.5
         version: 10.0.7(astro@6.3.8(@types/node@24.12.4)(@vercel/functions@3.6.0)(jiti@2.7.0)(lightningcss@1.32.0)(rollup@4.60.4)(yaml@2.9.0))(react@19.2.6)(rollup@4.60.4)
+      '@repo/api-utils':
+        specifier: workspace:*
+        version: link:../../packages/api-utils
       '@repo/env':
         specifier: workspace:*
         version: link:../../packages/env
@@ -385,6 +391,9 @@ importers:
       '@repo/ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      '@supabase/supabase-js':
+        specifier: ^2.106.1
+        version: 2.106.1
       '@tailwindcss/vite':
         specifier: ^4.2.4
         version: 4.3.0(vite@7.3.3(@types/node@24.12.4)(jiti@2.7.0)(lightningcss@1.32.0)(yaml@2.9.0))
@@ -471,6 +480,9 @@ importers:
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
+      vitest:
+        specifier: 3.2.4
+        version: 3.2.4(@types/debug@4.1.13)(@types/node@24.12.4)(jiti@2.7.0)(lightningcss@1.32.0)(yaml@2.9.0)
 
   src/packages/api-utils: {}
 

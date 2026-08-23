@@ -4,16 +4,18 @@ import { log } from "@/lib/log";
 import { listUsers } from "@/lib/admin";
 import { requireAdminSession } from "@/lib/authz";
 
-export const GET: APIRoute = async ({ request }) => {
+export const GET: APIRoute = async ({ request, url }) => {
   try {
-    await requireAdminSession(request);
-    const users = await listUsers();
+    const session = await requireAdminSession(request);
+    const limit = Number(url.searchParams.get("limit") || "50");
+    const offset = Number(url.searchParams.get("offset") || "0");
+    const search = url.searchParams.get("search") ?? undefined;
+    const users = await listUsers(session.token, { limit, offset, search });
     log.info("Admin users listed");
     return jsonOk({ data: users });
   } catch (error) {
     log.error("Admin users list failed", { error });
-    const message =
-      error instanceof Error ? error.message : "USERS_ADMIN_LIST_FAILED";
+    const message = error instanceof Error ? error.message : "";
 
     if (message === "USERS_SESSION_EXPIRED") {
       return jsonError(message, 401);
@@ -23,7 +25,7 @@ export const GET: APIRoute = async ({ request }) => {
       return jsonError(message, 403);
     }
 
-    return jsonError(message, 400);
+    return jsonError("USERS_ADMIN_LIST_FAILED", 500);
   }
 };
 

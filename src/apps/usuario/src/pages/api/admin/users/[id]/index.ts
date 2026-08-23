@@ -6,19 +6,18 @@ import { requireAdminSession } from "@/lib/authz";
 
 export const GET: APIRoute = async ({ request, params }) => {
   try {
-    await requireAdminSession(request);
+    const session = await requireAdminSession(request);
 
     const userId = params.id;
     if (!userId) {
       return jsonError("USERS_USER_NOT_FOUND", 404);
     }
 
-    const user = await getUserById(userId);
+    const user = await getUserById(userId, session.token);
     return jsonOk({ data: user });
   } catch (error) {
     log.error("Admin user operation failed", { id: params.id, error });
-    const message =
-      error instanceof Error ? error.message : "USERS_USER_NOT_FOUND";
+    const message = error instanceof Error ? error.message : "";
 
     if (message === "USERS_SESSION_EXPIRED") {
       return jsonError(message, 401);
@@ -32,7 +31,7 @@ export const GET: APIRoute = async ({ request, params }) => {
       return jsonError(message, 404);
     }
 
-    return jsonError(message, 400);
+    return jsonError("USERS_ADMIN_OPERATION_FAILED", 500);
   }
 };
 

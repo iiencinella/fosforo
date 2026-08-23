@@ -59,6 +59,21 @@ psql "$DATABASE_URL" -f db/supabase/migrations/202605261100_create_horarios_core
 
 Si usas `db/scripts/horarios_schema.sql`, ejecútalo desde una sesión `psql` que soporte metacomandos (`\i`).
 
+## Log: API keys de ingesta
+
+Genera una API key por app del ecosistema para enviar logs a la app Log:
+
+```bash
+node db/scripts/generate-log-api-keys.js
+```
+
+- Imprime las claves crudas por consola: copia cada una al entorno de su app (`LOGS_API_KEY`).
+- Escribe el SQL con hashes SHA-256 en `db/scripts/generated/log-api-keys.sql` (seguro de versionar).
+- Aplica el SQL con: `psql "$DATABASE_URL" -f db/scripts/generated/log-api-keys.sql`.
+- Regenerar claves por entorno (staging/producción); nunca reutilizar claves impresas en sesiones previas.
+
+Variables de ingesta por app emisora: `LOGS_API_URL` (endpoint `/api/logs` de la app log) y `LOGS_API_KEY`.
+
 ## Orden sugerido por entorno
 
 - `staging`

@@ -2,6 +2,16 @@
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import SiteHeader from "@/components/SiteHeader.astro";
 import SiteFooter from "@/components/SiteFooter.astro";
+
+const errorCode = Astro.url.searchParams.get("error");
+
+const errorMessages: Record<string, string> = {
+  invalid_credentials: "Email o password incorrectos. Verifica tus credenciales e intenta nuevamente.",
+  access_denied:
+    "Tu cuenta no tiene rol dev u ops en app_metadata. Solicita acceso al administrador del ecosistema.",
+};
+
+const errorMessage = errorCode ? (errorMessages[errorCode] ?? "No se pudo iniciar sesion.") : null;
 ---
 
 <BaseLayout title="Login · Fosforo Log" description="Acceso al panel de observabilidad.">
@@ -15,6 +25,15 @@ import SiteFooter from "@/components/SiteFooter.astro";
         `app_metadata.role`) pueden acceder a la aplicacion.
       </p>
     </section>
+
+    {
+      errorMessage && (
+        <div class="alert-banner alert-banner--error" role="alert">
+          <strong>Error de inicio de sesion:</strong>
+          <span>{errorMessage}</span>
+        </div>
+      )
+    }
 
     <section class="surface-grid">
       <article class="surface-card form-center">

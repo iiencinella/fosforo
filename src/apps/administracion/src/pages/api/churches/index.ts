@@ -4,6 +4,7 @@ import { createAuditLog } from "@/lib/admin-data";
 import { requireApiAuth } from "@/lib/auth";
 import { churchSchema } from "@/lib/validators";
 import { supabase } from "@/db/supabase";
+import { log } from "@/lib/log";
 
 export const GET: APIRoute = async ({ request, url }) => {
   const auth = await requireApiAuth(request, ["admin", "editor", "viewer"]);
@@ -24,7 +25,13 @@ export const GET: APIRoute = async ({ request, url }) => {
   }
 
   const { data, error } = await query;
-  if (error) return jsonError(error.message, 500);
+  if (error) {
+    log.error("Fallo listando iglesias", {
+      error: error.message,
+      search: q,
+    });
+    return jsonError(error.message, 500);
+  }
   return jsonOk({ churches: data ?? [] });
 };
 
@@ -86,8 +93,14 @@ export const POST: APIRoute = async ({ request, redirect }) => {
     .select("id")
     .single();
 
-  if (error || !data)
+  if (error || !data) {
+    log.error("Fallo creando iglesia", {
+      error: error?.message,
+      name: parsed.data.name,
+      city: parsed.data.city,
+    });
     return jsonError(error?.message ?? "Cannot create church", 500);
+  }
 
   await createAuditLog({
     userId: auth.session.userId,

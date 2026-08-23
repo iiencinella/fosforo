@@ -314,3 +314,9 @@ export const apiKeySchema = z
   .string()
   .trim()
   .min(8, "Invalid or missing API key");
+
+export function formatLogMetadata(
+  metadata: Record<string, unknown> | null | undefined,
+): string {
+  return JSON.stringify(metadata ?? {}, null, 2);
+}

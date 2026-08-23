@@ -30,28 +30,25 @@ type AuditRow = {
   created_at: string;
 };
 
-type UserRoleInsert = {
-  user_id: string;
-  role_id: number;
-  assigned_by: string;
-  assigned_at: string;
-};
-
-type AuditInsert = {
-  user_id: string;
-  action: string;
-  metadata: Record<string, unknown>;
-  ip_address: string | null;
-  created_at: string;
-};
-
-export async function listUsers() {
-  const supabase = getSupabaseAuthClient();
-  const { data, error } = await supabase
+export async function listUsers(
+  accessToken: string,
+  options: { search?: string; limit?: number; offset?: number } = {},
+) {
+  const supabase = getSupabaseAuthClient({ accessToken });
+  const limit = Math.min(Math.max(options.limit ?? 50, 1), 100);
+  const offset = Math.max(options.offset ?? 0, 0);
+  const search = options.search?.trim().slice(0, 120);
+  let query = supabase
     .from("profiles")
-    .select("id, email, name, avatar_url, role_id, created_at")
+    .select("id, email, name, avatar_url, role_id, created_at", {
+      count: "exact",
+    })
     .order("created_at", { ascending: false })
-    .limit(100);
+    .range(offset, offset + limit - 1);
+
+  if (search) query = query.ilike("email", `%${search}%`);
+
+  const { data, error, count } = await query;
 
   if (error) {
     log.error("Admin operation failed", { operation: "listUsers", error });
@@ -76,7 +73,7 @@ export async function listUsers() {
     rolesById = new Map(roleRows.map((role) => [role.id, role]));
   }
 
-  return profileRows.map((row) => {
+  const users = profileRows.map((row) => {
     const role = row.role_id ? rolesById.get(row.role_id) : undefined;
     return {
       id: row.id,
@@ -88,10 +85,19 @@ export async function listUsers() {
       createdAt: row.created_at,
     };
   });
+
+  return {
+    users,
+    pagination: {
+      limit,
+      offset,
+      total: count ?? users.length,
+    },
+  };
 }
 
-export async function getUserById(userId: string) {
-  const supabase = getSupabaseAuthClient();
+export async function getUserById(userId: string, accessToken: string) {
+  const supabase = getSupabaseAuthClient({ accessToken });
   const { data, error } = await supabase
     .from("profiles")
     .select("id, email, name, avatar_url, role_id, created_at")
@@ -133,10 +139,10 @@ export async function getUserById(userId: string) {
 export async function assignRole(
   targetUserId: string,
   payload: { roleSlug: string },
-  actorUserId: string,
   ipAddress: string | null,
+  accessToken: string,
 ) {
-  const supabase = getSupabaseAuthClient();
+  const supabase = getSupabaseAuthClient({ accessToken });
   const parsed = assignRoleSchema.parse(payload);
 
   const { data: roleData, error: roleError } = await supabase
@@ -153,58 +159,26 @@ export async function assignRole(
     throw new Error("USERS_ROLE_NOT_FOUND");
   }
 
-  const { data: currentProfile, error: profileError } = await supabase
-    .from("profiles")
-    .select("id, role_id")
-    .eq("id", targetUserId)
-    .single<{ id: string; role_id: number | null }>();
-
-  if (profileError || !currentProfile) {
-    log.error("Admin operation failed", {
-      operation: "assignRole",
-      error: profileError,
-    });
-    throw new Error("USERS_USER_NOT_FOUND");
-  }
-
-  const currentRoleId = currentProfile.role_id;
-
-  const { error: updateError } = await supabase
-    .from("profiles")
-    .update({ role_id: roleData.id, updated_at: new Date().toISOString() })
-    .eq("id", targetUserId);
-
-  if (updateError) {
-    log.error("Admin operation failed", {
-      operation: "assignRole",
-      error: updateError,
-    });
-    throw new Error("USERS_ROLE_ASSIGNMENT_FAILED");
-  }
-
-  const roleAssignment: UserRoleInsert = {
-    user_id: targetUserId,
-    role_id: roleData.id,
-    assigned_by: actorUserId,
-    assigned_at: new Date().toISOString(),
-  };
-
-  await supabase.from("user_roles").insert(roleAssignment);
-
-  const auditRecord: AuditInsert = {
-    user_id: targetUserId,
-    action: "role_changed",
-    metadata: {
-      actorUserId,
-      previousRoleId: currentRoleId,
-      nextRoleId: roleData.id,
-      nextRoleSlug: roleData.slug,
+  const { data: assignment, error: assignmentError } = await supabase.rpc(
+    "assign_user_role",
+    {
+      p_target_user_id: targetUserId,
+      p_role_slug: roleData.slug,
+      p_ip_address: ipAddress,
     },
-    ip_address: ipAddress,
-    created_at: new Date().toISOString(),
-  };
+  );
 
-  await supabase.from("audit_log").insert(auditRecord);
+  if (assignmentError || !assignment) {
+    log.error("Admin operation failed", {
+      operation: "assignRole",
+      error: assignmentError ? assignmentError.message : "assignment_failed",
+    });
+    throw new Error(
+      assignmentError?.message === "USERS_ROLE_ASSIGNMENT_DENIED"
+        ? "USERS_ROLE_ASSIGNMENT_DENIED"
+        : "USERS_ROLE_ASSIGNMENT_FAILED",
+    );
+  }
 
   return {
     userId: targetUserId,
@@ -212,8 +186,8 @@ export async function assignRole(
   };
 }
 
-export async function listAuditEvents(limit = 100) {
-  const supabase = getSupabaseAuthClient();
+export async function listAuditEvents(limit = 100, accessToken: string) {
+  const supabase = getSupabaseAuthClient({ accessToken });
   const safeLimit = Math.min(Math.max(limit, 1), 500);
 
   const { data, error } = await supabase

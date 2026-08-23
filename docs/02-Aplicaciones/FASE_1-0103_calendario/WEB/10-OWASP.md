@@ -30,14 +30,14 @@ related:
 
 ## 3. Checklist de controles
 
-| ID                      | Control                                                                                    | Estado            | Evidencia                                                                       |
-| ----------------------- | ------------------------------------------------------------------------------------------ | ----------------- | ------------------------------------------------------------------------------- |
-| SEC-0103-CALENDARIO-001 | La lectura pública del calendario se resuelve mediante endpoints server-side controlados.  | Definido para MVP | `02-SRS.md`, `08-Decisiones de Arquitectura.md`, `09-Especificacion Tecnica.md` |
-| SEC-0103-CALENDARIO-002 | La UI no expone secretos ni utiliza `service_role` en cliente.                             | Definido para MVP | `08-Decisiones de Arquitectura.md`, `09-Especificacion Tecnica.md`              |
-| SEC-0103-CALENDARIO-003 | Los parámetros `date`, `year` y `month` se validan y sanitizan antes de consultar datos.   | Definido para MVP | `03-FRD.md`, `05-Tests Unitarios.md`                                            |
-| SEC-0103-CALENDARIO-004 | Las tablas expuestas en `public` mantienen RLS habilitado con políticas compatibles.       | Definido para MVP | `06-Esquema de Datos.md`, `07-ERM.md`                                           |
-| SEC-0103-CALENDARIO-005 | Los errores técnicos no filtran detalles internos de esquema o infraestructura.            | Definido para MVP | `03-FRD.md`, `09-Especificacion Tecnica.md`                                     |
-| SEC-0103-CALENDARIO-006 | Se registran eventos operativos mínimos para fallos de lectura y degradación del servicio. | Definido para MVP | `02-SRS.md`, `07-ERM.md`, `11-SLA y SLO.md`                                     |
+| ID                      | Control                                                                                    | Estado              | Evidencia                                    |
+| ----------------------- | ------------------------------------------------------------------------------------------ | ------------------- | -------------------------------------------- |
+| SEC-0103-CALENDARIO-001 | La lectura pública del calendario se resuelve mediante endpoints server-side controlados.  | Implementado        | `src/pages/api/calendar/`, tests E2E         |
+| SEC-0103-CALENDARIO-002 | La UI no expone secretos ni utiliza `service_role` en cliente.                             | Implementado        | `src/lib/calendar.ts`, `.env.example`        |
+| SEC-0103-CALENDARIO-003 | Los parámetros `date`, `year` y `month` se validan y sanitizan antes de consultar datos.   | Implementado        | `src/lib/calendar.ts`, tests de endpoints    |
+| SEC-0103-CALENDARIO-004 | Las tablas expuestas en `public` mantienen RLS habilitado con políticas compatibles.       | Verificación opt-in | tests integración Supabase                   |
+| SEC-0103-CALENDARIO-005 | Los errores técnicos no filtran detalles internos de esquema o infraestructura.            | Implementado        | `src/lib/observability.ts`, tests de errores |
+| SEC-0103-CALENDARIO-006 | Se registran eventos operativos mínimos para fallos de lectura y degradación del servicio. | Implementado        | `/api/health`, `src/lib/observability.ts`    |
 
 ## 4. Riesgo aceptado
 

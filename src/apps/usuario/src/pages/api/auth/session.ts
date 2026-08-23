@@ -17,9 +17,7 @@ export const GET: APIRoute = async ({ request }) => {
     });
   } catch (error) {
     log.warn("Session check failed");
-    const message =
-      error instanceof Error ? error.message : "USERS_SESSION_EXPIRED";
-    return jsonError(message, 401);
+    return jsonError("USERS_SESSION_EXPIRED", 401);
   }
 };
 

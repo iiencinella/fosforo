@@ -1,10 +1,14 @@
 import type { APIRoute } from "astro";
 
 import {
+  CalendarDateInputError,
   CalendarInputError,
   getDayByDate,
   parseDateParam,
 } from "@/lib/calendar";
+
+import { log } from "@/lib/log";
+
 
 export const GET: APIRoute = async ({ url }) => {
   try {
@@ -17,31 +21,44 @@ export const GET: APIRoute = async ({ url }) => {
           code: "CALENDAR_DAY_NOT_FOUND",
           message: "No hay jornada cargada para la fecha solicitada.",
         },
-        { status: 404 },
+        { status: 404, headers: CACHE_HEADERS },
       );
     }
 
-    return Response.json(day);
+    return Response.json(day, { headers: CACHE_HEADERS });
   } catch (error) {
-    if (error instanceof CalendarInputError) {
+    if (error instanceof CalendarDateInputError) {
       return Response.json(
         {
           code: "CALENDAR_INVALID_DATE",
           message: error.message,
         },
-        { status: 400 },
+        { status: 400, headers: CACHE_HEADERS },
       );
     }
+
+    if (error instanceof CalendarInputError) {
+      return Response.json(
+        {
+          code: "CALENDAR_INVALID_DATE",
+          message: "La fecha solicitada no es válida.",
+        },
+        { status: 400, headers: CACHE_HEADERS },
+      );
+    }
+
+    await log.error("Fallo resolviendo jornada diaria", {
+      date: url.searchParams.get("date"),
+      error: error instanceof Error ? error.message : String(error),
+    });
+
 
     return Response.json(
       {
         code: "CALENDAR_DAY_ERROR",
-        message:
-          error instanceof Error
-            ? error.message
-            : "No se pudo resolver la jornada solicitada.",
+        message: "No se pudo resolver la jornada solicitada.",
       },
-      { status: 500 },
+      { status: 503, headers: { "Cache-Control": "no-store" } },
     );
   }
 };

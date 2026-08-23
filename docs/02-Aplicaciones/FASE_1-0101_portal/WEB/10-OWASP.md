@@ -30,14 +30,14 @@ related:
 
 ## 3. Checklist de controles
 
-| ID                  | Control                                                                                      | Estado                      | Evidencia                                                                |
-| ------------------- | -------------------------------------------------------------------------------------------- | --------------------------- | ------------------------------------------------------------------------ |
-| SEC-0101-PORTAL-001 | Los formularios del MVP permanecen publicos y no dependen de autenticación de usuario final. | Aceptado para MVP           | `00-README.md`, `02-SRS.md`, `08-Decisiones de Arquitectura.md`          |
-| SEC-0101-PORTAL-002 | Autorización por rol/recurso para operaciónes administrativas o de backoffice.               | Definido a nivel documental | `docs/01-Arquitectura/Capacidades Compartidas/SRS-Identidad-y-Acceso.md` |
-| SEC-0101-PORTAL-003 | Validación y sanitización de entradas en todos los formularios.                              | Definido para MVP           | `03-FRD.md`, `09-Especificación Tecnica.md`                              |
-| SEC-0101-PORTAL-004 | Proteccion contra abuso, rate limiting y minimización de datos de contacto.                  | Definido para MVP           | `02-SRS.md`, `07-ERM.md`                                                 |
-| SEC-0101-PORTAL-005 | Logging y auditoria de eventos sensibles de submit y fallo.                                  | Definido para MVP           | `02-SRS.md`, `07-ERM.md`                                                 |
-| SEC-0101-PORTAL-006 | Manejo seguro de secretos y acceso server-side a Supabase.                                   | Definido para MVP           | `08-Decisiones de Arquitectura.md`, `09-Especificación Tecnica.md`       |
+| ID                  | Control                                                                                      | Estado                      | Evidencia                                                                                        |
+| ------------------- | -------------------------------------------------------------------------------------------- | --------------------------- | ------------------------------------------------------------------------------------------------ |
+| SEC-0101-PORTAL-001 | Los formularios del MVP permanecen publicos y no dependen de autenticación de usuario final. | Aceptado para MVP           | `00-README.md`, `02-SRS.md`, `08-Decisiones de Arquitectura.md`                                  |
+| SEC-0101-PORTAL-002 | Autorización por rol/recurso para operaciónes administrativas o de backoffice.               | Definido a nivel documental | `docs/01-Arquitectura/Capacidades Compartidas/SRS-Identidad-y-Acceso.md`                         |
+| SEC-0101-PORTAL-003 | Validación y sanitización de entradas en todos los formularios.                              | Definido para MVP           | `03-FRD.md`, `09-Especificación Tecnica.md`                                                      |
+| SEC-0101-PORTAL-004 | Proteccion contra abuso, rate limiting y minimización de datos de contacto.                  | Definido para MVP           | `02-SRS.md`, `07-ERM.md`                                                                         |
+| SEC-0101-PORTAL-005 | Logging y auditoria de eventos sensibles de submit y fallo.                                  | En implementación           | `02-SRS.md`, `07-ERM.md`, migración `202608190001_create_portal_submissions.sql`                 |
+| SEC-0101-PORTAL-006 | Manejo seguro de secretos y acceso server-side a Supabase.                                   | Implementado en código      | `08-Decisiones de Arquitectura.md`, `09-Especificación Tecnica.md`, `src/lib/supabase-server.ts` |
 
 ## 4. Riesgo aceptado
 
