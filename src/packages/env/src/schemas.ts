@@ -12,7 +12,7 @@ export const supabaseFullEnvSchema = supabaseEnvSchema.extend({
 export const adminEnvSchema = z.object({
   sessionCookie: z.string().min(1),
   sessionMaxAge: z.coerce.number().int().positive(),
-  allowedEmailDomain: z.string().default(""),
+  allowedEmailDomain: z.string(),
 });
 
 export const bibliaEnvSchema = z.object({
@@ -21,4 +21,6 @@ export const bibliaEnvSchema = z.object({
 
 export const portalEnvSchema = z.object({
   whatsappNumber: z.string().min(1),
+  resendApiKey: z.string().min(1),
+  feedbackEmailTo: z.string().min(1),
 });

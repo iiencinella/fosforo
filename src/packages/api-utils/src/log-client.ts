@@ -20,6 +20,7 @@ type LogClientOptions = {
 const REQUEST_TIMEOUT_MS = 3000;
 
 let cachedConfig: { url: string; key: string } | null = null;
+let warnedIngestAlias = false;
 
 function resolveConfig(
   options?: LogClientOptions,
@@ -30,11 +31,18 @@ function resolveConfig(
 
   if (cachedConfig) return cachedConfig;
 
-  const url = options?.apiUrl ?? process.env.LOGS_API_URL;
-  const key =
-    options?.apiKey ??
-    process.env.LOGS_API_KEY ??
-    process.env.LOGS_INGEST_API_KEY;
+  const url = process.env.LOGS_API_URL;
+  let key = process.env.LOGS_API_KEY;
+
+  if (!key && process.env.LOGS_INGEST_API_KEY) {
+    key = process.env.LOGS_INGEST_API_KEY;
+    if (!warnedIngestAlias) {
+      warnedIngestAlias = true;
+      console.warn(
+        '[@repo/api-utils] La variable "LOGS_INGEST_API_KEY" esta deprecada. Usa "LOGS_API_KEY" en su lugar. El alias se eliminara en una version futura.',
+      );
+    }
+  }
 
   if (!url || !key) return null;
 

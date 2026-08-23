@@ -54,3 +54,8 @@ graphify-out/
 
 # misc temp files
 nul
+
+# local env files (la plantilla .env.example si queda versionada)
+.env
+.env.*
+!.env.example

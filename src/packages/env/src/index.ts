@@ -1,4 +1,10 @@
-export { readEnv, requireEnv } from "./reader.js";
+export {
+  readEnv,
+  requireEnv,
+  requireEnvValues,
+  MissingEnvError,
+  ENV_ALIASES,
+} from "./reader.js";
 export { isProduction, isDevelopment } from "./common.js";
 
 export {

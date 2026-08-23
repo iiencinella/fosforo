@@ -1,9 +1,21 @@
 import { getSupabaseEnv } from "@repo/env";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
-const { url, anonKey } = getSupabaseEnv();
+let cachedClient: SupabaseClient | undefined;
 
-export const supabase = createClient(url, anonKey);
+/**
+ * Cliente Supabase con inicializacion perezosa.
+ * Nunca instanciar a nivel de modulo: si falta una variable de entorno,
+ * el error debe ocurrir recien cuando se usa el cliente y no romper
+ * todo el bundle con un 500 global.
+ */
+export function getSupabaseClient(): SupabaseClient {
+  if (!cachedClient) {
+    const { url, anonKey } = getSupabaseEnv();
+    cachedClient = createClient(url, anonKey);
+  }
+  return cachedClient;
+}
 
 export type BibliaReadRow = {
   version_code: string;
@@ -45,7 +57,7 @@ export async function readChapterRpc(params: {
   bookSlug: string;
   chapterNumber: number;
 }) {
-  return supabase.rpc("biblia_read_chapter", {
+  return getSupabaseClient().rpc("biblia_read_chapter", {
     p_version_code: params.versionCode,
     p_book_slug: params.bookSlug,
     p_chapter_number: params.chapterNumber,
@@ -57,7 +69,7 @@ export async function searchVersesRpc(params: {
   query: string;
   limit?: number;
 }) {
-  return supabase.rpc("biblia_search_verses", {
+  return getSupabaseClient().rpc("biblia_search_verses", {
     p_version_code: params.versionCode,
     p_query: params.query,
     p_limit: params.limit ?? 30,
@@ -69,7 +81,7 @@ export async function getLiturgyDayRpc(params: {
   rite: string;
   regionCode: string;
 }) {
-  return supabase.rpc("biblia_get_liturgy_day", {
+  return getSupabaseClient().rpc("biblia_get_liturgy_day", {
     p_date: params.date,
     p_rite: params.rite,
     p_region_code: params.regionCode,
