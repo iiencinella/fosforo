@@ -21,6 +21,7 @@ Esta carpeta centraliza la documentación de capacidades reutilizables del ecosi
 
 - [Catalogo-de-Capacidades-Compartidas.md](Catalogo-de-Capacidades-Compartidas.md)
 - [Plantilla-SRS-Componente-Compartido.md](Plantilla-SRS-Componente-Compartido.md)
+- [Guia-Variables-de-Entorno.md](Guia-Variables-de-Entorno.md)
 
 ## Capacidades definidas
 
@@ -42,6 +43,8 @@ Los paquetes activos hoy viven en `src/packages/` y representan la base reusable
 | `@repo/tailwind-config`    | Tokens y configuración visual compartida                         | Parcialmente cubierto por `SRS-Design-System-y-Navegacion-Global.md`   |
 | `@repo/mobile-auth-client` | Primitivas mobile para sesion, login y pantallas compartidas     | Relaciónado con `SRS-Identidad-y-Acceso.md`, sin SRS de paquete propio |
 | `@repo/api-utils`          | Utilidades compartidas para consumo de APIs y contratos simples  | Sin documentación especifica de paquete                                |
+| `@repo/env`                | Lectura, validacion y convencion de variables de entorno         | Cubierto por `Guia-Variables-de-Entorno.md`                            |
+| `@repo/auth`               | Sesion y cookies compartidas sobre Supabase Auth                 | Relacionado con `SRS-Identidad-y-Acceso.md`                            |
 | `@repo/eslint-config`      | Configuración ESLint compartida del monorepo                     | Sin documentación especifica de paquete                                |
 | `@repo/typescript-config`  | Configuraciónes TypeScript reutilizables del monorepo            | Sin documentación especifica de paquete                                |
 

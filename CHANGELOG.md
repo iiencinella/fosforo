@@ -2,6 +2,20 @@
 
 Este archivo registra cambios relevantes del monorepo `fosforo`.
 
+## 2026-08-23
+
+### Changed
+
+- **Plataforma / unificación de variables de entorno** (`src/packages/env`, `src/packages/api-utils`, `turbo.json`, `.env.example`, `docs/01-Arquitectura/Capacidades Compartidas/Guia-Variables-de-Entorno.md`): se define una convención canónica de nombres (plano para server-only, `PUBLIC_`/`EXPO_PUBLIC_` solo client-exposed) y se documenta el estándar completo en la nueva guía de variables de entorno.
+  - `@repo/env`: alias deprecados (`PUBLIC_SUPABASE_URL`, `PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_KEY`, `LOGS_INGEST_API_KEY`) siguen resolviéndose pero emiten warning único; nuevo `requireEnvValues()` que agrega todas las variables faltantes en un solo error (`MissingEnvError`); validación Zod conectada a los getters de Supabase.
+  - `turbo.json`: `globalEnv` limpiado (fuera vars muertas de GitHub) y declaradas todas las canónicas; con Turborepo en modo estricto, Vercel solo expone a build y runtime las variables declaradas ahí.
+  - Tests unitarios nuevos para el lector de entorno (9 casos).
+
+### Fixed
+
+- **Biblia / administracion: 500 global por inicialización de Supabase a nivel de módulo** (`src/apps/biblia/src/db/supabase.ts`, `src/apps/administracion/src/db/supabase.ts`): el cliente ahora se instancia de forma perezosa con cache, igual que en horarios/log/cancionero/calendario. Si falta una variable, el error ocurre al usar el cliente y no rompe todas las rutas.
+- **Biblia en producción** (`fosforo-biblia.vercel.app`): el 500 general se debía a variables de entorno presentes en Vercel pero no declaradas en `turbo.json`, combinado con la inicialización a nivel de módulo.
+
 ## 2026-08-08
 
 ### Changed

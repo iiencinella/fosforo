@@ -1,4 +1,4 @@
-import { supabase } from "@/db/supabase";
+import { getSupabaseClient } from "@/db/supabase";
 import { getDefaultVersion } from "@/lib/data";
 import { log } from "@/lib/log";
 
@@ -35,7 +35,9 @@ function getFallbackCatalog(): BibliaVersionCatalog {
 export async function getBibleVersionCatalog(): Promise<BibliaVersionCatalog> {
   const fallback = getFallbackCatalog();
 
-  const { data, error } = await supabase
+  const client = getSupabaseClient();
+
+  const { data, error } = await client
     .from("biblia_versions")
     .select("code,name,is_enabled,is_internal_only")
     .order("name", { ascending: true });
@@ -65,7 +67,9 @@ export async function getBibleVersionCatalog(): Promise<BibliaVersionCatalog> {
 }
 
 export async function getEnabledBibleVersion(code: string) {
-  const { data, error } = await supabase
+  const client = getSupabaseClient();
+
+  const { data, error } = await client
     .from("biblia_versions")
     .select("code,name,is_enabled,is_internal_only")
     .eq("code", code)

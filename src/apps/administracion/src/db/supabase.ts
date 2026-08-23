@@ -1,12 +1,30 @@
 import { getSupabaseEnv } from "@repo/env";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
-const { url, anonKey } = getSupabaseEnv();
+let cachedClient: SupabaseClient | undefined;
 
-export const supabase = createClient(url, anonKey, {
-  auth: {
-    persistSession: false,
-    autoRefreshToken: false,
+function getClient(): SupabaseClient {
+  if (!cachedClient) {
+    const { url, anonKey } = getSupabaseEnv();
+    cachedClient = createClient(url, anonKey, {
+      auth: {
+        persistSession: false,
+        autoRefreshToken: false,
+      },
+    });
+  }
+  return cachedClient;
+}
+
+/**
+ * Cliente Supabase con inicializacion perezosa.
+ * Nunca instanciar a nivel de modulo: si falta una variable de entorno,
+ * el error debe ocurrir recien cuando se usa el cliente y no romper
+ * todo el bundle con un 500 global.
+ */
+export const supabase: SupabaseClient = new Proxy({} as SupabaseClient, {
+  get(_target, prop, receiver) {
+    return Reflect.get(getClient(), prop, receiver);
   },
 });
 
