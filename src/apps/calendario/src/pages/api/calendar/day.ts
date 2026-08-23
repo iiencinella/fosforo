@@ -9,6 +9,9 @@ import {
 
 import { log } from "@/lib/log";
 
+const CACHE_HEADERS: Record<string, string> = {
+  "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600",
+};
 
 export const GET: APIRoute = async ({ url }) => {
   try {
@@ -51,7 +54,6 @@ export const GET: APIRoute = async ({ url }) => {
       date: url.searchParams.get("date"),
       error: error instanceof Error ? error.message : String(error),
     });
-
 
     return Response.json(
       {

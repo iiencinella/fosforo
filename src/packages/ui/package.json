@@ -56,11 +56,11 @@
     "@repo/eslint-config": "workspace:*",
     "@repo/tailwind-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
-    "@tailwindcss/cli": "4.2.4",
-    "@types/react": "19.2.14",
+    "@tailwindcss/cli": "catalog:",
+    "@types/react": "catalog:",
     "eslint": "9.39.1",
     "mri": "^1.2.0",
-    "tailwindcss": "4.2.4",
+    "tailwindcss": "catalog:",
     "typescript": "6.0.3"
   }
 }
