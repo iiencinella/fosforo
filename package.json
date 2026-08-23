@@ -40,6 +40,9 @@
     },
     "onlyBuiltDependencies": [
       "electron"
-    ]
+    ],
+    "patchedDependencies": {
+      "@astrojs/internal-helpers@0.10.4": "patches/@astrojs__internal-helpers@0.10.4.patch"
+    }
   }
 }

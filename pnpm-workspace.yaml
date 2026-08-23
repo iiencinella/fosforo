@@ -20,5 +20,8 @@ catalog:
   turbo: 2.10.11
   "@types/node": 24.13.3
   "@astrojs/check": 0.9.10
+  astro: 7.2.4
+  "@astrojs/react": 6.0.4
+  "@astrojs/vercel": 11.0.7
   vitest: 4.1.11
   "@vitest/coverage-v8": 4.1.11
