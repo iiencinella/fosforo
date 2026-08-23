@@ -19,12 +19,12 @@
     "docs:sync-app-status": "node scripts/docs-sync-app-status.mjs"
   },
   "devDependencies": {
-    "@vitest/coverage-v8": "4.1.11",
+    "@vitest/coverage-v8": "catalog:",
     "prettier": "3.9.6",
     "prettier-plugin-tailwindcss": "0.8.1",
     "tslib": "2.8.1",
     "turbo": "catalog:",
-    "vitest": "4.1.11"
+    "vitest": "catalog:"
   },
   "packageManager": "pnpm@10.33.2",
   "engines": {

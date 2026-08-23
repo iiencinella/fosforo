@@ -58,7 +58,7 @@
     "@repo/typescript-config": "workspace:*",
     "@tailwindcss/cli": "catalog:",
     "@types/react": "catalog:",
-    "eslint": "9.39.1",
+    "eslint": "10.9.0",
     "mri": "^1.2.0",
     "tailwindcss": "catalog:",
     "typescript": "6.0.3"
