@@ -18,6 +18,21 @@
     "EXPO_PUBLIC_API_BASE_URL",
     "EXPO_PUBLIC_DEMO_USER_ID"
   ],
+  "globalPassThroughEnv": [
+    "SUPABASE_URL",
+    "SUPABASE_ANON_KEY",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "LOGS_API_URL",
+    "LOGS_API_KEY",
+    "ADMIN_SESSION_COOKIE",
+    "ADMIN_SESSION_MAX_AGE_SECONDS",
+    "ADMIN_ALLOWED_EMAIL_DOMAIN",
+    "BIBLIA_INTERNAL_INGESTION_KEY",
+    "CALENDARIO_API_URL",
+    "PUBLIC_PORTAL_WHATSAPP_NUMBER",
+    "RESEND_API_KEY",
+    "FEEDBACK_EMAIL_TO"
+  ],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
