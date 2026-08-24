@@ -77,6 +77,25 @@ const title = day
 const description = day
   ? `${day.celebrationTitle}. ${day.summary}`
   : "Consulta la jornada litúrgica del día y navega el calendario mensual del ecosistema Fósforo.";
+
+const toIsoDate = (date: Date) => date.toISOString().slice(0, 10);
+
+const previousDayDate = new Date(selectedDate);
+previousDayDate.setUTCDate(previousDayDate.getUTCDate() - 1);
+const nextDayDate = new Date(selectedDate);
+nextDayDate.setUTCDate(nextDayDate.getUTCDate() + 1);
+
+const previousDayHref = `/?date=${toIsoDate(previousDayDate)}`;
+const nextDayHref = `/?date=${toIsoDate(nextDayDate)}`;
+
+const selectedDayLabel =
+  day?.weekdayLabel ??
+  new Intl.DateTimeFormat("es-AR", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    timeZone: "UTC",
+  }).format(selectedDate);
 ---
 
 <BaseLayout title={title} description={description}>
@@ -112,6 +131,15 @@ const description = day
     <section class="section calendar-main" id="calendar">
       <div class="page calendar-shell">
         <article class="calendar-panel">
+          <nav class="calendar-day-nav" aria-label="Navegación por día">
+            <a href={previousDayHref} aria-label="Día anterior">←</a>
+            <p class="calendar-day-nav__label">
+              <strong>{selectedDayLabel}</strong>
+              <span>{toIsoDate(selectedDate)}</span>
+            </p>
+            <a href={nextDayHref} aria-label="Día siguiente">→</a>
+          </nav>
+
           {
             pageError ? (
               <article class="card calendar-status-card calendar-error-card">
@@ -164,29 +192,20 @@ const description = day
                       dayItem ? (
                     dayItem.href ? (
                           <a
-                            class={`calendar-day liturgical-${dayItem.liturgicalColor}${dayItem.isSelected ? " is-selected" : ""}${dayItem.isToday ? " is-today" : ""}${!dayItem.hasData ? " is-without-data" : ""}`}
+                            class={`calendar-day${dayItem.isSelected ? " is-selected" : ""}${dayItem.isToday ? " is-today" : ""}${!dayItem.hasData ? " is-without-data" : ""}`}
                             href={dayItem.href}
+                            aria-label={`${dayItem.dayNumber} de ${month.monthLabel}: ${dayItem.celebrationTitle}`}
                           >
                             <span class="day-date">{dayItem.dayNumber}</span>
-                            <span class="day-title">{dayItem.celebrationTitle}</span>
-                            {
-                              dayItem.rankLabel || dayItem.isArgentina || dayItem.isMarian ? (
-                                <span class="calendar-day-flags">
-                                  {dayItem.rankLabel ? <span>{dayItem.rankLabel}</span> : null}
-                                  {dayItem.isArgentina ? <span>AR</span> : null}
-                                  {dayItem.isMarian ? <span>Mariana</span> : null}
-                                </span>
-                              ) : null
-                            }
-                            <span class={`season-chip ${dayItem.liturgicalColor === "blanco" ? "season-christmas" : "season-ordinary"}`}>
-                              <span class="season-dot"></span>
-                              {dayItem.liturgicalSeason}
-                            </span>
+                            <span
+                              class="day-dot"
+                              data-lit={dayItem.liturgicalColor}
+                              aria-hidden="true"
+                            ></span>
                           </a>
                         ) : (
                           <div class="calendar-day is-without-data" aria-hidden="true">
                             <span class="day-date">{dayItem.dayNumber}</span>
-                            <span class="day-title">Sin datos</span>
                           </div>
                         )
                       ) : (

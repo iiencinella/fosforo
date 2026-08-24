@@ -49,6 +49,21 @@
   color: var(--color-muted);
 }
 
+/* El halo del hero (brand-50) lava el texto claro: contorno oscuro para
+   que las letras blancas se lean sobre el foco de luz. */
+.calendar-hero-compact .calendar-title,
+.calendar-hero-compact .calendar-kicker,
+.calendar-hero-compact .calendar-subtitle {
+  paint-order: stroke fill;
+  -webkit-text-stroke: 0.05em rgba(26, 19, 9, 0.88);
+}
+
+.calendar-hero-compact .calendar-meta-bar .pill {
+  text-shadow:
+    0 1px 2px rgba(26, 19, 9, 0.65),
+    0 0 6px rgba(26, 19, 9, 0.35);
+}
+
 .calendar-hero-compact .calendar-title {
   font-family: var(--font-serif);
   font-size: clamp(2.2rem, 3.2vw, 3.4rem);
@@ -228,34 +243,115 @@
   opacity: 0.52;
 }
 
-.calendar-grid .calendar-day .day-title {
-  white-space: normal;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
+/* Celdas minimalistas: numero + punto del color liturgico.
+   El detalle de la festividad vive en la tarjeta del dia seleccionado. */
+.calendar-grid .calendar-day {
+  place-content: center;
+  justify-items: center;
+  gap: 10px;
 }
 
-.calendar-grid .calendar-day .season-chip {
-  margin-top: auto;
+.calendar-grid .calendar-day .day-date {
+  font-size: 1.05rem;
 }
 
-.calendar-day-flags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 6px;
+.day-dot {
+  width: 13px;
+  height: 13px;
+  border-radius: 999px;
+  background: var(--color-surface-strong);
+  border: 1px solid color-mix(in srgb, var(--color-line) 80%, transparent);
 }
 
-.calendar-day-flags span {
+.day-dot[data-lit="verde"] {
+  background: var(--lit-green);
+  border-color: transparent;
+}
+
+.day-dot[data-lit="morado"] {
+  background: var(--lit-purple);
+  border-color: transparent;
+}
+
+.day-dot[data-lit="blanco"] {
+  background: var(--lit-white);
+  border-color: rgba(60, 40, 20, 0.35);
+}
+
+.day-dot[data-lit="rojo"] {
+  background: var(--lit-red);
+  border-color: transparent;
+}
+
+.day-dot[data-lit="rosa"] {
+  background: var(--lit-rose);
+  border-color: transparent;
+}
+
+/* Navegacion por dia (visible solo en movil) */
+.calendar-day-nav {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 16px;
+  border: 1px solid
+    color-mix(in srgb, var(--color-brand-500) 18%, var(--color-line));
+  background: color-mix(in srgb, var(--color-surface-strong) 74%, transparent);
+}
+
+.calendar-day-nav a {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0 14px;
   border-radius: 999px;
-  padding: 3px 8px;
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  background: color-mix(in srgb, var(--color-surface-strong) 86%, transparent);
-  border: 1px solid color-mix(in srgb, var(--color-line) 78%, transparent);
+  border: 1px solid var(--color-line);
+  color: var(--color-text);
+  background: color-mix(in srgb, var(--color-surface-strong) 74%, transparent);
+  font-size: 1.1rem;
+  transition:
+    transform var(--transition-default),
+    background var(--transition-default),
+    border-color var(--transition-default),
+    box-shadow var(--transition-default);
+}
+
+.calendar-day-nav a:hover {
+  transform: translateY(-1px);
+  background: color-mix(
+    in srgb,
+    var(--color-surface-strong) 92%,
+    var(--color-bg-elevated)
+  );
+  border-color: color-mix(
+    in srgb,
+    var(--color-brand-500) 18%,
+    var(--color-line)
+  );
+  box-shadow: var(--shadow-soft);
+}
+
+.calendar-day-nav__label {
+  display: grid;
+  gap: 2px;
+  text-align: center;
+  margin: 0;
+}
+
+.calendar-day-nav__label strong {
+  font-family: var(--font-serif);
+  font-size: 1.02rem;
+  line-height: 1.25;
+}
+
+.calendar-day-nav__label span {
+  font-size: 0.78rem;
+  color: var(--color-muted);
+  letter-spacing: 0.06em;
 }
 
 .calendar-panel-label {
@@ -465,6 +561,10 @@
     grid-template-columns: 1fr;
   }
 
+  .calendar-shell {
+    grid-template-columns: 1fr;
+  }
+
   .calendar-aside {
     position: static;
   }
@@ -475,12 +575,20 @@
     gap: 8px;
   }
 
+  /* Vista de dia unico: fuera grilla, toolbar y leyenda; entra la navegacion
+     por flechas y el detalle de la jornada debajo. */
+  .calendar-toolbar,
+  .calendar-legend,
   .calendar-grid {
-    grid-template-columns: repeat(7, minmax(38px, 1fr));
-    gap: 8px;
+    display: none;
   }
 
-  .calendar-day {
-    padding: 8px;
+  .calendar-day-nav {
+    display: flex;
+  }
+
+  .calendar-panel {
+    padding: 16px;
+    gap: 14px;
   }
 }
