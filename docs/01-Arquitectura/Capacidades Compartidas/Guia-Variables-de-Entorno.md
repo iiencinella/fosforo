@@ -165,6 +165,27 @@ Plan de remoción:
 5. Configurarla en Vercel (Production y Preview) y redesplegar.
 6. Si reemplaza una existente: sumarla a la tabla de alias deprecados con fecha de remoción.
 
+## Regla crítica: flag "Sensitive" en Vercel
+
+**Las variables marcadas como _Sensitive_ en Vercel solo se descifran durante el build; NUNCA llegan al runtime de las funciones serverless.**
+
+Síntoma característico: `vercel env ls` muestra la variable, el build la recibe, pero `process.env` en el lambda no la tiene (verificado con endpoint de diagnóstico: solo claves de sistema `VERCEL_*`).
+
+Reglas:
+
+1. Toda variable que la app lea **en runtime** debe crearse como **no-sensitive**: `npx vercel env add NAME production --no-sensitive`.
+2. Ojo: `vercel env add` crea variables sensitive por defecto en Production/Preview; siempre pasar `--no-sensitive` explícitamente para las de runtime.
+3. Solo dejar como sensitive lo que sea exclusivamente de build-time (hoy: ninguna).
+4. `vercel env pull` escribe `[SECRET_VALUE]` como placeholder para valores sensitive: si un pull devuelve eso, la variable es sensitive (y por lo tanto inútil en runtime).
+5. Después de crear/modificar variables: redesplegar (`vercel redeploy <url-produccion>`) para que el snapshot del deployment las tome.
+
+Diagnóstico aplicado (2026-08-24): biblia y calendario fallaban en producción porque todas sus variables estaban creadas como sensitive. Se recrearon como no-sensitive con valores reales y los proyectos volvieron a funcionar.
+
+## Variables pendientes de valor real
+
+- `LOGS_API_KEY`: falta definir la API key de ingesta del servicio log (biblia la espera para activar el envío de logs; sin key, el logging degrada silenciosamente).
+- `BIBLIA_INTERNAL_INGESTION_KEY`: sin valor configurado; la API interna de ingesta queda deshabilitada hasta definirlo.
+
 ## Limpieza detectada (pendiente de ejecutar)
 
 Variables presentes en Vercel pero sin uso en código (candidatas a remover tras verificación):
