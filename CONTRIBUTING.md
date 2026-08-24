@@ -54,7 +54,7 @@ Para mas detalle: `docs/01-Arquitectura/Estructura Monorepo.md`.
 
 ## Flujo de trabajo recomendado
 
-1. Crea una rama desde `main`.
+1. Crea una rama desde `main` con el formato `<tipo>/<descripcion-kebab-case>` (ver [Convención de ramas en AGENTS.md](AGENTS.md#convención-de-ramas)).
 2. Lee la documentación relevante del cambio.
 3. Implementa respetando la estructura real del monorepo.
 4. Ejecuta validaciónes proporcionales.

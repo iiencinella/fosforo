@@ -112,6 +112,22 @@ Para ejecutar una tarea en un workspace concreto, usa el filtro de pnpm/Turborep
 5. Ejecuta las validaciones proporcionales al cambio y describe sus resultados en el Pull Request.
 6. No agregues reglas de negocio sin respaldo documental y no incluyas secretos, `.env` ni artefactos generados.
 
+### Convención de ramas
+
+Toda rama nace desde `main` con el formato `<tipo>/<descripcion-kebab-case>`:
+
+| Tipo        | Uso                                           |
+| ----------- | --------------------------------------------- |
+| `feat/`     | Nueva funcionalidad                           |
+| `fix/`      | Corrección de bug                             |
+| `refactor/` | Reestructuración sin cambio de comportamiento |
+| `chore/`    | Mantenimiento y tooling                       |
+| `docs/`     | Solo documentación                            |
+| `test/`     | Pruebas                                       |
+| `hotfix/`   | Corrección urgente de producción              |
+
+Ejemplos: `feat/log-mvp-completacion`, `fix/turbo-cache-vercel-output`, `docs/env-sensitive-runtime`. En kebab-case, sin acentos ni ñ. Los pushes directos a `main` están bloqueados: todo cambio llega vía Pull Request. Detalles completos en [`AGENTS.md`](AGENTS.md#convención-de-ramas) y [`CONTRIBUTING.md`](CONTRIBUTING.md).
+
 Consulta [`CONTRIBUTING.md`](CONTRIBUTING.md) para el flujo completo de ramas, validaciones, Pull Requests, licencias y atribuciones.
 
 ## Licencias
