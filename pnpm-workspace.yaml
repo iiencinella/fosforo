@@ -23,5 +23,6 @@ catalog:
   astro: 7.2.4
   "@astrojs/react": 6.0.4
   "@astrojs/vercel": 11.0.7
+  typescript: 6.0.3
   vitest: 4.1.11
   "@vitest/coverage-v8": 4.1.11

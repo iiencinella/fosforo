@@ -61,6 +61,6 @@
     "eslint": "10.9.0",
     "mri": "^1.2.0",
     "tailwindcss": "catalog:",
-    "typescript": "6.0.3"
+    "typescript": "catalog:"
   }
 }
