@@ -15,24 +15,24 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/react": "^4.4.0",
-    "@astrojs/vercel": "^10.0.5",
+    "@astrojs/react": "catalog:",
+    "@astrojs/vercel": "catalog:",
     "@repo/api-utils": "workspace:*",
     "@repo/env": "workspace:*",
     "@repo/ui": "workspace:*",
-    "@supabase/supabase-js": "^2.106.1",
-    "@tailwindcss/vite": "^4.2.4",
-    "astro": "^6.3.1",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "resend": "^6.17.2",
-    "tailwindcss": "4.2.4",
-    "zod": "^4.3.6"
+    "@supabase/supabase-js": "catalog:",
+    "@tailwindcss/vite": "catalog:",
+    "astro": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "resend": "6.22.0",
+    "tailwindcss": "catalog:",
+    "zod": "catalog:"
   },
   "devDependencies": {
-    "@astrojs/check": "^0.9.8",
-    "@types/node": "^24.10.1",
-    "turbo": "2.9.6",
-    "typescript": "^5.9.3"
+    "@astrojs/check": "catalog:",
+    "@types/node": "catalog:",
+    "turbo": "catalog:",
+    "typescript": "catalog:"
   }
 }

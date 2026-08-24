@@ -2,6 +2,22 @@
 
 Este archivo registra cambios relevantes del monorepo `fosforo`.
 
+## 2026-08-24
+
+### Changed
+
+- **Plataforma / actualización integral de dependencias** (`pnpm-workspace.yaml`, `package.json` de los 14 workspaces, `patches/`): se introdujo el **catálogo de pnpm** con versiones exactas como única fuente de verdad para dependencias compartidas, eliminando la dispersión histórica (ej. astro 6.3.1–6.4.1 entre apps).
+  - Stack web: `astro` 6.4.8 → **7.2.4** + `@astrojs/react` 4.4.2 → **6.0.4** + `@astrojs/vercel` 10.0.8 → **11.0.7** en las 8 apps; todos los builds verdes con el nuevo compilador Rust.
+  - UI: `react`/`react-dom` 19.2.8, `tailwindcss` 4.3.3, tipos React al día.
+  - Datos: `@supabase/supabase-js` 2.112.4, `zod` 4.4.3.
+  - Tooling: `vitest` unificado en **4.1.11** (los 5 workspaces rezagados en v3 migrados sin cambios de API), `eslint` **10.9.0** (resuelve peer warning preexistente), `prettier` 3.9.6, `turbo` 2.10.11.
+  - TypeScript unificado en **6.0.3**: se probó 7.0.2 pero `astro check` crashea (`@astrojs/language-server` aún no lo soporta); a reintentar cuando haya soporte. `@types/node` alineado a **24.x** (runtime LTS real de Vercel), no a 26.
+
+### Fixed
+
+- **Calendario / APIs day-month** (`src/apps/calendario/src/pages/api/calendar/*.ts`, preexistente en main): `CACHE_HEADERS` estaba referenciado sin definirse (rompía check-types) y `CalendarDateInputError` no se manejaba en la vista mensual (devolvía 503 en vez de 400 para fechas inválidas).
+- **Builds Astro en Windows** (`patches/@astrojs__internal-helpers@0.10.4.patch`): el tracing de `@astrojs/vercel@11` crea symlinks que requieren privilegio de administrador; el patch usa junctions resueltos en absoluto en Windows, sin cambios en Linux/CI.
+
 ## 2026-08-23
 
 ### Changed

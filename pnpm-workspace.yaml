@@ -3,3 +3,26 @@ packages:
   - "src/mobile/*"
   - "src/desktop/*"
   - "src/packages/*"
+
+# Catalogo de dependencias compartidas.
+# Versiones EXACTAS: una sola fuente de verdad para todo el monorepo.
+# Para actualizar: cambiar aca y correr pnpm install.
+catalog:
+  react: 19.2.8
+  react-dom: 19.2.8
+  "@types/react": 19.2.18
+  "@types/react-dom": 19.2.5
+  tailwindcss: 4.3.3
+  "@tailwindcss/vite": 4.3.3
+  "@tailwindcss/cli": 4.3.3
+  "@supabase/supabase-js": 2.112.4
+  zod: 4.4.3
+  turbo: 2.10.11
+  "@types/node": 24.13.3
+  "@astrojs/check": 0.9.10
+  astro: 7.2.4
+  "@astrojs/react": 6.0.4
+  "@astrojs/vercel": 11.0.7
+  typescript: 6.0.3
+  vitest: 4.1.11
+  "@vitest/coverage-v8": 4.1.11

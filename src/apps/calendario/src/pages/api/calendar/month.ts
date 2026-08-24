@@ -1,6 +1,7 @@
 import type { APIRoute } from "astro";
 
 import {
+  CalendarDateInputError,
   CalendarMonthInputError,
   CalendarInputError,
   getMonthCalendar,
@@ -9,6 +10,10 @@ import {
 } from "@/lib/calendar";
 
 import { log } from "@/lib/log";
+
+const CACHE_HEADERS: Record<string, string> = {
+  "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600",
+};
 
 export const GET: APIRoute = async ({ url }) => {
   try {
@@ -22,6 +27,16 @@ export const GET: APIRoute = async ({ url }) => {
 
     return Response.json(month, { headers: CACHE_HEADERS });
   } catch (error) {
+    if (error instanceof CalendarDateInputError) {
+      return Response.json(
+        {
+          code: "CALENDAR_INVALID_DATE",
+          message: error.message,
+        },
+        { status: 400, headers: CACHE_HEADERS },
+      );
+    }
+
     if (error instanceof CalendarMonthInputError) {
       return Response.json(
         {
