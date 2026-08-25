@@ -45,10 +45,11 @@ Durante el MVP, la app resuelve el calendario litúrgico del rito romano para la
 
 ## Estado de implementación
 
-- **Completado:** documentación spec-driven, implementación Astro del MVP, endpoints `day`/`month`/`health`, pruebas unitarias base, enriquecimiento GCatholic 2026 en `public.liturgy_day_profiles`, reestructuración de layout con calendario al inicio, aside sticky para detalle del día, sección de info secundaria, ocultado de botones de auth en el header y widget embebible de jornada del día vía iframe (`/widget/day`).
+- **Completado:** documentación spec-driven, implementación Astro del MVP, endpoints `day`/`month`/`health`, pruebas unitarias base, enriquecimiento GCatholic 2026 en `public.liturgy_day_profiles`, reestructuración de layout con calendario al inicio, aside sticky para detalle del día, sección de info secundaria, ocultado de botones de auth en el header y widget embebible de jornada del día vía iframe (`/widget/day`), tests de integración Supabase opt-in, E2E HTTP, estados de error, validación de RLS, headers de cache, health degradado y sanitización de errores técnicos. Gates verificados contra el proyecto remoto (integración 3/3) y deployment activo en Vercel.
 - **En curso:** exposición progresiva de metadata litúrgica enriquecida en DTOs, UI y contratos reutilizables del ecosistema.
-- **Completado en esta iteración:** tests de integración Supabase opt-in, E2E HTTP, estados de error, validación de RLS, headers de cache, health degradado y sanitización de errores técnicos.
-- **Pendiente:** ejecutar los gates contra el proyecto Supabase y CI Linux, y cerrar runbooks/alertas de operación para próximos ciclos litúrgicos.
+- **Pendiente:** investigar la política de caché efectiva en producción (el E2E contra el deploy reporta `Cache-Control: public` sin `s-maxage=300` que el código define; posible comportamiento del adapter o build desactualizado) e integrar alertas al panel de Log.
+
+Detalle operativo: [13-Runbook-Operativo](13-Runbook-Operativo.md).
 
 ## Ubicación del codigo
 

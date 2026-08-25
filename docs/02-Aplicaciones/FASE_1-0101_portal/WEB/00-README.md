@@ -45,9 +45,11 @@ El portal debe servir tanto a usuarios finales como a contribuidores: permite de
 
 ## Estado de implementación
 
-- **Completado:** scaffolding documental y workspace web base en `src/apps/portal/` con landing, catálogo, novedades, contacto, feedback y guía para desarrolladores.
-- **En curso:** integración server-side con Supabase para persistencia de envíos y auditoría, junto con el cierre operativo del despliegue.
-- **Pendiente:** aplicar la migración en staging/producción, completar pruebas de integración, protección anti-abuso distribuida, observabilidad y runbooks operativos.
+- **Completado:** scaffolding documental y workspace web base en `src/apps/portal/` con landing, catálogo, novedades, contacto, feedback y guía para desarrolladores. Integración server-side con Supabase para persistencia de envíos y auditoría (tablas `portal_contact_requests`, `portal_feedback_items`, `portal_submission_audit` creadas y aplicadas en producción). Rate limiting de formularios de contacto y feedback (5 req/min por IP, ventana fija). Health endpoint resiliente: sin configuración de Supabase degrada a 503 en lugar de fallar con 500.
+- **En curso:** cierre operativo del despliegue (variables `SUPABASE_URL`/`SUPABASE_SERVICE_ROLE_KEY` en Vercel; el health en producción reporta degradado hasta configurarlas).
+- **Pendiente:** anti-abuso distribuido (el limitador actual es en memoria por instancia de serverless), pruebas de integración E2E de formularios y observabilidad operativa (runbook disponible, alertas por conectar al panel de Log).
+
+Detalle del proceso: [13-Runbook-Operativo](13-Runbook-Operativo.md).
 
 ## Ubicación del codigo
 
