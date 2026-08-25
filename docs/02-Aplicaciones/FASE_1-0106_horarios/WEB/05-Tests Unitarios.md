@@ -31,18 +31,20 @@ related:
 
 ## 3. Matriz de pruebas
 
-| ID                   | Requisito trazado     | Tipo                                                          | Estado    |
-| -------------------- | --------------------- | ------------------------------------------------------------- | --------- |
-| TC-0106-HORARIOS-001 | FR-0106-HORARIOS-001  | Unitario - normaliza query de busqueda por templo/ciudad      | Pendiente |
-| TC-0106-HORARIOS-002 | FR-0106-HORARIOS-001  | Integracion - `GET /api/celebraciones` retorna lista paginada | Pendiente |
-| TC-0106-HORARIOS-003 | FR-0106-HORARIOS-002  | Unitario - filtro por tipo aplica correctamente               | Pendiente |
-| TC-0106-HORARIOS-004 | FR-0106-HORARIOS-003  | Unitario - filtro por franja y fecha valida casos limite      | Pendiente |
-| TC-0106-HORARIOS-005 | FR-0106-HORARIOS-004  | Integracion - `GET /api/templos/{id}` retorna ficha completa  | Pendiente |
-| TC-0106-HORARIOS-006 | FR-0106-HORARIOS-005  | Unitario - mapeo de estado de actualizacion por templo        | Pendiente |
-| TC-0106-HORARIOS-007 | FR-0106-HORARIOS-007  | Unitario - orden por cercania con geolocalizacion habilitada  | Pendiente |
-| TC-0106-HORARIOS-008 | FR-0106-HORARIOS-009  | Unitario - estados UI loading/empty/error/success             | Pendiente |
-| TC-0106-HORARIOS-009 | RB-0106-HORARIOS-006  | Unitario - composicion de filtros en modo AND                 | Pendiente |
-| TC-0106-HORARIOS-010 | NFR-0106-HORARIOS-003 | Unitario - rechazo de parametros invalidos en API             | Pendiente |
+| ID                   | Requisito trazado     | Tipo                                                          | Estado                                           |
+| -------------------- | --------------------- | ------------------------------------------------------------- | ------------------------------------------------ |
+| TC-0106-HORARIOS-001 | FR-0106-HORARIOS-001  | Unitario - normaliza query de busqueda por templo/ciudad      | Implementado                                     |
+| TC-0106-HORARIOS-002 | FR-0106-HORARIOS-002  | Integracion - `GET /api/celebraciones` retorna lista paginada | Implementado                                     |
+| TC-0106-HORARIOS-003 | FR-0106-HORARIOS-003  | Unitario - filtro por tipo aplica correctamente               | Implementado                                     |
+| TC-0106-HORARIOS-004 | FR-0106-HORARIOS-004  | Unitario - filtro por franja y fecha valida casos limite      | Implementado                                     |
+| TC-0106-HORARIOS-005 | FR-0106-HORARIOS-005  | Integracion - `GET /api/templos/{id}` retorna ficha completa  | Implementado                                     |
+| TC-0106-HORARIOS-006 | FR-0106-HORARIOS-007  | Unitario - mapeo de estado de actualizacion por templo        | Implementado                                     |
+| TC-0106-HORARIOS-007 | FR-0106-HORARIOS-008  | Unitario - orden por cercania con geolocalizacion habilitada  | Implementado                                     |
+| TC-0106-HORARIOS-008 | FR-0106-HORARIOS-009  | Unitario - estados UI loading/empty/error/success             | Implementado (contratos API empty/success/error) |
+| TC-0106-HORARIOS-009 | RB-0106-HORARIOS-006  | Unitario - composicion de filtros en modo AND                 | Implementado                                     |
+| TC-0106-HORARIOS-010 | NFR-0106-HORARIOS-003 | Unitario - rechazo de parametros invalidos en API             | Implementado                                     |
+
+Implementacion: `src/lib/search.test.ts` y `src/pages/api/routes.test.ts` (25 tests). La matriz detecto y corrigio un defecto real: la validacion de latitud aceptaba valores fuera de [-90, 90] porque usaba el rango de longitud (`searchQuerySchema`).
 
 ## 4. Cobertura objetivo
 
