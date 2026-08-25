@@ -74,6 +74,12 @@ node db/scripts/generate-log-api-keys.js
 
 Variables de ingesta por app emisora: `LOGS_API_URL` (endpoint `/api/logs` de la app log) y `LOGS_API_KEY`.
 
+## Bootstrap de identidad y panel (pendiente de aplicar en produccion)
+
+- `seed-admin-bootstrap.sql`: crea los roles base del ecosistema y habilita el primer administrador (fila en `profiles` con rol `admin` + fila en `admin_users`). Requiere editar la variable `v_admin_email` y que el usuario exista previamente en Supabase Auth. Idempotente.
+- `baseline-migraciones.sql`: registra en `supabase_migrations.schema_migrations` las migraciones aplicadas fuera del CLI para que `supabase db push` no intente re-aplicarlas. No ejecuta DDL.
+- Ambos se aplican con aprobacion explicita del owner (SQL Editor o MCP) y luego se verifica el resultado con las consultas comentadas al final de cada archivo.
+
 ## Orden sugerido por entorno
 
 - `staging`
