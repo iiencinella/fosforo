@@ -168,6 +168,22 @@
   gap: var(--spacing-2);
 }
 
+.bible-hub-modal-verses .bible-hub-result-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+.bible-hub-modal-verses .bible-hub-result-item > .bible-hub-result-verse {
+  flex: 1;
+}
+
+.bible-hub-result-share .share-button-trigger {
+  font-size: 0.75rem;
+  padding: var(--spacing-1) var(--spacing-2);
+  white-space: nowrap;
+}
+
 .bible-hub-modal-verses p,
 .bible-hub-modal-verses .bible-hub-result-verse {
   margin: 0;

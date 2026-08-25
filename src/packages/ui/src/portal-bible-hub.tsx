@@ -180,6 +180,12 @@ export function PortalBibleHub({
   const canGoPreviousChapter = chapter > 1;
   const canGoNextChapter = chapter < selectedBook.chapters;
 
+  const origin = typeof window !== "undefined" ? window.location.origin : "";
+
+  function buildSharePageUrl(reference: string): string {
+    return `${origin}/compartir?ref=${encodeURIComponent(reference)}&version=${encodeURIComponent(versionCode)}`;
+  }
+
   const totalPages = Math.max(1, Math.ceil(results.length / SEARCH_PAGE_SIZE));
   const pagedResults = results.slice(
     (page - 1) * SEARCH_PAGE_SIZE,
@@ -545,6 +551,18 @@ export function PortalBibleHub({
               >
                 Siguiente
               </button>
+              <ShareButton
+                url={buildSharePageUrl(`${selectedBook.name} ${chapter}`)}
+                title={`${selectedBook.name} ${chapter}`}
+                text={
+                  verses.length > 0
+                    ? verses
+                        .slice(0, 2)
+                        .map((verse) => verse.text)
+                        .join(" ")
+                    : `Lee ${selectedBook.name} ${chapter} en Biblia Fosforo`
+                }
+              />
             </div>
 
             {chapterError && !chapterModalOpen ? (
@@ -695,6 +713,18 @@ export function PortalBibleHub({
             <span className="app-desc">
               Capitulo {chapter} de {selectedBook.chapters}
             </span>
+            <ShareButton
+              url={buildSharePageUrl(`${selectedBook.name} ${chapter}`)}
+              title={`${selectedBook.name} ${chapter}`}
+              text={
+                verses.length > 0
+                  ? verses
+                      .slice(0, 2)
+                      .map((verse) => verse.text)
+                      .join(" ")
+                  : `Lee ${selectedBook.name} ${chapter} en Biblia Fosforo`
+              }
+            />
             <button
               className="button secondary"
               type="button"
@@ -796,7 +826,7 @@ export function PortalBibleHub({
               </button>
               {isReferenceResult && normalizedReference ? (
                 <ShareButton
-                  url={`${typeof window !== "undefined" ? window.location.origin : ""}/compartir?ref=${encodeURIComponent(normalizedReference)}`}
+                  url={buildSharePageUrl(normalizedReference)}
                   title={normalizedReference}
                   text={results.map((r) => r.text).join(" ")}
                 />
@@ -842,17 +872,27 @@ export function PortalBibleHub({
                 </p>
               ) : (
                 pagedResults.map((item) => (
-                  <button
-                    type="button"
-                    className="bible-hub-result-verse"
+                  <div
+                    className="bible-hub-result-item"
                     key={`${item.bookSlug}-${item.chapter}-${item.verse}`}
-                    onClick={() => {
-                      setSearchResultsModalOpen(false);
-                      openResultInReader(item);
-                    }}
                   >
-                    <strong>{item.reference}</strong> {item.text}
-                  </button>
+                    <button
+                      type="button"
+                      className="bible-hub-result-verse"
+                      onClick={() => {
+                        setSearchResultsModalOpen(false);
+                        openResultInReader(item);
+                      }}
+                    >
+                      <strong>{item.reference}</strong> {item.text}
+                    </button>
+                    <ShareButton
+                      className="bible-hub-result-share"
+                      url={buildSharePageUrl(item.reference)}
+                      title={item.reference}
+                      text={item.text}
+                    />
+                  </div>
                 ))
               )}
             </div>
@@ -877,7 +917,7 @@ export function PortalBibleHub({
               </button>
               {slotReference ? (
                 <ShareButton
-                  url={`${typeof window !== "undefined" ? window.location.origin : ""}/compartir?date=${encodeURIComponent(reading?.fecha ?? date)}`}
+                  url={`${origin}/compartir?ref=${encodeURIComponent(slotReference)}&date=${encodeURIComponent(reading?.fecha ?? date)}&version=${encodeURIComponent(versionCode)}`}
                   title={slotReference}
                   text={slotVerses.map((v) => v.text).join(" ")}
                 />

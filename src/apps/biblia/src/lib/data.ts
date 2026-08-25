@@ -86,6 +86,7 @@ export type ParsedBibleReference = {
   normalized: string;
   isCrossChapter?: boolean;
   chapterEnd?: number;
+  chapterEndVerse?: number;
   verseRanges?: VerseRange[];
 };
 
@@ -144,6 +145,7 @@ export function parseBibleReferenceQuery(
       normalized,
       isCrossChapter: true,
       chapterEnd,
+      chapterEndVerse: verseEnd,
     };
   }
 
@@ -245,6 +247,52 @@ export function parseBibleReferenceQuery(
     verseEnd,
     normalized,
   };
+}
+
+export function filterVersesByReference<
+  T extends { chapter: number; verse: number },
+>(rows: T[], parsed: ParsedBibleReference): T[] {
+  const endChapter = parsed.isCrossChapter
+    ? (parsed.chapterEnd ?? parsed.chapter)
+    : parsed.chapter;
+
+  return rows
+    .filter((row) => row.chapter >= parsed.chapter && row.chapter <= endChapter)
+    .filter((row) => {
+      if (row.chapter === parsed.chapter) {
+        if (parsed.verseRanges?.length) {
+          return parsed.verseRanges.some(
+            (range) => row.verse >= range.start && row.verse <= range.end,
+          );
+        }
+        if (typeof parsed.verseStart === "number") {
+          if (parsed.isCrossChapter) {
+            return row.verse >= parsed.verseStart;
+          }
+          const rangeEnd = parsed.verseEnd ?? parsed.verseStart;
+          return row.verse >= parsed.verseStart && row.verse <= rangeEnd;
+        }
+        return true;
+      }
+      if (parsed.isCrossChapter && row.chapter === endChapter) {
+        return typeof parsed.chapterEndVerse === "number"
+          ? row.verse <= parsed.chapterEndVerse
+          : true;
+      }
+      return false;
+    });
+}
+
+export function buildSearchDeepLink(
+  citation: string,
+  versionCode: string,
+): string {
+  const params = new URLSearchParams({
+    modo: "busqueda",
+    q: citation.trim(),
+    version: versionCode,
+  });
+  return `/?${params.toString()}`;
 }
 
 type VerseIndex = {
