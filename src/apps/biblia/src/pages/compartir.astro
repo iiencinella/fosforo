@@ -1,8 +1,19 @@
 ---
 import Layout from "@/layouts/Layout.astro";
-import { getLiturgyDayRpc, readChapterRpc, type BibliaLiturgyRow, type BibliaReadRow } from "@/db/supabase";
+import {
+  getLiturgyDayRpc,
+  readChapterRpc,
+  type BibliaLiturgyRow,
+  type BibliaReadRow,
+} from "@/db/supabase";
 import { formatReadRows } from "@/lib/api-formatters";
-import { parseBibleReferenceQuery, getDefaultVersion } from "@/lib/data";
+import {
+  buildSearchDeepLink,
+  filterVersesByReference,
+  getDefaultVersion,
+  parseBibleReferenceQuery,
+  type ParsedBibleReference,
+} from "@/lib/data";
 import { getEnabledBibleVersion } from "@/lib/server/bible-versions";
 import "@/styles/share.css";
 
@@ -14,59 +25,108 @@ function getTodayIsoDate(): string {
   return `${year}-${month}-${day}`;
 }
 
+function truncateText(text: string, maxLength = 160): string {
+  return text.length <= maxLength ? text : `${text.slice(0, maxLength - 1).trimEnd()}…`;
+}
+
+const params = Astro.url.searchParams;
+const dateParam = params.get("date");
+const refParam = params.get("ref");
+const versionParam = params.get("version");
+
 const today = getTodayIsoDate();
-const dateParam = Astro.url.searchParams.get("date");
 const selectedDate = /^\d{4}-\d{2}-\d{2}$/.test(dateParam ?? "") ? dateParam! : today;
 
-const { data: liturgyData, error: liturgyError } = await getLiturgyDayRpc({
-  date: selectedDate,
-  rite: "roman",
-  regionCode: "AR",
-});
+const citationParam = refParam?.trim() ?? "";
+const isCitationView = citationParam.length > 0;
 
-const entry = (liturgyData?.[0] as BibliaLiturgyRow | undefined) ?? null;
+const defaultVersionCode = getDefaultVersion().code;
+const { version: enabledVersion } = await getEnabledBibleVersion(
+  versionParam?.trim() || defaultVersionCode,
+);
+const effectiveVersionCode = enabledVersion?.code ?? defaultVersionCode;
 
-let reading = null;
-let gospelVerses: Array<{
+type SharedVerse = {
   bookSlug: string;
   chapter: number;
   verse: number;
   text: string;
-}> = [];
+};
 
-if (entry) {
-  reading = {
-    fecha: entry.reading_date,
-    tipo: entry.celebration_type,
-    nombre: entry.celebration_name,
-    ciclo: entry.cycle,
-    semana: entry.week,
-    primera: entry.first_reading_ref,
-    salmo: entry.psalm_ref,
-    segunda: entry.second_reading_ref,
-    evangelio: entry.gospel_ref,
-  };
+let sharedVerses: SharedVerse[] = [];
+let parsedCitation: ParsedBibleReference | null = null;
+let citationDisplay = citationParam;
 
-  if (entry.gospel_ref) {
-    const parsed = parseBibleReferenceQuery(entry.gospel_ref);
+if (isCitationView && enabledVersion) {
+  parsedCitation = parseBibleReferenceQuery(citationParam);
 
-    if (parsed) {
-      const { version: enabledVersion } = await getEnabledBibleVersion(getDefaultVersion().code);
+  if (parsedCitation) {
+    citationDisplay = parsedCitation.normalized;
 
-      if (enabledVersion) {
+    const chaptersToLoad = new Set<number>([parsedCitation.chapter]);
+    if (parsedCitation.isCrossChapter && typeof parsedCitation.chapterEnd === "number") {
+      chaptersToLoad.add(parsedCitation.chapterEnd);
+    }
+
+    const rawRows: BibliaReadRow[] = [];
+    for (const chapterNumber of chaptersToLoad) {
+      const { data } = await readChapterRpc({
+        versionCode: effectiveVersionCode,
+        bookSlug: parsedCitation.bookSlug,
+        chapterNumber,
+      });
+      if (data) rawRows.push(...(data as BibliaReadRow[]));
+    }
+
+    sharedVerses = filterVersesByReference(formatReadRows(rawRows), parsedCitation).map(
+      (row) => ({
+        bookSlug: row.bookSlug,
+        chapter: row.chapter,
+        verse: row.verse,
+        text: row.text,
+      }),
+    );
+  }
+}
+
+let reading = null;
+let gospelVerses: SharedVerse[] = [];
+
+if (!isCitationView) {
+  const { data: liturgyData } = await getLiturgyDayRpc({
+    date: selectedDate,
+    rite: "roman",
+    regionCode: "AR",
+  });
+
+  const entry = (liturgyData?.[0] as BibliaLiturgyRow | undefined) ?? null;
+
+  if (entry) {
+    reading = {
+      fecha: entry.reading_date,
+      tipo: entry.celebration_type,
+      nombre: entry.celebration_name,
+      ciclo: entry.cycle,
+      semana: entry.week,
+      primera: entry.first_reading_ref,
+      salmo: entry.psalm_ref,
+      segunda: entry.second_reading_ref,
+      evangelio: entry.gospel_ref,
+    };
+
+    if (entry.gospel_ref && enabledVersion) {
+      const parsed = parseBibleReferenceQuery(entry.gospel_ref);
+
+      if (parsed) {
         const { data: versesData } = await readChapterRpc({
-          versionCode: enabledVersion.code,
+          versionCode: effectiveVersionCode,
           bookSlug: parsed.bookSlug,
           chapterNumber: parsed.chapter,
         });
 
         if (versesData) {
           gospelVerses = formatReadRows((versesData ?? []) as BibliaReadRow[])
-            .filter((row) => {
-              if (typeof parsed.verseStart === "number" && row.verse < parsed.verseStart) return false;
-              if (typeof parsed.verseEnd === "number" && row.verse > parsed.verseEnd) return false;
-              return true;
-            })
+            .filter((row) => filterVersesByReference([row], parsed).length > 0)
             .map((row) => ({ bookSlug: row.bookSlug, chapter: row.chapter, verse: row.verse, text: row.text }));
         }
       }
@@ -74,13 +134,48 @@ if (entry) {
   }
 }
 
-const shareUrl = Astro.url.href;
-const shareTitle = reading?.evangelio
-  ? `Evangelio del día: ${reading.evangelio}`
-  : "Lectura del día · Biblia Fósforo";
-const shareText = reading?.nombre
-  ? `${reading.nombre} — ${reading.fecha}`
-  : `Lectura litúrgica del ${selectedDate}`;
+const LITURGY_SECTIONS: Array<{
+  key: "primera" | "salmo" | "segunda" | "evangelio";
+  label: string;
+}> = [
+  { key: "primera", label: "Primera lectura" },
+  { key: "salmo", label: "Salmo" },
+  { key: "segunda", label: "Segunda lectura" },
+  { key: "evangelio", label: "Evangelio" },
+];
+
+function buildSectionShareHref(reference: string): string {
+  const query = new URLSearchParams({
+    date: selectedDate,
+    ref: reference,
+    version: effectiveVersionCode,
+  });
+  return `/compartir?${query.toString()}`;
+}
+
+const pageHeading = isCitationView ? "Compartir cita bíblica" : "Lectura del día";
+
+const shareTitle = isCitationView
+  ? parsedCitation
+    ? `${citationDisplay} · Biblia`
+    : `"${citationParam}" · Biblia Fósforo`
+  : reading?.evangelio
+    ? `Evangelio del día: ${reading.evangelio}`
+    : "Lectura del día · Biblia Fósforo";
+
+const shareText = isCitationView
+  ? sharedVerses.length > 0
+    ? truncateText(sharedVerses.map((verse) => verse.text).join(" "))
+    : `Abrí esta búsqueda en Biblia Fósforo`
+  : reading?.nombre
+    ? `${reading.nombre} — ${reading.fecha}`
+    : `Lectura litúrgica del ${selectedDate}`;
+
+const shareTargetPath = buildSearchDeepLink(
+  parsedCitation?.normalized ?? citationParam,
+  effectiveVersionCode,
+);
+const shareUrl = isCitationView ? new URL(shareTargetPath, Astro.url.origin).href : Astro.url.href;
 
 const celebrationLabel = reading
   ? [reading.nombre ?? reading.tipo, reading.ciclo ? `Ciclo ${reading.ciclo}` : ""]
@@ -90,7 +185,6 @@ const celebrationLabel = reading
 
 const encodedUrl = encodeURIComponent(shareUrl);
 const encodedTitle = encodeURIComponent(shareTitle);
-const encodedText = encodeURIComponent(shareText);
 const encodedAll = encodeURIComponent(`${shareTitle}\n\n${shareText}\n\n${shareUrl}`);
 
 const SOCIAL_LINKS = [
@@ -99,21 +193,53 @@ const SOCIAL_LINKS = [
   { name: "LinkedIn", icon: "💼", color: "#0a66c2", href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}` },
   { name: "WhatsApp", icon: "💬", color: "#25d366", href: `https://api.whatsapp.com/send?text=${encodedAll}` },
 ];
+
+const backHref = isCitationView && dateParam ? `/compartir?date=${selectedDate}` : "/";
 ---
 
 <Layout
-  title={`${shareTitle} · Biblia`}
+  title={`${pageHeading} · ${isCitationView ? citationDisplay : selectedDate} · Biblia`}
   description={shareText}
   image="/og-biblia.png"
 >
   <main class="share-page">
     <header class="share-page-header">
-      <a href="/" class="share-back">← Volver a Biblia</a>
-      <h1 class="share-page-title">Lectura del día</h1>
-      <p class="share-page-date">{selectedDate}</p>
+      <a href={backHref} class="share-back">
+        {isCitationView && dateParam ? "← Volver a la lectura del día" : "← Volver a Biblia"}
+      </a>
+      <h1 class="share-page-title">{pageHeading}</h1>
+      <p class="share-page-date">{isCitationView ? citationDisplay : selectedDate}</p>
     </header>
 
-    {reading ? (
+    {isCitationView ? (
+      <article class="share-reading">
+        <div class="share-cite-header">
+          <p class="share-cite-ref">{citationDisplay}</p>
+          <span class="share-reading-badge">versión {effectiveVersionCode}</span>
+        </div>
+
+        {sharedVerses.length > 0 ? (
+          <div class="share-reading-verses">
+            {sharedVerses.map((verse) => (
+              <p class="share-reading-verse">
+                <strong>{verse.verse}</strong> {verse.text}
+              </p>
+            ))}
+          </div>
+        ) : (
+          <div class="share-empty share-empty--compact">
+            {parsedCitation ? (
+              <p>No hay texto disponible para esta cita en la versión activa.</p>
+            ) : (
+              <p>
+                No es una referencia bíblica puntual. El enlace abre una búsqueda de
+                «{citationParam}» en la app.
+              </p>
+            )}
+          </div>
+        )}
+      </article>
+    ) : reading ? (
       <article class="share-reading">
         <div class="share-reading-header">
           <h2 class="share-reading-celebration">{celebrationLabel}</h2>
@@ -122,33 +248,23 @@ const SOCIAL_LINKS = [
           ) : null}
         </div>
 
-        {reading.primera ? (
+        {LITURGY_SECTIONS.filter((section) => reading[section.key]).map((section) => (
           <section class="share-reading-section">
-            <h3 class="share-reading-section-title">Primera lectura</h3>
-            <p class="share-reading-ref">{reading.primera}</p>
-          </section>
-        ) : null}
+            <div class="share-reading-section-head">
+              <h3 class="share-reading-section-title">{section.label}</h3>
+              <a
+                class="share-section-share"
+                href={buildSectionShareHref(reading[section.key]!)}
+                aria-label={`Compartir ${section.label}: ${reading[section.key]}`}
+              >
+                🔗 Compartir
+              </a>
+            </div>
+            <p class:list={["share-reading-ref", { "share-reading-ref--gospel": section.key === "evangelio" }]}>
+              {reading[section.key]}
+            </p>
 
-        {reading.salmo ? (
-          <section class="share-reading-section">
-            <h3 class="share-reading-section-title">Salmo</h3>
-            <p class="share-reading-ref">{reading.salmo}</p>
-          </section>
-        ) : null}
-
-        {reading.segunda ? (
-          <section class="share-reading-section">
-            <h3 class="share-reading-section-title">Segunda lectura</h3>
-            <p class="share-reading-ref">{reading.segunda}</p>
-          </section>
-        ) : null}
-
-        {reading.evangelio ? (
-          <section class="share-reading-section share-reading-gospel">
-            <h3 class="share-reading-section-title">Evangelio</h3>
-            <p class="share-reading-ref share-reading-ref--gospel">{reading.evangelio}</p>
-
-            {gospelVerses.length > 0 ? (
+            {section.key === "evangelio" && gospelVerses.length > 0 ? (
               <div class="share-reading-verses">
                 {gospelVerses.map((verse) => (
                   <p class="share-reading-verse">
@@ -158,7 +274,7 @@ const SOCIAL_LINKS = [
               </div>
             ) : null}
           </section>
-        ) : null}
+        ))}
       </article>
     ) : (
       <div class="share-empty">
@@ -166,66 +282,74 @@ const SOCIAL_LINKS = [
       </div>
     )}
 
-    <section class="share-section">
-      <div class="share-buttons">
-        <h3 class="share-title">Compartir lectura</h3>
-        <p class="share-subtitle">
-          Fomenta la lectura de la Biblia compartiendo con otros
-        </p>
+    {isCitationView ? (
+      <section class="share-section">
+        <div class="share-buttons">
+          <h3 class="share-title">Compartir esta cita</h3>
+          <p class="share-subtitle">
+            El enlace lleva al texto completo en el modo búsqueda de Biblia Fósforo.
+          </p>
 
-        <div class="share-grid">
-          {SOCIAL_LINKS.map((network) => (
-            <a
-              class="share-btn"
-              style={`--brand-color: ${network.color}`}
-              href={network.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`Compartir en ${network.name}`}
+          <div class="share-grid">
+            {SOCIAL_LINKS.map((network) => (
+              <a
+                class="share-btn"
+                style={`--brand-color: ${network.color}`}
+                href={network.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`Compartir en ${network.name}`}
+              >
+                <span class="share-btn-icon">{network.icon}</span>
+                <span class="share-btn-label">{network.name}</span>
+              </a>
+            ))}
+          </div>
+
+          <div class="share-actions">
+            <button
+              type="button"
+              class="share-action-btn"
+              id="share-copy-btn"
+              data-share-url={shareUrl}
             >
-              <span class="share-btn-icon">{network.icon}</span>
-              <span class="share-btn-label">{network.name}</span>
-            </a>
-          ))}
-        </div>
+              <span id="share-copy-label">🔗 Copiar enlace</span>
+            </button>
 
-        <div class="share-actions">
-          <button
-            type="button"
-            class="share-action-btn"
-            id="share-copy-btn"
-            data-share-url={shareUrl}
-          >
-            <span id="share-copy-label">🔗 Copiar enlace</span>
-          </button>
+            <button
+              type="button"
+              class="share-action-btn"
+              id="share-native-btn"
+              data-share-title={shareTitle}
+              data-share-text={shareText}
+              data-share-url={shareUrl}
+            >
+              📤 Compartir...
+            </button>
+          </div>
 
-          <button
-            type="button"
-            class="share-action-btn"
-            id="share-native-btn"
-            data-share-title={shareTitle}
-            data-share-text={shareText}
-            data-share-url={shareUrl}
-          >
-            📤 Compartir...
-          </button>
-        </div>
-
-        <div class="share-preview">
-          <p class="share-preview-label">Vista previa del enlace:</p>
-          <div class="share-preview-card">
-            <div class="share-preview-image">
-              <img src="/og-biblia.png" alt="Biblia Fósforo" />
-            </div>
-            <div class="share-preview-info">
-              <p class="share-preview-domain">biblia.fosforo.org</p>
-              <p class="share-preview-title">{shareTitle}</p>
-              <p class="share-preview-text">{shareText}</p>
+          <div class="share-preview">
+            <p class="share-preview-label">Vista previa del enlace:</p>
+            <div class="share-preview-card">
+              <div class="share-preview-image">
+                <img src="/og-biblia.png" alt="Biblia Fósforo" />
+              </div>
+              <div class="share-preview-info">
+                <p class="share-preview-domain">biblia.fosforo.org</p>
+                <p class="share-preview-title">{shareTitle}</p>
+                <p class="share-preview-text">{shareText}</p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    ) : null}
+
+    {!isCitationView && reading ? (
+      <section class="share-hint">
+        <p>Elegí una lectura para compartir su cita con el texto completo.</p>
+      </section>
+    ) : null}
 
     <footer class="share-footer">
       <p>Biblia · Fósforo — <a href="https://fosforo.org" target="_blank" rel="noopener noreferrer">fosforo.org</a></p>
