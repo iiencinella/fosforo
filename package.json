@@ -16,9 +16,14 @@
     "db:generate-types": "node db/scripts/supabase-cli.js generate-types",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "docs:new-app": "node scripts/docs-new-app.mjs",
-    "docs:sync-app-status": "node scripts/docs-sync-app-status.mjs"
+    "docs:sync-app-status": "node scripts/docs-sync-app-status.mjs",
+    "changeset": "changeset",
+    "changeset:status": "changeset status",
+    "changeset:version": "changeset version",
+    "release": "turbo run build && changeset publish"
   },
   "devDependencies": {
+    "@changesets/cli": "^3.0.1",
     "@vitest/coverage-v8": "catalog:",
     "prettier": "3.9.6",
     "prettier-plugin-tailwindcss": "0.8.1",

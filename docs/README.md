@@ -44,6 +44,7 @@ related: []
 - [08-FRD-Maestro](00-General/08-FRD-Maestro.md)
 - [09-Guia-UI-UX-Base](00-General/09-Guia-UI-UX-Base.md)
 - [10-Matriz-de-Trazabilidad](00-General/10-Matriz-de-Trazabilidad.md)
+- [17-Control-de-Versiones-y-Releases](00-General/17-Control-de-Versiones-y-Releases.md)
 
 ### 3) Templates — Spec-driven (referencia)
 
