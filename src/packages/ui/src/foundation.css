@@ -475,13 +475,14 @@ video {
   left: 50%;
   transform: translateX(-50%);
   margin-bottom: var(--spacing-2);
-  background: var(--color-surface);
+  /* Superficie elevada solida: --color-surface es semi-transparente por diseño */
+  background: var(--color-bg-elevated);
   border: 1px solid var(--color-line);
   border-radius: var(--radius-md);
   padding: var(--spacing-2);
   min-width: 180px;
   z-index: 100;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-medium);
 }
 
 .share-button-item {
