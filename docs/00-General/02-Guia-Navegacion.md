@@ -37,6 +37,12 @@ related:
 - [SRS Maestro](07-SRS-Maestro.md)
 - [FRD Maestro](08-FRD-Maestro.md)
 
+## Si vas a liberar una versión
+
+- [Control de Versiones y Releases](17-Control-de-Versiones-y-Releases.md): política SemVer por app, flujo de release con Changesets y reglas para packages compartidos.
+- Agregar un changeset en el PR: `pnpm changeset`.
+- Ver releases pendientes: `pnpm changeset:status`.
+
 ## Si buscas arquitectura
 
 - [Arquitectura](../01-Arquitectura/README.md)

@@ -1,0 +1,14 @@
+{
+  "$schema": "https://unpkg.com/@changesets/config@3.1.1/schema.json",
+  "changelog": ["@changesets/cli/changelog", { "repo": "iiencinella/fosforo" }],
+  "commit": false,
+  "fixed": [],
+  "linked": [],
+  "access": "restricted",
+  "baseBranch": "main",
+  "changedFilePatterns": ["**"],
+  "privatePackages": { "version": true, "tag": true },
+  "updateInternalDependencies": "patch",
+  "ignore": [],
+  "__comment__": "privatePackages habilita versionado y tags para workspaces privados (apps y @repo/*). Nada se publica a npm."
+}

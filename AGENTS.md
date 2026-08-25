@@ -157,6 +157,12 @@ Si no es posible ejecutar alguna validación, el agente debe indicarlo explicita
 - Señalar riesgos, limites o desalineaciónes detectadas entre documentación y codigo.
 - Si el usuario acepta los cambios, registrarlo en un archivo de novedades explciando, de manera simple, los cambios realizados y el porqué se aplicaron.
 
+## Control de versiones y releases
+
+- La normativa oficial esta en `docs/00-General/17-Control-de-Versiones-y-Releases.md`.
+- Todo PR con cambio visible debe incluir un changeset (`pnpm changeset`).
+- Los releases se consolidan automaticamente via el bot de Changesets (PR Version Packages); no hacer bumps manuales de `version` en `package.json`.
+
 ## Convencion de archivo para instrucciones de agentes
 
 La convencion oficial del repositorio es usar `AGENTS.md`.

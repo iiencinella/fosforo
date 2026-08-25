@@ -228,4 +228,4 @@ Establecer un estandar para especificar, desarrollar y operar aplicativos de esc
 - Gate 2: `02-SRS.md`, `03-FRD.md` y `04-Flujos y Secuencias.md` completos y trazables.
 - Gate 3: `05-Tests Unitarios.md`, `06-Esquema de Datos.md` y `07-ERM.md` listos.
 - Gate 4: `08-Decisiones de Arquitectura.md` y `09-Especificación Tecnica.md` aprobados.
-- Gate 5: `10-OWASP.md`, `11-SLA y SLO.md`, instalador y rollback validados.
+- Gate 5: `10-OWASP.md`, `11-SLA y SLO.md`, instalador, changeset y rollback validados (ver `17-Control-de-Versiones-y-Releases.md`).
