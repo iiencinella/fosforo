@@ -2,6 +2,7 @@ import { z } from "zod";
 import { Resend } from "resend";
 import { getPortalEnv } from "@repo/env";
 import { log } from "@/lib/log";
+import { getIp, isRateLimited } from "@/lib/rate-limit";
 import { createContactSubmission } from "@/lib/submissions";
 
 const contactSchema = z.object({
@@ -14,16 +15,6 @@ const contactSchema = z.object({
   privacy: z.union([z.literal(true), z.literal("true")]),
 });
 
-type RateState = {
-  count: number;
-  resetAt: number;
-};
-
-const RATE_LIMIT_WINDOW_MS = 60_000;
-const RATE_LIMIT_MAX = 5;
-
-const rateStore = new Map<string, RateState>();
-
 function getFieldErrors(error: z.ZodError): Record<string, string[]> {
   return error.issues.reduce<Record<string, string[]>>((acc, issue) => {
     const key = typeof issue.path[0] === "string" ? issue.path[0] : "form";
@@ -35,33 +26,6 @@ function getFieldErrors(error: z.ZodError): Record<string, string[]> {
     acc[key].push(issue.message);
     return acc;
   }, {});
-}
-
-function getIp(request: Request): string {
-  const forwarded = request.headers.get("x-forwarded-for");
-  if (forwarded) {
-    return forwarded.split(",")[0]?.trim() || "unknown";
-  }
-
-  return "unknown";
-}
-
-function isRateLimited(ip: string): boolean {
-  const now = Date.now();
-  const current = rateStore.get(ip);
-
-  if (!current || current.resetAt <= now) {
-    rateStore.set(ip, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS });
-    return false;
-  }
-
-  if (current.count >= RATE_LIMIT_MAX) {
-    return true;
-  }
-
-  current.count += 1;
-  rateStore.set(ip, current);
-  return false;
 }
 
 export function jsonResponse(

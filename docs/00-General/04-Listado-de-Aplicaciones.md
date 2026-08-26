@@ -59,11 +59,11 @@ Estos modulos no deben pensarse como productos aislados, sino como capacidades b
 | Fósforo Portal | 1 | WEB | Si | Si | src/apps/portal |
 | Panel de Administración | 1 | WEB | Si | Si | src/apps/administracion |
 | Gestion de Usuarios | 1 | WEB | Si | Si | src/apps/usuario |
-| Motor Liturgico | 1 | - | No | No | - |
+| Motor Liturgico | 2 | - | No | No | - |
 | Horarios de Misas | 1 | WEB | Si | Si | src/apps/horarios |
-| Espiritualidad diaria | 1 | WEB | No | No | - |
-| Sistema de Notificaciónes | 1 | - | No | No | - |
-| Sistema de Contenidos (CMS) | 1 | - | No | No | - |
+| Espiritualidad diaria | 2 | WEB | No | No | - |
+| Sistema de Notificaciónes | 2 | - | No | No | - |
+| Sistema de Contenidos (CMS) | 2 | - | No | No | - |
 | Log | 1 | WEB | Si | Si | src/apps/log |
 | Misal | 2 | WEB | No | No | - |
 | Oraciones | 2 | WEB | No | No | - |

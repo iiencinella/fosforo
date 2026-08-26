@@ -54,7 +54,7 @@ const APP_CATALOG = [
   {
     name: "Motor Liturgico",
     aliases: ["motor-liturgico"],
-    defaultPhase: "1",
+    defaultPhase: "2",
   },
   {
     name: "Horarios de Misas",
@@ -65,18 +65,18 @@ const APP_CATALOG = [
   {
     name: "Espiritualidad diaria",
     aliases: ["espiritualidad-diaria"],
-    defaultPhase: "1",
+    defaultPhase: "2",
     defaultPlatforms: ["WEB"],
   },
   {
     name: "Sistema de Notificaciónes",
     aliases: ["sistema-de-notificaciónes", "notificaciónes"],
-    defaultPhase: "1",
+    defaultPhase: "2",
   },
   {
     name: "Sistema de Contenidos (CMS)",
     aliases: ["sistema-de-contenidos", "cms"],
-    defaultPhase: "1",
+    defaultPhase: "2",
   },
   {
     name: "Log",

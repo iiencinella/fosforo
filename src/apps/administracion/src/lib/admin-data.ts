@@ -17,15 +17,16 @@ export async function createAuditLog(input: {
 }
 
 export async function getDashboardMetrics() {
-  const [{ count: churchesCount }, { count: schedulesCount }, activity] =
+  const [{ count: templesCount }, { count: schedulesCount }, activity] =
     await Promise.all([
       supabase
-        .from("churches")
+        .from("horarios_temples")
         .select("id", { count: "exact", head: true })
-        .eq("status", "active"),
+        .eq("is_active", true),
       supabase
-        .from("celebration_schedules")
-        .select("id", { count: "exact", head: true }),
+        .from("horarios_celebrations")
+        .select("id", { count: "exact", head: true })
+        .eq("is_active", true),
       supabase
         .from("admin_audit_log")
         .select("action, resource_type, created_at")
@@ -34,7 +35,7 @@ export async function getDashboardMetrics() {
     ]);
 
   return {
-    activeChurches: churchesCount ?? 0,
+    activeChurches: templesCount ?? 0,
     schedules: schedulesCount ?? 0,
     recentActivity: activity.data ?? [],
   };

@@ -23,7 +23,8 @@ const rangeSchema = z.enum(["morning", "afternoon", "evening"]);
 const sortSchema = z.enum(["relevance", "nearby", "soonest"]);
 const pageSchema = z.coerce.number().int().min(1).catch(1);
 const pageSizeSchema = z.coerce.number().int().min(1).max(40).catch(12);
-const coordSchema = z.coerce.number().min(-180).max(180);
+const lngSchema = z.coerce.number().min(-180).max(180);
+const latSchema = z.coerce.number().min(-90).max(90);
 
 export const searchQuerySchema = z.object({
   q: z.string().trim().max(80).optional(),
@@ -35,8 +36,8 @@ export const searchQuerySchema = z.object({
     .regex(/^\d{4}-\d{2}-\d{2}$/)
     .optional(),
   sort: sortSchema.optional(),
-  lat: coordSchema.optional(),
-  lng: coordSchema.optional(),
+  lat: latSchema.optional(),
+  lng: lngSchema.optional(),
   page: pageSchema.optional(),
   pageSize: pageSizeSchema.optional(),
 });

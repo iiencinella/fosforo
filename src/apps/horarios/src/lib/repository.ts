@@ -96,6 +96,7 @@ async function loadFromDb(): Promise<SearchDataSource> {
       .select(
         "id,name,city,province,address,lat,lng,status,contact_phone,contact_whatsapp,notes",
       )
+      .eq("is_active", true)
       .order("city", { ascending: true })
       .order("name", { ascending: true }),
     supabase

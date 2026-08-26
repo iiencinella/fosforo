@@ -2,9 +2,11 @@ import type { APIRoute } from "astro";
 import { jsonError, jsonOk, parseJsonBody } from "@repo/api-utils";
 import { createAuditLog } from "@/lib/admin-data";
 import { requireApiAuth } from "@/lib/auth";
-import { churchSchema } from "@/lib/validators";
+import { templeInputToRow, templeSchema } from "@/lib/validators";
 import { supabase } from "@/db/supabase";
 import { log } from "@/lib/log";
+
+const UNIQUE_VIOLATION = "23505";
 
 export const GET: APIRoute = async ({ request, url }) => {
   const auth = await requireApiAuth(request, ["admin", "editor", "viewer"]);
@@ -13,8 +15,8 @@ export const GET: APIRoute = async ({ request, url }) => {
   const q = (url.searchParams.get("q") ?? "").trim();
 
   let query = supabase
-    .from("churches")
-    .select("id, name, city, province, country, status, updated_at")
+    .from("horarios_temples")
+    .select("id, name, city, province, country, status, is_active, updated_at")
     .order("updated_at", { ascending: false })
     .limit(100);
 
@@ -57,16 +59,16 @@ export const POST: APIRoute = async ({ request, redirect }) => {
     };
     payload = {
       name: form.get("name"),
-      address: form.get("address") || null,
+      address: form.get("address"),
       city: form.get("city"),
-      province: form.get("province") || null,
-      country: form.get("country") || null,
+      province: form.get("province"),
+      country: form.get("country"),
       latitude: maybeNumber(form.get("latitude")),
       longitude: maybeNumber(form.get("longitude")),
-      phone: form.get("phone") || null,
-      email: form.get("email") || null,
-      website: form.get("website") || null,
-      status: "active",
+      phone: form.get("phone"),
+      email: form.get("email"),
+      website: form.get("website"),
+      notes: form.get("notes"),
     };
   } else {
     payload = await parseJsonBody<Record<string, unknown>>(request);
@@ -74,38 +76,60 @@ export const POST: APIRoute = async ({ request, redirect }) => {
 
   if (!payload) return jsonError("Invalid payload", 400);
 
-  const parsed = churchSchema.safeParse(payload);
+  const parsed = templeSchema.safeParse(payload);
   if (!parsed.success) return jsonError("Validation error", 422);
 
+  const row = templeInputToRow(parsed.data);
+
+  // Deteccion temprana de duplicado nombre+ciudad (indice unico en DB).
   const { data: duplicate } = await supabase
-    .from("churches")
+    .from("horarios_temples")
     .select("id")
-    .eq("name", parsed.data.name)
-    .eq("city", parsed.data.city)
+    .ilike("name", parsed.data.name)
+    .ilike("city", parsed.data.city)
     .limit(1)
     .maybeSingle();
 
   if (duplicate) return jsonError("Church already exists in this city", 409);
 
-  const { data, error } = await supabase
-    .from("churches")
-    .insert(parsed.data)
-    .select("id")
-    .single();
+  const insert = async (templeId: string) =>
+    supabase
+      .from("horarios_temples")
+      .insert({ ...row, id: templeId })
+      .select("id")
+      .single();
 
-  if (error || !data) {
+  // Resuelve colisiones de slug (carrera) agregando sufijos -2, -3, ...
+  let data: { id: string } | null = null;
+  let lastError: string | null = null;
+  for (let attempt = 1; attempt <= 5 && !data; attempt += 1) {
+    const candidate = attempt === 1 ? row.id : `${row.id}-${attempt}`;
+    const { data: inserted, error } = await insert(candidate);
+
+    if (!error && inserted) {
+      data = inserted;
+      break;
+    }
+
+    lastError = error?.message ?? "unknown_error";
+    if (error?.code !== UNIQUE_VIOLATION) {
+      break;
+    }
+  }
+
+  if (!data) {
     log.error("Fallo creando iglesia", {
-      error: error?.message,
+      error: lastError,
       name: parsed.data.name,
       city: parsed.data.city,
     });
-    return jsonError(error?.message ?? "Cannot create church", 500);
+    return jsonError(lastError ?? "Cannot create church", 500);
   }
 
   await createAuditLog({
     userId: auth.session.userId,
     action: "create",
-    resourceType: "church",
+    resourceType: "temple",
     resourceId: data.id,
     details: { name: parsed.data.name, city: parsed.data.city },
   });

@@ -30,33 +30,47 @@ export const supabase: SupabaseClient = new Proxy({} as SupabaseClient, {
 
 export type AdminRole = "admin" | "editor" | "viewer";
 
-export type ChurchRow = {
+/**
+ * Fila de horarios_temples (esquema consolidado compartido con la app
+ * publica 0106_horarios).
+ */
+export type TempleRow = {
   id: string;
   name: string;
-  address: string | null;
   city: string;
-  province: string | null;
-  country: string | null;
-  latitude: number | null;
-  longitude: number | null;
-  phone: string | null;
-  email: string | null;
+  province: string;
+  country: string;
+  address: string;
+  lat: number;
+  lng: number;
+  status: "updated" | "review" | "stale";
+  contact_phone: string | null;
+  contact_whatsapp: string | null;
+  contact_email: string | null;
   website: string | null;
-  status: "active" | "inactive";
+  notes: string | null;
+  is_active: boolean;
   created_at: string;
   updated_at: string;
 };
 
+/** Fila de horarios_celebrations (esquema consolidado). */
 export type ScheduleRow = {
   id: string;
-  church_id: string;
-  celebration_type: string;
-  weekday: number;
+  temple_id: string;
+  type: "misa" | "adoracion" | "confesion" | "rosario" | "liturgia";
+  weekday:
+    | "monday"
+    | "tuesday"
+    | "wednesday"
+    | "thursday"
+    | "friday"
+    | "saturday"
+    | "sunday";
   start_time: string;
-  valid_from: string | null;
-  valid_to: string | null;
+  duration_min: number;
   notes: string | null;
-  created_by: string | null;
+  is_active: boolean;
   created_at: string;
   updated_at: string;
 };

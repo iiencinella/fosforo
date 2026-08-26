@@ -3,6 +3,7 @@ import { Resend } from "resend";
 import { z } from "zod";
 import { getPortalEnv } from "@repo/env";
 import { log } from "@/lib/log";
+import { getIp, isRateLimited } from "@/lib/rate-limit";
 import { createFeedbackSubmission } from "@/lib/submissions";
 
 const feedbackSchema = z.object({
@@ -93,6 +94,16 @@ async function sendEmail(payload: {
 
 export const POST: APIRoute = async ({ request }) => {
   const contentType = request.headers.get("content-type") || "";
+  const ip = getIp(request);
+  if (isRateLimited(ip)) {
+    return jsonResponse(
+      {
+        success: false,
+        message: "Demasiados intentos. Intenta nuevamente en un minuto.",
+      },
+      429,
+    );
+  }
 
   if (contentType.includes("application/json")) {
     const payload = (await request.json().catch(() => null)) as {
