@@ -9,7 +9,7 @@ if (auth.response) {
 }
 
 const { data: churches } = await supabase
-  .from("churches")
+  .from("horarios_temples")
   .select("id, name, city, province, status, updated_at")
   .order("updated_at", { ascending: false })
   .limit(50);
