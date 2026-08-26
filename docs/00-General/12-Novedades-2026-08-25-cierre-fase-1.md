@@ -68,8 +68,14 @@ Auditoría integral del estado de Fase 1 para habilitar producción: verificaci�
 
 ## Pendiente (requiere owner)
 
-1. Aprobar y aplicar migración de consolidación + seeds + baseline (MCP con email del primer admin).
-2. Configurar env Vercel: Supabase del portal; `LOGS_API_URL`/`LOGS_API_KEY` al desplegar horarios y administracion.
-3. URLs de recovery en dashboard Supabase para la app usuario.
-4. Carga real de datos: templos/horarios vía panel ya preparado; contenido bíblico (uso interno por licencia).
-5. Investigar caché de calendario en producción; desplegar horarios y administracion; overrides de audit y endurecer workflow de seguridad.
+1. ~~Aprobar y aplicar migración de consolidación + seeds + baseline~~ **Aplicado el 2026-08-26** (ver ejecución abajo).
+2. ~~Env vars Vercel: Supabase del portal; LOGS al desplegar~~ **Aplicadas el 2026-08-26** (ver ejecución abajo). Falta `LOGS_API_KEY` en emisores (claves crudas solo con el owner).
+3. URLs de recovery en dashboard Supabase para la app usuario (Authentication > URL Configuration > Redirect URLs).
+4. Carga real de datos: templos/horarios vía panel (admin ya sembrado); contenido bíblico (uso interno por licencia).
+5. ~~Caché calendario~~ resuelto · ~~overrides audit~~ aplicados (inventario en cero, workflow bloqueante) · horarios y administracion **desplegados**.
+
+## Ejecución del 2026-08-26
+
+- **BD producción:** migración `consolidacion_templos` aplicada y registrada (drop de churches/celebration_schedules, 6 políticas RLS por rol del panel, auditoría con ids textuales, RPC de métricas sobre tablas consolidadas). Seed aplicado con `eze14_12@hotmail.com` como admin (profiles + admin_users); catálogo preexistente de roles (admin/sacerdote/coordinador/musico/usuario) respetado por el seed idempotente. Baseline registrado (4 versiones). Corrección de registro: la verificación del 25/08 dio por vacías tablas que tenían datos (roles, profiles, catálogo de horarios); nada preexistente fue alterado.
+- **Vercel:** proyectos `fosforo-horarios` y `fosforo-administracion` creados, conectados a Git y con Root Directory configurado (`src/apps/<app>`); credenciales Supabase copiadas desde el proyecto log y `LOGS_API_URL` desde portal; portal redesplegado para activar sus credenciales. Healths verificados: horarios OK leyendo BD (12 templos / 58 celebraciones), administracion sirviendo `/login` (302 a dashboard), portal `supabase: ok` tanto en .vercel.app como en www.fosforo.com.ar.
+- **Pendiente operativo:** primer login del admin en https://fosforo-administracion.vercel.app/login para validar el flujo end-to-end; los PRs abiertos actualizarán ambos deployments al mergearse.

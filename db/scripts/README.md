@@ -74,11 +74,11 @@ node db/scripts/generate-log-api-keys.js
 
 Variables de ingesta por app emisora: `LOGS_API_URL` (endpoint `/api/logs` de la app log) y `LOGS_API_KEY`.
 
-## Bootstrap de identidad y panel (pendiente de aplicar en produccion)
+## Bootstrap de identidad y panel (aplicado en produccion el 2026-08-26)
 
-- `seed-admin-bootstrap.sql`: crea los roles base del ecosistema y habilita el primer administrador (fila en `profiles` con rol `admin` + fila en `admin_users`). Requiere editar la variable `v_admin_email` y que el usuario exista previamente en Supabase Auth. Idempotente.
-- `baseline-migraciones.sql`: registra en `supabase_migrations.schema_migrations` las migraciones aplicadas fuera del CLI para que `supabase db push` no intente re-aplicarlas. No ejecuta DDL.
-- Ambos se aplican con aprobacion explicita del owner (SQL Editor o MCP) y luego se verifica el resultado con las consultas comentadas al final de cada archivo.
+- `seed-admin-bootstrap.sql`: crea los roles base del ecosistema y habilita el primer administrador (fila en `profiles` con rol `admin` + fila en `admin_users`). Requiere editar la variable `v_admin_email` y que el usuario exista previamente en Supabase Auth. Idempotente. **Aplicado con `eze14_12@hotmail.com` como admin de panel; el catalogo preexistente de roles (incluye musico) se respeto via on conflict do nothing.**
+- `baseline-migraciones.sql`: registra en `supabase_migrations.schema_migrations` las migraciones aplicadas fuera del CLI para que `supabase db push` no intente re-aplicarlas. No ejecuta DDL. **Aplicado: 4 versiones registradas.**
+- Adicionalmente se aplico y registro la migracion `consolidacion_templos` (columnas nuevas en horarios_temples, politicas RLS por rol del panel, auditoria con ids textuales, RPC de metricas sobre tablas consolidadas y drop de churches/celebration_schedules).
 
 ## Orden sugerido por entorno
 
