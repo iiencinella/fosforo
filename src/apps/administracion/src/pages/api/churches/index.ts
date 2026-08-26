@@ -81,6 +81,17 @@ export const POST: APIRoute = async ({ request, redirect }) => {
 
   const row = templeInputToRow(parsed.data);
 
+  // Deteccion temprana de duplicado nombre+ciudad (indice unico en DB).
+  const { data: duplicate } = await supabase
+    .from("horarios_temples")
+    .select("id")
+    .ilike("name", parsed.data.name)
+    .ilike("city", parsed.data.city)
+    .limit(1)
+    .maybeSingle();
+
+  if (duplicate) return jsonError("Church already exists in this city", 409);
+
   const insert = async (templeId: string) =>
     supabase
       .from("horarios_temples")
@@ -88,7 +99,7 @@ export const POST: APIRoute = async ({ request, redirect }) => {
       .select("id")
       .single();
 
-  // Resuelve colisiones de slug agregando sufijos -2, -3, ...
+  // Resuelve colisiones de slug (carrera) agregando sufijos -2, -3, ...
   let data: { id: string } | null = null;
   let lastError: string | null = null;
   for (let attempt = 1; attempt <= 5 && !data; attempt += 1) {
