@@ -1,38 +1,43 @@
 ---
 slug: "biblia"
 name: "Biblia"
-resume: "Lectura sencilla de la Biblia con búsqueda, favoritos y acceso rápido a las lecturas del día."
+resume: "Leé la Biblia por libro, capítulo y versículo, buscá citas y palabras clave, seguí las lecturas del día y compartí cualquier pasaje con un solo botón."
 category: "contenido"
-status: "en-desarrollo"
+status: "disponible"
 image: "../../assets/apps/biblia.png"
-url: ""
+url: "https://www.biblia.fosforo.com.ar/"
 visible: true
 ---
 
-Biblia nace con una idea sencilla y profunda: que la Palabra de Dios pueda estar siempre cerca, sin barreras ni complicaciónes.
-Ofrecer un espacio claro y amable para leer, volver a un pasaje importante, detenerse en una cita que toca el corazon y dejar que la Escritura acompañe la vida cotidiana.
+Biblia nace con una idea sencilla y profunda: que la Palabra de Dios pueda estar siempre cerca, sin barreras ni complicaciones.
+Ofrece un espacio claro y amable para leer, volver a un pasaje importante, detenerse en una cita que toca el corazón y dejar que la Escritura acompañe la vida cotidiana.
 
-La experiencia esta pensada para ser serena, clara y cercana, incluso para quien recien empieza a leer la Biblia con mas frecuencia.
-Al formar parte de las primeras bases del ecosistema, esta aplicación tambien cumple un papel esencial: abrir un camino firme para otras experiencias de oración, formación y acompanamiento.
+La experiencia está pensada para ser serena, clara y cercana, incluso para quien recién empieza a leer la Biblia con más frecuencia.
+Como una de las primeras aplicaciones del ecosistema, también sienta una base firme sobre la cual crecer hacia futuras experiencias de oración, formación y acompañamiento.
 
-## Para que sirve
+## Aprópiate de tu biblia digital
 
-Sirve para encontrarte con la Escritura en cualquier momento, seguir las lecturas del día y volver con facilidad a aquellos textos que iluminan, consuelan o interpelan.
+Al ingresar te esperan tres modos de lectura:
 
-## A quien puede ayudar
+- **Modo Lectura**: navegación directa por libro, capítulo y versículo, para leer la Biblia completa de forma continua o ir a un pasaje puntual.
+- **Modo Búsqueda**: buscás por referencia exacta ("Juan 3, 16") o por palabras clave, y recibís referencias bíblicas navegables con su texto.
+- **Modo Liturgia**: las lecturas del día según el calendario litúrgico del Rito Romano (Argentina): Primera lectura, Salmo, Segunda lectura y Evangelio, siempre a mano.
 
-- Personas que quieren leer la Biblia con mas frecuencia
-- Quienes buscan el Evangelio o las lecturas del día
-- Usuarios que rezan, estudian o preparan encuentros de formación
+## ¿De qué me sirve tenerlo a mano?
 
-## Que vas a poder hacer
+- Lée la Escritura por libro, capítulo y versículo sobre la versión activa.
+- Busca palabras, temas o citas puntuales y saltar directo al texto.
+- Sigue el Evangelio y las lecturas propuestas para cada jornada.
+- Cambia de modo sin perder el contexto: toda la experiencia vive en una misma página.
 
-- Leer por libro, capitulo y versiculo
-- Buscar palabras, temas o citas puntuales
-- Guardar pasajes favoritos o referencias personales
-- Seguir el Evangelio y las lecturas propuestas para cada jornada
+## Se misionero/a digital
 
-## Como se integra con el ecosistema
+Cada modo tiene su botón **Compartir**:
 
-- Se conecta con el Calendario Liturgico para mostrar las lecturas correspondientes de cada día.
-- Tambien nutre otras experiencias del ecosistema, como la Lectio Divina y algunos recorridos de Formación.
+- En **Lectura**, compartís el capítulo que estás leyendo desde el panel o desde el modal del capítulo.
+- En **Búsqueda por referencia**, se comparte la referencia normalizada; en **búsqueda por palabra clave**, cada resultado tiene su propio botón con su cita exacta.
+- En **Liturgia**, cada sección del día (Primera, Salmo, Segunda, Evangelio) se comparte por separado con su cita.
+
+Todo lo que leas lo podrás compartir en tus redes sociales.
+
+Lleva a Jesús por las redes en la era de la tecnología y la conectividad.
