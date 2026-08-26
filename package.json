@@ -39,7 +39,7 @@
     "overrides": {
       "tar": ">=7.5.21",
       "svgo": ">=4.0.2",
-      "brace-expansion@>=3.0.0": ">=5.0.9"
+      "@babel/core": "7.29.7",
     },
     "packageExtensions": {
       "@tailwindcss/cli@*": {
