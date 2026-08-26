@@ -28,7 +28,18 @@ e2e("Calendario HTTP E2E", () => {
 
     expect(response.status).toBe(200);
     expect(body.requestedDate).toBe("2026-05-20");
-    expect(response.headers.get("cache-control")).toContain("s-maxage=300");
+
+    // La funcion emite `public, s-maxage=300, stale-while-revalidate=600`.
+    // En Vercel el proxy CONSUME s-maxage/stale-while-revalidate para su CDN
+    // y los elimina de la respuesta al cliente (queda `Cache-Control: public`
+    // mas `x-vercel-cache`). Fuera de Vercel se ve la directiva completa.
+    // https://vercel.com/docs/caching/cache-control-headers
+    const cacheControl = response.headers.get("cache-control") ?? "";
+    const edgeCacheable =
+      cacheControl.includes("s-maxage=300") ||
+      (cacheControl.includes("public") &&
+        response.headers.has("x-vercel-cache"));
+    expect(edgeCacheable).toBe(true);
   });
 
   it("returns a monthly contract", async () => {
