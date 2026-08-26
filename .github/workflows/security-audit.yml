@@ -22,11 +22,8 @@ jobs:
     name: pnpm audit (high/critical)
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    # No bloqueante mientras se remedian las vulnerabilidades preexistentes
-    # del arbol (55 al 2026-08-21). Pasar a bloqueante quitando
-    # continue-on-error cuando el inventario llegue a cero high/critical.
-    continue-on-error: true
-
+    # Bloqueante desde el 2026-08-26: los overrides de chore/audit-overrides
+    # dejaron el inventario --prod en cero vulnerabilidades.
     steps:
       - name: Obtener repositorio
         uses: actions/checkout@v4
