@@ -47,17 +47,17 @@ Como core system del ecosistema, esta app garantiza que cada usuario tenga una i
 
 ## Estado de implementación
 
-- **Completado:** workspace Astro, Supabase Auth y RLS, cookies de sesión, administración base, recuperación de contraseña con actualización, clientes Supabase ligados al JWT y helpers RBAC en `@repo/auth`.
-- **En curso:** integración E2E con un usuario de pruebas, configuración de URLs de recovery en Supabase y despliegue Linux/Vercel.
-- **Pendiente:** integración completa con `mobile-auth-client`, auditoría/alertas operativas y cierre de pruebas con tokens de staging.
+- **Completado:** workspace Astro (`src/apps/usuario/`), Supabase Auth y RLS, cookies de sesión, administración base, recuperación y actualización de contraseña (páginas `auth/reset-password` + endpoints `api/auth/reset-password` y `api/auth/update-password`), clientes Supabase ligados al JWT, helpers RBAC en `@repo/auth`, login móvil vía `api/auth/mobile-login` y auditoría administrativa. Despliegue activo en Vercel con health OK.
+- **En curso:** integración E2E con un usuario de pruebas y configuración de URLs de recovery en el dashboard de Supabase.
+- **Pendiente:** carga inicial de roles base y primer perfil (seeds), alertas operativas de auditoría y cierre de pruebas con tokens de staging.
 
 ## Ubicación del codigo
 
-- App: `src/apps/usuarios/` (no implementada aún)
-- Componentes: `src/apps/usuarios/src/components/`
+- App: `src/apps/usuario/`
+- Componentes: `src/apps/usuario/src/components/`
 - Estilos: `src/packages/ui/`, `src/packages/tailwind-config/shared-styles.css`
-- Contenido: `src/apps/usuarios/src/content/`
-- API: `src/apps/usuarios/src/pages/api/`
+- Contenido: `src/apps/usuario/src/content/`
+- API: `src/apps/usuario/src/pages/api/`
 
 ## Alcance MVP
 
