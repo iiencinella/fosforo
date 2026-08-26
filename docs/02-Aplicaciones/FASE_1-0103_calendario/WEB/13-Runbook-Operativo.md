@@ -38,11 +38,14 @@ CALENDARIO_RUN_INTEGRATION=true pnpm --filter calendario exec vitest run tests/i
 CALENDARIO_E2E_BASE_URL=https://fosforo-calendario.vercel.app pnpm --filter calendario exec vitest run tests/e2e
 ```
 
-Estado verificado 2026-08-25: unit 21 OK · integración remota 3/3 · E2E producción 3/5.
+Estado verificado 2026-08-26: unit 21 OK · integración remota 3/3 · E2E producción 5/5.
+
+## Comportamiento de cache en Vercel (resuelto)
+
+El E2E original esperaba ver `s-maxage=300` en la respuesta y fallaba contra producción. Causa raíz documentada por Vercel: el proxy **consume** `s-maxage`/`stale-while-revalidate` de la respuesta del serverless function para gobernar su CDN y los elimina del header que llega al cliente (queda `Cache-Control: public` más `x-vercel-cache: HIT|MISS`). El edge caching funciona correctamente; el E2E fue corregido para aceptar ambas formas (`fix/calendario-e2e-cache-vercel`). Referencia: https://vercel.com/docs/caching/cache-control-headers
 
 ## Problemas conocidos
 
-- **Cache-Control en producción:** el E2E espera `s-maxage=300` pero el deploy responde `public`. El código fuente define la política correcta (`src/pages/api/calendar/day.ts:13`). Investigar build desplegado vs adapter de Vercel antes de tocar código.
 - **Ciclo litúrgico nuevo año:** regenerar/enriquecer `liturgy_day_profiles` para el año siguiente antes del Adviento (fuente GCatholic, script de enriquecimiento).
 
 ## Escalado
