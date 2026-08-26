@@ -1,0 +1,144 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import { requirePageAuth } from "@/lib/auth";
+import { listPeople, listRoles } from "@/lib/roles";
+
+const auth = await requirePageAuth(Astro, ["admin", "editor", "viewer"]);
+if (auth.response) {
+  return auth.response;
+}
+
+const search = (Astro.url.searchParams.get("search") ?? "").trim();
+const offset = Number(Astro.url.searchParams.get("offset") ?? "0");
+const limit = 30;
+
+const [people, roles] = await Promise.all([
+  listPeople(auth.session!.token, {
+    search: search || undefined,
+    limit,
+    offset: Number.isFinite(offset) ? offset : 0,
+  }),
+  listRoles(),
+]);
+
+const canAssign =
+  auth.session?.role === "admin" || auth.session?.role === "editor";
+
+const nextOffset = people.pagination.offset + people.pagination.limit;
+const hasNext = nextOffset < people.pagination.total;
+const prevOffset = Math.max(0, people.pagination.offset - people.pagination.limit);
+
+const roleOptions = roles.map((role) => ({
+  slug: role.slug,
+  label: role.name,
+}));
+
+const formError = Astro.url.searchParams.get("error");
+const messageByCode: Record<string, string> = {
+  USERS_ROLE_ASSIGNMENT_DENIED:
+    "No tienes permisos para asignar ese rol a esta persona.",
+  USERS_ROLE_NOT_FOUND: "El rol seleccionado no existe.",
+  USERS_USER_NOT_FOUND: "No se encontró la persona seleccionada.",
+  ADMIN_PERSON_ROLE_ASSIGN_FAILED:
+    "No se pudo actualizar el rol. Intenta nuevamente.",
+  Validation: "Datos inválidos. Revisá el formulario.",
+};
+---
+
+<AdminLayout title="Personas | Fósforo Admin" userEmail={auth.session?.email}>
+  <section>
+    <h1>Personas y rol global</h1>
+    <p class="app-desc">Asignación de rol único del ecosistema por perfil.</p>
+  </section>
+
+  {formError && (
+    <section class="admin-section">
+      <div class="error-box">
+        {messageByCode[formError] ?? "No se pudo completar la operación."}
+      </div>
+    </section>
+  )}
+
+  <section class="admin-section" aria-labelledby="people-list-title">
+    <h2 id="people-list-title">Perfiles</h2>
+
+    <form method="get" class="actions-row" action="/admin/people">
+      <input
+        type="search"
+        name="search"
+        placeholder="Buscar por email"
+        value={search}
+      />
+      <input type="hidden" name="offset" value="0" />
+      <button class="button-secondary" type="submit">Buscar</button>
+    </form>
+
+    {people.users.length > 0 ? (
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Email</th>
+              <th>Rol actual</th>
+              <th>Alta</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+          <tbody>
+            {people.users.map((user) => (
+              <tr>
+                <td>{user.name}</td>
+                <td>{user.email}</td>
+                <td>{user.roleLabel}</td>
+                <td>{new Date(user.createdAt).toLocaleDateString("es-AR")}</td>
+                <td>
+                  {canAssign ? (
+                    <form
+                      class="inline-form"
+                      method="post"
+                      action={`/api/people/${user.id}/role`}
+                    >
+                      <select name="roleSlug" aria-label={`Rol para ${user.email}`}>
+                        {roleOptions.map((role) => (
+                          <option value={role.slug} selected={role.slug === user.roleSlug}>
+                            {role.label}
+                          </option>
+                        ))}
+                      </select>
+                      <button class="button-secondary" type="submit">Aplicar</button>
+                    </form>
+                  ) : (
+                    <span class="chip">Solo lectura</span>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    ) : (
+      <p class="app-desc">No se encontraron perfiles para el filtro actual.</p>
+    )}
+
+    <div class="actions-row">
+      {people.pagination.offset > 0 ? (
+        <a
+          class="button-secondary"
+          href={`/admin/people?search=${encodeURIComponent(search)}&offset=${prevOffset}`}
+        >
+          Anterior
+        </a>
+      ) : null}
+
+      {hasNext ? (
+        <a
+          class="button-secondary"
+          href={`/admin/people?search=${encodeURIComponent(search)}&offset=${nextOffset}`}
+        >
+          Siguiente
+        </a>
+      ) : null}
+    </div>
+  </section>
+</AdminLayout>

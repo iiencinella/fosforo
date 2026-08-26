@@ -1,0 +1,186 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import { requirePageAuth } from "@/lib/auth";
+import { getRoleDetail, ECOSYSTEM_APP_SLUGS } from "@/lib/roles";
+import { supabase } from "@/db/supabase";
+
+const auth = await requirePageAuth(Astro, ["admin", "editor", "viewer"]);
+if (auth.response) {
+  return auth.response;
+}
+
+const roleId = Number(Astro.params.id || "0");
+if (!Number.isInteger(roleId) || roleId <= 0) {
+  return Astro.redirect("/admin/roles");
+}
+
+let role;
+try {
+  role = await getRoleDetail(roleId);
+} catch {
+  return Astro.redirect("/admin/roles");
+}
+
+const canManage = auth.session?.role === "admin";
+
+const labels: Record<(typeof ECOSYSTEM_APP_SLUGS)[number], string> = {
+  portal: "Portal",
+  biblia: "Biblia",
+  calendario: "Calendario",
+  horarios: "Horarios",
+  usuario: "Usuario",
+  log: "Log",
+  administracion: "Administración",
+  cancionero: "Cancionero",
+};
+
+const { count: assignedUsers } = await supabase
+  .from("profiles")
+  .select("id", { count: "exact", head: true })
+  .eq("role_id", role.id);
+
+const formError = Astro.url.searchParams.get("error");
+const messageByCode: Record<string, string> = {
+  ADMIN_ROLE_UPDATE_FAILED: "No se pudo actualizar el rol.",
+  ADMIN_ROLE_PERMISSIONS_UPDATE_FAILED:
+    "No se pudo guardar la matriz de permisos.",
+  ADMIN_ROLE_PROTECTED: "Este rol está protegido y no puede eliminarse.",
+  ADMIN_ROLE_HAS_ASSIGNED_USERS:
+    "No se puede eliminar un rol con usuarios asignados.",
+  ADMIN_ROLE_DELETE_FAILED: "No se pudo eliminar el rol.",
+  Validation: "Datos inválidos. Revisá los campos del formulario.",
+  ADMIN_ROLE_NOT_FOUND: "No se encontró el rol solicitado.",
+};
+---
+
+<AdminLayout title={`Rol ${role.slug} | Fósforo Admin`} userEmail={auth.session?.email}>
+  <section>
+    <h1>{role.name}</h1>
+    <p class="app-desc">Slug: <code>{role.slug}</code></p>
+  </section>
+
+  {formError && (
+    <section class="admin-section">
+      <div class="error-box">
+        {messageByCode[formError] ?? "No se pudo completar la operación."}
+      </div>
+    </section>
+  )}
+
+  <section class="admin-section" aria-labelledby="role-details-title">
+    <h2 id="role-details-title">Datos del rol</h2>
+    <div class="table-wrap">
+      <table>
+        <tbody>
+          <tr><th>Slug</th><td>{role.slug}</td></tr>
+          <tr><th>Descripción</th><td>{role.description ?? "-"}</td></tr>
+          <tr><th>Jerarquía</th><td>{role.hierarchyLevel}</td></tr>
+          <tr><th>Usuarios asignados</th><td>{assignedUsers ?? 0}</td></tr>
+          <tr>
+            <th>Protección</th>
+            <td>{role.protected ? "Rol protegido (no eliminable)" : "Editable"}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  {canManage && (
+    <section class="admin-section" aria-labelledby="role-edit-title">
+      <h2 id="role-edit-title">Editar rol</h2>
+      <form class="form" method="post" action={`/api/roles/${role.id}`}>
+        <div class="form-row">
+          <label for="name">Nombre</label>
+          <input id="name" name="name" required minlength="2" maxlength="80" value={role.name} />
+        </div>
+        <div class="form-row">
+          <label for="description">Descripción</label>
+          <textarea id="description" name="description" maxlength="240">{role.description ?? ""}</textarea>
+        </div>
+        <div class="form-row">
+          <label for="hierarchyLevel">Jerarquía</label>
+          <input
+            id="hierarchyLevel"
+            name="hierarchyLevel"
+            type="number"
+            min="1"
+            max="100"
+            value={role.hierarchyLevel}
+            required
+          />
+        </div>
+        <div class="actions-row">
+          <button class="button-primary" type="submit">Guardar cambios</button>
+        </div>
+      </form>
+    </section>
+  )}
+
+  <section class="admin-section" aria-labelledby="permissions-title">
+    <h2 id="permissions-title">Matriz de acceso por aplicación</h2>
+    {canManage ? (
+      <form class="form" method="post" action={`/api/roles/${role.id}/permissions`}>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Aplicación</th>
+                <th>Acceso</th>
+              </tr>
+            </thead>
+            <tbody>
+              {role.apps.map((app) => (
+                <tr>
+                  <td>{labels[app.appSlug]}</td>
+                  <td>
+                    <label class="inline-form">
+                      <input
+                        type="checkbox"
+                        name="apps"
+                        value={app.appSlug}
+                        checked={app.canAccess}
+                      />
+                      <span>{app.canAccess ? "Permitido" : "Denegado"}</span>
+                    </label>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div class="actions-row">
+          <button class="button-primary" type="submit">Guardar matriz</button>
+        </div>
+      </form>
+    ) : (
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Aplicación</th>
+              <th>Acceso</th>
+            </tr>
+          </thead>
+          <tbody>
+            {role.apps.map((app) => (
+              <tr>
+                <td>{labels[app.appSlug]}</td>
+                <td>{app.canAccess ? "Permitido" : "Denegado"}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    )}
+  </section>
+
+  {canManage && !role.protected && (
+    <section class="admin-section" aria-labelledby="danger-title">
+      <h2 id="danger-title">Zona de peligro</h2>
+      <p class="app-desc">Eliminará el rol y su matriz de permisos.</p>
+      <form method="post" action={`/api/roles/${role.id}?_action=delete`}>
+        <button class="button-secondary" type="submit">Eliminar rol</button>
+      </form>
+    </section>
+  )}
+</AdminLayout>

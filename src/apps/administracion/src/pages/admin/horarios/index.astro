@@ -9,10 +9,26 @@ if (auth.response) {
 }
 
 const { data: schedules } = await supabase
-  .from("celebration_schedules")
-  .select("id, celebration_type, weekday, start_time, churches(name)")
+  .from("horarios_celebrations")
+  .select("id, type, weekday, start_time, temple_id")
   .order("updated_at", { ascending: false })
   .limit(80);
+
+const templeIds = [
+  ...new Set((schedules ?? []).map((row) => row.temple_id).filter(Boolean)),
+];
+
+let templeById = new Map<string, string>();
+if (templeIds.length > 0) {
+  const { data: temples } = await supabase
+    .from("horarios_temples")
+    .select("id, name")
+    .in("id", templeIds);
+
+  templeById = new Map(
+    (temples ?? []).map((temple) => [temple.id as string, temple.name as string]),
+  );
+}
 ---
 
 <AdminLayout title="Horarios | Fósforo Admin" userEmail={auth.session?.email}>
@@ -36,8 +52,8 @@ const { data: schedules } = await supabase
           <tbody>
             {schedules.map((row) => (
               <tr>
-                <td>{Array.isArray(row.churches) ? (row.churches[0]?.name ?? "-") : "-"}</td>
-                <td>{row.celebration_type}</td>
+                <td>{templeById.get(row.temple_id as string) ?? "-"}</td>
+                <td>{row.type}</td>
                 <td>{row.weekday}</td>
                 <td>{row.start_time}</td>
               </tr>

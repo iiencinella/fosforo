@@ -111,6 +111,9 @@ importers:
       '@repo/api-utils':
         specifier: workspace:*
         version: link:../../packages/api-utils
+      '@repo/auth':
+        specifier: workspace:*
+        version: link:../../packages/auth
       '@repo/env':
         specifier: workspace:*
         version: link:../../packages/env

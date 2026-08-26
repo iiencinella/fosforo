@@ -126,6 +126,60 @@
   color: var(--color-warning-500);
 }
 
+.admin-app .status-pill[data-status="protected"] {
+  color: var(--color-info-500);
+}
+
+.admin-app .form {
+  display: grid;
+  gap: var(--spacing-3);
+}
+
+.admin-app .form-row {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.admin-app .form-row input,
+.admin-app .form-row textarea,
+.admin-app .form-row select {
+  width: 100%;
+  border: 1px solid var(--color-line);
+  background: var(--color-bg-elevated);
+  color: var(--color-text);
+  border-radius: 0.6rem;
+  padding: 0.55rem 0.7rem;
+}
+
+.admin-app .inline-form {
+  display: inline-flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.admin-app .error-box {
+  border: 1px solid
+    color-mix(in srgb, var(--color-error-500) 45%, var(--color-line));
+  background: color-mix(in srgb, var(--color-error-500) 12%, transparent);
+  border-radius: var(--radius-sm);
+  padding: var(--spacing-3);
+  color: var(--color-text);
+}
+
+.admin-app .chip-list {
+  display: inline-flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.admin-app .chip {
+  border-radius: 999px;
+  border: 1px solid var(--color-line);
+  padding: 0.15rem 0.55rem;
+  font-size: 0.75rem;
+  color: var(--color-muted);
+}
+
 .theme-toggle {
   display: inline-flex;
   align-items: center;
