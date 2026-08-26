@@ -2,7 +2,7 @@ import type { APIRoute } from "astro";
 import { jsonError, jsonOk, parseJsonBody } from "@repo/api-utils";
 import { createAuditLog } from "@/lib/admin-data";
 import { requireApiAuth } from "@/lib/auth";
-import { scheduleSchema } from "@/lib/validators";
+import { scheduleInputToRow, scheduleSchema } from "@/lib/validators";
 import { supabase } from "@/db/supabase";
 import { log } from "@/lib/log";
 
@@ -19,9 +19,12 @@ export const PUT: APIRoute = async ({ request, params }) => {
   const parsed = scheduleSchema.safeParse(payload);
   if (!parsed.success) return jsonError("Validation error", 422);
 
+  // El id y el templo asociado son estables en un update.
+  const row = scheduleInputToRow(parsed.data, id);
+
   const { data, error } = await supabase
-    .from("celebration_schedules")
-    .update(parsed.data)
+    .from("horarios_celebrations")
+    .update(row)
     .eq("id", id)
     .select("id")
     .single();
@@ -49,7 +52,7 @@ export const DELETE: APIRoute = async ({ request, params }) => {
   if (!id) return jsonError("Missing id", 400);
 
   const { error } = await supabase
-    .from("celebration_schedules")
+    .from("horarios_celebrations")
     .delete()
     .eq("id", id);
   if (error) {

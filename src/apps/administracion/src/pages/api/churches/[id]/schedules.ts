@@ -2,8 +2,13 @@ import type { APIRoute } from "astro";
 import { jsonError, jsonOk, parseJsonBody } from "@repo/api-utils";
 import { createAuditLog } from "@/lib/admin-data";
 import { requireApiAuth } from "@/lib/auth";
-import { scheduleSchema } from "@/lib/validators";
+import {
+  scheduleInputToRow,
+  scheduleRowToUi,
+  scheduleSchema,
+} from "@/lib/validators";
 import { supabase } from "@/db/supabase";
+import { randomUUID } from "node:crypto";
 
 export const GET: APIRoute = async ({ request, params }) => {
   const auth = await requireApiAuth(request, ["admin", "editor", "viewer"]);
@@ -13,14 +18,20 @@ export const GET: APIRoute = async ({ request, params }) => {
   if (!churchId) return jsonError("Missing church id", 400);
 
   const { data, error } = await supabase
-    .from("celebration_schedules")
+    .from("horarios_celebrations")
     .select("*")
-    .eq("church_id", churchId)
-    .order("weekday", { ascending: true })
-    .order("start_time", { ascending: true });
+    .eq("temple_id", churchId);
 
   if (error) return jsonError(error.message, 500);
-  return jsonOk({ schedules: data ?? [] });
+
+  const schedules = (data ?? [])
+    .map((row) => scheduleRowToUi(row))
+    .sort(
+      (a, b) =>
+        a.weekday - b.weekday || a.start_time.localeCompare(b.start_time),
+    );
+
+  return jsonOk({ schedules });
 };
 
 export const POST: APIRoute = async ({ request, params, redirect }) => {
@@ -43,8 +54,9 @@ export const POST: APIRoute = async ({ request, params, redirect }) => {
       celebration_type: form.get("celebration_type"),
       weekday: Number(form.get("weekday")),
       start_time: form.get("start_time"),
-      valid_from: form.get("valid_from") || null,
-      valid_to: form.get("valid_to") || null,
+      duration_min: form.get("duration_min")
+        ? Number(form.get("duration_min"))
+        : undefined,
       notes: form.get("notes") || null,
     };
   } else {
@@ -56,24 +68,22 @@ export const POST: APIRoute = async ({ request, params, redirect }) => {
   const parsed = scheduleSchema.safeParse(payload);
   if (!parsed.success) return jsonError("Validation error", 422);
 
+  const row = scheduleInputToRow(parsed.data, randomUUID(), churchId);
+
   const { data: collision } = await supabase
-    .from("celebration_schedules")
+    .from("horarios_celebrations")
     .select("id")
-    .eq("church_id", churchId)
-    .eq("weekday", parsed.data.weekday)
-    .eq("start_time", parsed.data.start_time)
+    .eq("temple_id", churchId)
+    .eq("weekday", row.weekday)
+    .eq("start_time", row.start_time)
     .limit(1)
     .maybeSingle();
 
   if (collision) return jsonError("Schedule overlap for this day/hour", 409);
 
   const { data, error } = await supabase
-    .from("celebration_schedules")
-    .insert({
-      ...parsed.data,
-      church_id: churchId,
-      created_by: auth.session.userId,
-    })
+    .from("horarios_celebrations")
+    .insert(row)
     .select("id")
     .single();
 
@@ -85,7 +95,7 @@ export const POST: APIRoute = async ({ request, params, redirect }) => {
     action: "create",
     resourceType: "schedule",
     resourceId: data.id,
-    details: { churchId },
+    details: { templeId: churchId },
   });
 
   if (isForm) {

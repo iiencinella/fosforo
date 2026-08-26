@@ -20,7 +20,7 @@ if (auth.response) {
       </div>
       <div class="form-row">
         <label for="address">Dirección</label>
-        <input id="address" name="address" maxlength="300" />
+        <input id="address" name="address" required maxlength="300" />
       </div>
       <div class="form-row">
         <label for="city">Ciudad</label>
@@ -28,7 +28,7 @@ if (auth.response) {
       </div>
       <div class="form-row">
         <label for="province">Provincia</label>
-        <input id="province" name="province" maxlength="120" />
+        <input id="province" name="province" required maxlength="120" />
       </div>
       <div class="form-row">
         <label for="country">País</label>
@@ -36,11 +36,11 @@ if (auth.response) {
       </div>
       <div class="form-row">
         <label for="latitude">Latitud</label>
-        <input id="latitude" name="latitude" type="number" step="any" min="-90" max="90" />
+        <input id="latitude" name="latitude" type="number" step="any" min="-90" max="90" required />
       </div>
       <div class="form-row">
         <label for="longitude">Longitud</label>
-        <input id="longitude" name="longitude" type="number" step="any" min="-180" max="180" />
+        <input id="longitude" name="longitude" type="number" step="any" min="-180" max="180" required />
       </div>
       <button class="button-primary" type="submit">Crear iglesia</button>
     </form>
