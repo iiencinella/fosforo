@@ -8,6 +8,7 @@
   },
   "scripts": {
     "dev": "astro dev --host",
+    "prebuild": "pnpm --filter @repo/ui build",
     "build": "astro build",
     "preview": "astro preview",
     "check-types": "astro check",
