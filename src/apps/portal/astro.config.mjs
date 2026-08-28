@@ -10,7 +10,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://fosforo.org",
+  site: "https://www.fosforo.com.ar",
   output: "static",
   adapter: vercel(),
   integrations: [react()],
