@@ -33,13 +33,13 @@
   },
   "packageManager": "pnpm@10.33.2",
   "engines": {
-    "node": ">=18"
+    "node": ">=22.12.0"
   },
   "pnpm": {
     "overrides": {
       "tar": ">=7.5.21",
       "svgo": ">=4.0.2",
-      "@babel/core": "7.29.7",
+      "@babel/core": "7.29.7"
     },
     "packageExtensions": {
       "@tailwindcss/cli@*": {
