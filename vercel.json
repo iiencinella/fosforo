@@ -1,4 +1,7 @@
 {
+  "framework": "astro",
+  "installCommand": "pnpm install --frozen-lockfile",
+  "buildCommand": "pnpm --filter portal build",
   "headers": [
     {
       "source": "/(.*)",
