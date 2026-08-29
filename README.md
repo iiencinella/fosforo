@@ -137,3 +137,4 @@ Consulta [`CONTRIBUTING.md`](CONTRIBUTING.md) para el flujo completo de ramas, v
 
 Consulta [`LICENSE`](LICENSE), [`NOTICE`](NOTICE), [`ATTRIBUTIONS.md`](ATTRIBUTIONS.md) y [`docs/03-Legal/README.md`](docs/03-Legal/README.md) antes de reutilizar o aportar material.
 # Trigger deploy
+# Fix vercel.json - Sat Aug 29 20:53:17     2026
