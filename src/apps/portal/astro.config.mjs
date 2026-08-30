@@ -8,22 +8,16 @@ import { dirname, resolve } from "node:path";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-// https://astro.build/config
+// forced-rebuild-$(date)
 export default defineConfig({
   site: "https://www.fosforo.com.ar",
   output: "static",
   adapter: vercel(),
   integrations: [react()],
-  build: {
-    inlineStylesheets: "always",
-  },
+  build: { inlineStylesheets: "always" },
   vite: {
     plugins: [tailwindcss()],
-    resolve: {
-      alias: {
-        "@": resolve(__dirname, "./src"),
-      },
-    },
+    resolve: { alias: { "@": resolve(__dirname, "./src") } },
   },
 });
-// build fix 1788047807
+// forced-rebuild-1788049593
