@@ -20,3 +20,4 @@ export default defineConfig({
     resolve: { alias: { "@": resolve(__dirname, "./src") } },
   },
 });
+// forced-rebuild-1788049593
