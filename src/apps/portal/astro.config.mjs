@@ -8,7 +8,6 @@ import { dirname, resolve } from "node:path";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-// forced-rebuild-$(date)
 export default defineConfig({
   site: "https://www.fosforo.com.ar",
   output: "static",
@@ -20,4 +19,3 @@ export default defineConfig({
     resolve: { alias: { "@": resolve(__dirname, "./src") } },
   },
 });
-// forced-rebuild-1788049593
