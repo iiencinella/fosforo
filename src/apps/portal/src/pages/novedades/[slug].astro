@@ -22,6 +22,7 @@ const { Content } = await render(item);
 const coverImage = item.data.image?.src;
 const socialImage = coverImage ?? blogPostDefault.src;
 const itemDescription = (item.body ?? "").slice(0, 160).trim();
+const releaseDate = item.data.fecha_creación.toISOString().slice(0, 10);
 ---
 
 <BaseLayout
@@ -40,7 +41,12 @@ const itemDescription = (item.body ?? "").slice(0, 160).trim();
         <span class="breadcrumbs-item is-active">{item.data.titulo}</span>
       </nav>
 
-      <article class={`card detail-card${coverImage ? " detail-card--with-image" : ""}`}>
+      <article
+        class={`card detail-card${coverImage ? " detail-card--with-image" : ""}`}
+        data-novedad-content
+        data-release-date={releaseDate}
+        hidden
+      >
         {
           coverImage ? (
             <div
@@ -51,9 +57,7 @@ const itemDescription = (item.body ?? "").slice(0, 160).trim();
           ) : null
         }
         <div class="card-meta">
-          <time datetime={item.data.fecha_creación.toISOString().slice(0, 10)}>
-            {item.data.fecha_creación.toISOString().slice(0, 10)}
-          </time>
+          <time datetime={releaseDate}>{releaseDate}</time>
           <span> · portal</span>
         </div>
         <h1 class="section-title">{item.data.titulo}</h1>
@@ -61,7 +65,40 @@ const itemDescription = (item.body ?? "").slice(0, 160).trim();
           <Content />
         </div>
       </article>
+
+      <article class="card" data-novedad-unpublished hidden>
+        <h1 class="section-title">Esta novedad aún no está publicada</h1>
+        <p class="app-desc">
+          Este post estará disponible cuando la fecha de tu dispositivo sea igual o posterior a
+          <strong> {releaseDate}</strong>.
+        </p>
+        <a href="/novedades">Volver a novedades</a>
+      </article>
     </div>
   </main>
+  <script is:inline>
+    (() => {
+      const content = document.querySelector("[data-novedad-content]");
+      const unpublished = document.querySelector("[data-novedad-unpublished]");
+
+      if (!(content instanceof HTMLElement) || !(unpublished instanceof HTMLElement)) {
+        return;
+      }
+
+      const releaseDateRaw = content.dataset.releaseDate;
+      const releaseDate = releaseDateRaw ? new Date(`${releaseDateRaw}T00:00:00`) : null;
+
+      const today = new Date();
+      const userDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
+      const isPublished =
+        releaseDate instanceof Date &&
+        Number.isFinite(releaseDate.getTime()) &&
+        releaseDate.getTime() <= userDate.getTime();
+
+      content.hidden = !isPublished;
+      unpublished.hidden = isPublished;
+    })();
+  </script>
   <SiteFooter />
 </BaseLayout>
