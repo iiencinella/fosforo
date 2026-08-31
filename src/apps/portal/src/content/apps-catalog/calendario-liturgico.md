@@ -3,7 +3,7 @@ slug: "calendario-liturgico"
 name: "Calendario Liturgico"
 resume: "Referencia diaria para conocer celebraciónes, santo del día, tiempo liturgico y lecturas."
 category: "contenido"
-status: "en-desarrollo"
+status: "disponible"
 image: "../../assets/apps/calendario.png"
 url: ""
 visible: true

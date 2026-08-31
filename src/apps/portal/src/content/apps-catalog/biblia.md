@@ -3,7 +3,7 @@ slug: "biblia"
 name: "Biblia"
 resume: "Lectura sencilla de la Biblia con búsqueda, favoritos y acceso rápido a las lecturas del día."
 category: "contenido"
-status: "en-desarrollo"
+status: "disponible"
 image: "../../assets/apps/biblia.png"
 url: ""
 visible: true
