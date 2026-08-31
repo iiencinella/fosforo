@@ -39,6 +39,7 @@ related:
 | ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------- |
 | RB-0101-PORTAL-001 | Toda aplicación publicada en el portal debe exhibir un estado explícito y un texto breve que explique disponibilidad o siguiente acción. |
 | RB-0101-PORTAL-002 | Una novedad sólo puede publicarse si está asociada al ecosistema o a una aplicación concreta y tiene fecha visible.                      |
+| RB-0101-PORTAL-006 | La grilla de novedades sólo debe mostrar posteos cuya `fecha_creación` sea igual o anterior a la fecha local del usuario.                |
 | RB-0101-PORTAL-003 | Los formularios públicos deben solicitar únicamente la información mínima necesaria para responder o clasificar el envío.                |
 | RB-0101-PORTAL-004 | Las sugerencias técnicas del MVP no se registran por formulario propio: deben canalizarse mediante pull requests al repositorio.         |
 | RB-0101-PORTAL-005 | Ningún error de envío debe dejar al usuario sin feedback; siempre debe mostrarse estado de éxito o fallo recuperable.                    |
@@ -48,6 +49,7 @@ related:
 | Contexto                     | Validación                                                                                       | Error                                                                                 |
 | ---------------------------- | ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------- |
 | Catálogo de apps             | Cada app debe incluir `slug`, `name`, `resume`, `category` y `status` en frontmatter versionado. | `PORTAL_APPS_INVALID_DATA` - El catálogo no pudo renderizarse por datos incompletos.  |
+| Novedades                    | Sólo se renderizan posteos con `fecha_creación` <= fecha local del dispositivo del visitante.    | `PORTAL_NEWS_NOT_PUBLISHED_YET` - La novedad aún no está publicada para tu fecha.     |
 | Formulario de contacto       | `nombre`, `email` o medio de respuesta, `motivo` y `mensaje` son obligatorios.                   | `PORTAL_CONTACT_INVALID_INPUT` - Revisá los campos obligatorios e intentá nuevamente. |
 | Feedback general             | `categoria` y `mensaje` deben existir; el mensaje debe superar un mínimo de contenido útil.      | `PORTAL_FEEDBACK_INVALID_INPUT` - Falta contexto para registrar el aporte.            |
 | Sección para desarrolladores | Debe exponer repositorio, expectativas mínimas de contribución y referencia al flujo de PR.      | `PORTAL_DEV_GUIDE_UNAVAILABLE` - No se pudo cargar la guía de contribución técnica.   |
