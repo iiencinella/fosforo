@@ -40,6 +40,7 @@ related:
 ## Si vas a liberar una versión
 
 - [Control de Versiones y Releases](17-Control-de-Versiones-y-Releases.md): política SemVer por app, flujo de release con Changesets y reglas para packages compartidos.
+- [Guia de Despliegue Vercel en Monorepo](18-Guia-Despliegue-Vercel-Monorepo.md): root directory por app, build filtrado e ignored build step por workspace.
 - Agregar un changeset en el PR: `pnpm changeset`.
 - Ver releases pendientes: `pnpm changeset:status`.
 
