@@ -45,6 +45,7 @@ related: []
 - [09-Guia-UI-UX-Base](00-General/09-Guia-UI-UX-Base.md)
 - [10-Matriz-de-Trazabilidad](00-General/10-Matriz-de-Trazabilidad.md)
 - [17-Control-de-Versiones-y-Releases](00-General/17-Control-de-Versiones-y-Releases.md)
+- [18-Guia-Despliegue-Vercel-Monorepo](00-General/18-Guia-Despliegue-Vercel-Monorepo.md)
 
 ### 3) Templates — Spec-driven (referencia)
 

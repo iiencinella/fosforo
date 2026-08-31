@@ -52,6 +52,7 @@ El prefijo numerico es la convencion oficial para humanos y agentes de IA.
 - [Guia de lectura para Desarrolladores e IA](01-Guia-Lectura-Desarrolladores-e-IA.md)
 - [Listado de aplicaciónes](04-Listado-de-Aplicaciones.md)
 - [Control de Versiones y Releases](17-Control-de-Versiones-y-Releases.md)
+- [Guia de Despliegue Vercel en Monorepo](18-Guia-Despliegue-Vercel-Monorepo.md)
 - [Arquitectura](../01-Arquitectura/README.md)
 - [Arquitectura General](../01-Arquitectura/Arquitectura%20General.md)
 - [Aplicaciones](../02-Aplicaciones/00-README.md)

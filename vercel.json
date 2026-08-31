@@ -1,7 +1,9 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "astro",
   "installCommand": "pnpm install --frozen-lockfile",
   "buildCommand": "pnpm turbo run build --filter=portal",
+  "ignoreCommand": "pnpm turbo query affected --packages portal --tasks build --exit-code",
   "headers": [
     {
       "source": "/(.*)",
