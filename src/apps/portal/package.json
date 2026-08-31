@@ -8,11 +8,10 @@
   },
   "scripts": {
     "dev": "astro dev --host",
-    "prebuild": "pnpm --filter @repo/ui build",
     "build": "astro build",
     "preview": "astro preview",
     "check-types": "astro check",
-    "test:unit": "vitest run --config vitest.config.ts",
+    "test:unit": "vitest run",
     "astro": "astro"
   },
   "dependencies": {
@@ -33,7 +32,9 @@
   "devDependencies": {
     "@astrojs/check": "catalog:",
     "@types/node": "catalog:",
-    "turbo": "catalog:",
-    "typescript": "catalog:"
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
   }
 }
