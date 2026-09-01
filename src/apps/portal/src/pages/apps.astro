@@ -9,6 +9,7 @@ import {
   sortAppsCatalogEntries,
 } from "@/lib/apps-catalog";
 import { getCollection } from "astro:content";
+import { getImage } from "astro:assets";
 import { PortalAppCard } from "@repo/ui";
 import SectionIntro from "@repo/ui/astro/SectionIntro.astro";
 
@@ -18,18 +19,27 @@ const categoryFilters = CATEGORY_ORDER.map((category) => ({
   href: `/apps?categoria=${category}#group-${category}`,
 }));
 
-const allApps = sortAppsCatalogEntries(await getCollection("appsCatalog"))
-  .map((app) => ({
-    slug: app.data.slug,
-    name: app.data.name,
-    resume: app.data.resume,
-    category: getCategoryLabel(app.data.category),
-    categoryKey: app.data.category,
-    status: app.data.status,
-    visible: app.data.visible,
-    imageSrc: app.data.image?.src,
-    imageAlt: `Imagen de portada para ${app.data.name}`,
-  }));
+const allApps = await Promise.all(
+  sortAppsCatalogEntries(await getCollection("appsCatalog")).map(
+    async (app) => {
+      const optimized = app.data.image
+        ? await getImage({ src: app.data.image, width: 800, format: "webp" })
+        : undefined;
+
+      return {
+        slug: app.data.slug,
+        name: app.data.name,
+        resume: app.data.resume,
+        category: getCategoryLabel(app.data.category),
+        categoryKey: app.data.category,
+        status: app.data.status,
+        visible: app.data.visible,
+        imageSrc: optimized?.src,
+        imageAlt: `Imagen de portada para ${app.data.name}`,
+      };
+    },
+  ),
+);
 
 const apps = allApps.filter((app) => app.visible !== false);
 

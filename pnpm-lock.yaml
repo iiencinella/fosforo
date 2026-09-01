@@ -45,6 +45,9 @@ catalogs:
     react-dom:
       specifier: 19.2.8
       version: 19.2.8
+    sharp:
+      specifier: 0.35.3
+      version: 0.35.3
     tailwindcss:
       specifier: 4.3.3
       version: 4.3.3
@@ -482,6 +485,9 @@ importers:
       resend:
         specifier: 6.22.0
         version: 6.22.0
+      sharp:
+        specifier: 'catalog:'
+        version: 0.35.3(@types/node@24.13.3)
       tailwindcss:
         specifier: 'catalog:'
         version: 4.3.3

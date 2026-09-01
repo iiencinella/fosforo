@@ -5,6 +5,7 @@ import SiteFooter from "@/components/SiteFooter.astro";
 import SiteHeader from "@/components/SiteHeader.astro";
 import { getCategoryLabel } from "@/lib/apps-catalog";
 import { getCollection, render } from "astro:content";
+import { getImage } from "astro:assets";
 import { ExternalLinkButton } from "@repo/ui";
 
 const { whatsappNumber } = getPortalEnv();
@@ -22,7 +23,10 @@ const { app } = Astro.props as {
 };
 
 const { Content } = await render(app);
-const coverImage = app.data.image?.src;
+const coverImage = app.data.image
+  ? (await getImage({ src: app.data.image, width: 1600, format: "webp" }))
+      .src
+  : undefined;
 const categoryLabel = getCategoryLabel(app.data.category);
 const appUrl = app.data.url?.trim() ?? "";
 

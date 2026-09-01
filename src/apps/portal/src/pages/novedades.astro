@@ -3,8 +3,9 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 import SiteFooter from "@/components/SiteFooter.astro";
 import SiteHeader from "@/components/SiteHeader.astro";
 import { getCollection } from "astro:content";
+import { getImage } from "astro:assets";
 import { PortalBlogCard } from "@repo/ui";
-import blogPostDefault from "@/assets/blog_post_default.png";
+import blogPostDefault from "@/assets/blog_post_default.webp";
 
 function summarizeBody(markdown: string): string {
   const normalized = markdown
@@ -19,23 +20,37 @@ function summarizeBody(markdown: string): string {
   return `${normalized.slice(0, 157).trim()}...`;
 }
 
-const novedades = (await getCollection("novedades"))
-  .sort(
-    (a, b) =>
-      b.data.fecha_creación.getTime() - a.data.fecha_creación.getTime(),
-  )
-  .map((item) => ({
-    slug: item.data.slug,
-    title: item.data.titulo,
-    description: summarizeBody(item.body ?? ""),
-    createdAt: item.data.fecha_creación.toISOString().slice(0, 10),
-    date: item.data.fecha_creación.toISOString().slice(0, 10),
-    category: "novedad",
-    app: "portal",
-    href: `/novedades/${item.data.slug}`,
-    imageSrc: item.data.image?.src ?? blogPostDefault.src,
-    imageAlt: `Imagen de portada para ${item.data.titulo}`,
-  }));
+const blogPostFallback = await getImage({
+  src: blogPostDefault,
+  width: 800,
+  format: "webp",
+});
+
+const novedades = await Promise.all(
+  (await getCollection("novedades"))
+    .sort(
+      (a, b) =>
+        b.data.fecha_creación.getTime() - a.data.fecha_creación.getTime(),
+    )
+    .map(async (item) => {
+      const optimized = item.data.image
+        ? await getImage({ src: item.data.image, width: 800, format: "webp" })
+        : blogPostFallback;
+
+      return {
+        slug: item.data.slug,
+        title: item.data.titulo,
+        description: summarizeBody(item.body ?? ""),
+        createdAt: item.data.fecha_creación.toISOString().slice(0, 10),
+        date: item.data.fecha_creación.toISOString().slice(0, 10),
+        category: "novedad",
+        app: "portal",
+        href: `/novedades/${item.data.slug}`,
+        imageSrc: optimized.src,
+        imageAlt: `Imagen de portada para ${item.data.titulo}`,
+      };
+    }),
+);
 ---
 
 <BaseLayout title="Novedades · Portal Fósforo" description="Novedades del ecosistema Fósforo.">
