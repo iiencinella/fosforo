@@ -8,7 +8,7 @@ type: guia-despliegue
 area: general
 status: vigente
 created: 2026-08-31
-updated: 2026-08-31
+updated: 2026-09-01
 related:
   - "[[17-Control-de-Versiones-y-Releases|Control de Versiones y Releases]]"
   - "[[../01-Arquitectura/Estructura Monorepo|Estructura Monorepo]]"
@@ -46,14 +46,16 @@ Cada app web tiene su `vercel.json` con este patron:
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "buildCommand": "pnpm turbo run build --filter=<app>",
-  "ignoreCommand": "pnpm turbo query affected --packages <app> --tasks build --exit-code"
+  "ignoreCommand": "pnpm dlx turbo-ignore <app> --fallback=HEAD^1"
 }
 ```
 
-Semantica de `ignoreCommand`:
+Semantica de `ignoreCommand` con `turbo-ignore`:
 
-- Exit code `0`: no afectado, Vercel salta el build.
-- Exit code `1`: afectado, Vercel ejecuta el build.
+- Exit code `0`: la app no tiene cambios desde el ultimo deploy, Vercel salta el build.
+- Exit code `1`: la app tiene cambios (o no se pudo determinar), Vercel ejecuta el build.
+
+`turbo-ignore` compara contra `VERCEL_GIT_PREVIOUS_SHA` (el commit del ultimo deployment del proyecto) y resuelve el workspace por nombre. El flag `--fallback=HEAD^1` cubre el primer deploy o un redeploy sin commit previo comparable. A diferencia de `turbo query affected` (que compara contra el merge-base con la rama por defecto y siempre devuelve "sin cambios" en un push a main), `turbo-ignore` usa la comparacion correcta para deploys de Vercel y falla a favor de buildar ante cualquier duda.
 
 ## Mapa de apps web actuales
 

@@ -3,7 +3,7 @@
   "framework": "astro",
   "installCommand": "pnpm install --frozen-lockfile",
   "buildCommand": "pnpm turbo run build --filter=portal",
-  "ignoreCommand": "pnpm turbo query affected --packages portal --tasks build --exit-code",
+  "ignoreCommand": "pnpm dlx turbo-ignore portal --fallback=HEAD^1",
   "headers": [
     {
       "source": "/(.*)",
