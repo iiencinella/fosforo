@@ -38,6 +38,8 @@ Queremos aprovechar esta ocasión para que la Palabra de Dios salga de nuestras 
 
 **Porque compartir la Palabra también es una manera de evangelizar.**
 
+Visita y experimenta tu Fe en el siguiente [enlace](https://www.biblia.fosforo.com.ar/)
+
 ## 🕊️ No te pierdas las celebraciones de la Iglesia
 
 Con **Calendario Litúrgico** podrás conocer las principales celebraciones, solemnidades, fiestas y acontecimientos que acompañan la vida de la Iglesia Católica a lo largo del año.
@@ -47,6 +49,8 @@ Pero esta herramienta va mucho más allá de mostrar una fecha.
 El calendario será **uno de los elementos centrales que conectará las distintas aplicaciones del ecosistema Fósforo**. Cada aplicación podrá reconocer qué celebración estamos viviendo y adaptar sus contenidos para acompañarnos en ese momento particular del año litúrgico.
 
 De esta manera, Fósforo buscará que cada día tenga un sentido y que podamos descubrir **qué celebra la Iglesia, qué nos propone y cómo podemos vivir nuestra Fe en comunidad**.
+
+Visita y experimenta tu Fe en el siguiente [enlace](https://www.calendario.fosforo.com.ar/)
 
 ## 🔥 Dos herramientas para comenzar un gran camino
 
