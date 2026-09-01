@@ -56,8 +56,12 @@ const blogPostFallback = await getImage({
 });
 
 const novedades = await Promise.all(
-  (await getCollection("novedades"))
-    .sort(
+  (
+    await getCollection(
+      "novedades",
+      ({ data }) => data.fecha_creación.getTime() <= Date.now(),
+    )
+  ).sort(
       (a, b) =>
         b.data.fecha_creación.getTime() - a.data.fecha_creación.getTime(),
     )

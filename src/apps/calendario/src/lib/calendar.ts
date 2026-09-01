@@ -432,7 +432,7 @@ export function buildRelatedLinks(record: CalendarDayRecord): RelatedLink[] {
   if (record.first_reading_ref || record.gospel_ref) {
     links.push({
       label: "Ir a Biblia",
-      href: "/apps/biblia",
+      href: "https://www.biblia.fosforo.com.ar",
       description:
         "Profundiza las referencias del día desde la experiencia bíblica del ecosistema.",
     });
@@ -440,14 +440,14 @@ export function buildRelatedLinks(record: CalendarDayRecord): RelatedLink[] {
 
   links.push({
     label: "Ir a Misal",
-    href: "/apps/misal",
+    href: "https://www.fosforo.com.ar/apps/misal",
     description:
       "Continúa la jornada litúrgica desde los textos y apoyos de la Misa.",
   });
 
   links.push({
     label: "Ir a Oraciones",
-    href: "/apps/oraciones",
+    href: "https://www.fosforo.com.ar/apps/oraciones",
     description:
       "Conecta la celebración del día con oraciones y acompañamiento espiritual.",
   });
@@ -455,7 +455,7 @@ export function buildRelatedLinks(record: CalendarDayRecord): RelatedLink[] {
   if (record.celebration_name) {
     links.push({
       label: "Ir a Santopedia",
-      href: "/apps/santopedia",
+      href: "https://www.fosforo.com.ar/apps/santopedia",
       description:
         "Amplía el contexto de la celebración o de figuras santas relacionadas con la jornada.",
     });
