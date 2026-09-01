@@ -7,7 +7,10 @@ import { getImage } from "astro:assets";
 import blogPostDefault from "@/assets/blog_post_default.webp";
 
 export async function getStaticPaths() {
-  const novedades = await getCollection("novedades");
+  const novedades = await getCollection(
+    "novedades",
+    ({ data }) => data.fecha_creación.getTime() <= Date.now(),
+  );
 
   return novedades.map((item) => ({
     params: { slug: item.data.slug },
@@ -47,9 +50,6 @@ const releaseDate = item.data.fecha_creación.toISOString().slice(0, 10);
 
       <article
         class={`card detail-card${coverImage ? " detail-card--with-image" : ""}`}
-        data-novedad-content
-        data-release-date={releaseDate}
-        hidden
       >
         {
           coverImage ? (
@@ -69,40 +69,7 @@ const releaseDate = item.data.fecha_creación.toISOString().slice(0, 10);
           <Content />
         </div>
       </article>
-
-      <article class="card" data-novedad-unpublished hidden>
-        <h1 class="section-title">Esta novedad aún no está publicada</h1>
-        <p class="app-desc">
-          Este post estará disponible cuando la fecha de tu dispositivo sea igual o posterior a
-          <strong> {releaseDate}</strong>.
-        </p>
-        <a href="/novedades">Volver a novedades</a>
-      </article>
     </div>
   </main>
-  <script is:inline>
-    (() => {
-      const content = document.querySelector("[data-novedad-content]");
-      const unpublished = document.querySelector("[data-novedad-unpublished]");
-
-      if (!(content instanceof HTMLElement) || !(unpublished instanceof HTMLElement)) {
-        return;
-      }
-
-      const releaseDateRaw = content.dataset.releaseDate;
-      const releaseDate = releaseDateRaw ? new Date(`${releaseDateRaw}T00:00:00`) : null;
-
-      const today = new Date();
-      const userDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-
-      const isPublished =
-        releaseDate instanceof Date &&
-        Number.isFinite(releaseDate.getTime()) &&
-        releaseDate.getTime() <= userDate.getTime();
-
-      content.hidden = !isPublished;
-      unpublished.hidden = isPublished;
-    })();
-  </script>
   <SiteFooter />
 </BaseLayout>

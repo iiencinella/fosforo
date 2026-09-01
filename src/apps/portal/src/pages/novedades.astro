@@ -27,8 +27,12 @@ const blogPostFallback = await getImage({
 });
 
 const novedades = await Promise.all(
-  (await getCollection("novedades"))
-    .sort(
+  (
+    await getCollection(
+      "novedades",
+      ({ data }) => data.fecha_creación.getTime() <= Date.now(),
+    )
+  ).sort(
       (a, b) =>
         b.data.fecha_creación.getTime() - a.data.fecha_creación.getTime(),
     )
@@ -41,7 +45,6 @@ const novedades = await Promise.all(
         slug: item.data.slug,
         title: item.data.titulo,
         description: summarizeBody(item.body ?? ""),
-        createdAt: item.data.fecha_creación.toISOString().slice(0, 10),
         date: item.data.fecha_creación.toISOString().slice(0, 10),
         category: "novedad",
         app: "portal",
@@ -64,22 +67,11 @@ const novedades = await Promise.all(
 
       {
         novedades.length > 0 ? (
-          <>
-            <div class="card-grid blog-grid mt-24" data-novedades-grid>
-              {novedades.map((item) => (
-                <div data-release-date={item.createdAt}>
-                  <PortalBlogCard {...item} />
-                </div>
-              ))}
-            </div>
-            <article class="card mt-24" data-novedades-empty hidden>
-              <h2 class="card-title">Todavía no hay novedades publicadas</h2>
-              <p class="app-desc">
-                Cuando haya posteos con fecha igual o anterior a tu fecha actual, aparecerán en
-                esta sección.
-              </p>
-            </article>
-          </>
+          <div class="card-grid blog-grid mt-24">
+            {novedades.map((item) => (
+              <PortalBlogCard {...item} />
+            ))}
+          </div>
         ) : (
           <article class="card mt-24">
             <h2 class="card-title">Todavía no hay novedades publicadas</h2>
@@ -89,49 +81,5 @@ const novedades = await Promise.all(
       }
     </div>
   </main>
-  {
-    novedades.length > 0 ? (
-      <script is:inline>
-        (() => {
-          const grid = document.querySelector("[data-novedades-grid]");
-          const emptyState = document.querySelector("[data-novedades-empty]");
-
-          if (!(grid instanceof HTMLElement) || !(emptyState instanceof HTMLElement)) {
-            return;
-          }
-
-          const today = new Date();
-          const userDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-          const postElements = Array.from(grid.querySelectorAll("[data-release-date]"));
-
-          let visiblePosts = 0;
-
-          postElements.forEach((postElement) => {
-            if (!(postElement instanceof HTMLElement)) {
-              return;
-            }
-
-            const releaseDateRaw = postElement.dataset.releaseDate;
-            const releaseDate = releaseDateRaw ? new Date(`${releaseDateRaw}T00:00:00`) : null;
-            const shouldShow =
-              releaseDate instanceof Date &&
-              Number.isFinite(releaseDate.getTime()) &&
-              releaseDate.getTime() <= userDate.getTime();
-
-            postElement.hidden = !shouldShow;
-
-            if (shouldShow) {
-              visiblePosts += 1;
-            }
-          });
-
-          const hasVisiblePosts = visiblePosts > 0;
-
-          grid.hidden = !hasVisiblePosts;
-          emptyState.hidden = hasVisiblePosts;
-        })();
-      </script>
-    ) : null
-  }
   <SiteFooter />
 </BaseLayout>
