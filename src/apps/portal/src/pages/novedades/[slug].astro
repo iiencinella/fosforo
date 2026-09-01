@@ -3,7 +3,8 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 import SiteFooter from "@/components/SiteFooter.astro";
 import SiteHeader from "@/components/SiteHeader.astro";
 import { getCollection, render } from "astro:content";
-import blogPostDefault from "@/assets/blog_post_default.png";
+import { getImage } from "astro:assets";
+import blogPostDefault from "@/assets/blog_post_default.webp";
 
 export async function getStaticPaths() {
   const novedades = await getCollection("novedades");
@@ -19,7 +20,10 @@ const { item } = Astro.props as {
 };
 
 const { Content } = await render(item);
-const coverImage = item.data.image?.src;
+const coverImage = item.data.image
+  ? (await getImage({ src: item.data.image, width: 1600, format: "webp" }))
+      .src
+  : undefined;
 const socialImage = coverImage ?? blogPostDefault.src;
 const itemDescription = (item.body ?? "").slice(0, 160).trim();
 const releaseDate = item.data.fecha_creación.toISOString().slice(0, 10);

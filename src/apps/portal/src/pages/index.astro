@@ -4,9 +4,10 @@ import SiteFooter from "@/components/SiteFooter.astro";
 import SiteHeader from "@/components/SiteHeader.astro";
 import { getCategoryLabel, sortAppsCatalogEntries } from "@/lib/apps-catalog";
 import { getCollection } from "astro:content";
+import { getImage } from "astro:assets";
 import { PortalAppCard, PortalBlogCard, PortalHero, SectionHeader } from "@repo/ui";
 import ActionLinkList from "@repo/ui/astro/ActionLinkList.astro";
-import blogPostDefault from "@/assets/blog_post_default.png";
+import blogPostDefault from "@/assets/blog_post_default.webp";
 import heroVideo from "@/assets/video/video_fosforo.mp4";
 
 function summarizeBody(markdown: string): string {
@@ -27,37 +28,58 @@ const heroActions = [
   { href: "/novedades", label: "Ver novedades", secondary: true },
 ];
 
-const allApps = sortAppsCatalogEntries(await getCollection("appsCatalog"))
-  .map((app) => ({
-    slug: app.data.slug,
-    name: app.data.name,
-    resume: app.data.resume,
-    category: getCategoryLabel(app.data.category),
-    status: app.data.status,
-    visible: app.data.visible,
-    imageSrc: app.data.image?.src,
-    imageAlt: `Imagen de portada para ${app.data.name}`,
-  }));
+const allApps = await Promise.all(
+  sortAppsCatalogEntries(await getCollection("appsCatalog")).map(async (app) => {
+    const optimized = app.data.image
+      ? await getImage({ src: app.data.image, width: 800, format: "webp" })
+      : undefined;
+
+    return {
+      slug: app.data.slug,
+      name: app.data.name,
+      resume: app.data.resume,
+      category: getCategoryLabel(app.data.category),
+      status: app.data.status,
+      visible: app.data.visible,
+      imageSrc: optimized?.src,
+      imageAlt: `Imagen de portada para ${app.data.name}`,
+    };
+  }),
+);
 
 const apps = allApps.filter((app) => app.visible !== false);
 
-const novedades = (await getCollection("novedades"))
-  .sort(
-    (a, b) =>
-      b.data.fecha_creación.getTime() - a.data.fecha_creación.getTime(),
-  )
-  .slice(0, 3)
-  .map((item) => ({
-    slug: item.data.slug,
-    title: item.data.titulo,
-    description: summarizeBody(item.body ?? ""),
-    date: item.data.fecha_creación.toISOString().slice(0, 10),
-    category: "novedad",
-    app: "portal",
-    href: `/novedades/${item.data.slug}`,
-    imageSrc: item.data.image?.src ?? blogPostDefault.src,
-    imageAlt: `Imagen de portada para ${item.data.titulo}`,
-  }));
+const blogPostFallback = await getImage({
+  src: blogPostDefault,
+  width: 800,
+  format: "webp",
+});
+
+const novedades = await Promise.all(
+  (await getCollection("novedades"))
+    .sort(
+      (a, b) =>
+        b.data.fecha_creación.getTime() - a.data.fecha_creación.getTime(),
+    )
+    .slice(0, 3)
+    .map(async (item) => {
+      const optimized = item.data.image
+        ? await getImage({ src: item.data.image, width: 800, format: "webp" })
+        : blogPostFallback;
+
+      return {
+        slug: item.data.slug,
+        title: item.data.titulo,
+        description: summarizeBody(item.body ?? ""),
+        date: item.data.fecha_creación.toISOString().slice(0, 10),
+        category: "novedad",
+        app: "portal",
+        href: `/novedades/${item.data.slug}`,
+        imageSrc: optimized.src,
+        imageAlt: `Imagen de portada para ${item.data.titulo}`,
+      };
+    }),
+);
 ---
 
 <BaseLayout title="Portal Fósforo" description="Puerta de entrada del ecosistema Fósforo.">

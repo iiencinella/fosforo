@@ -1,7 +1,7 @@
 ---
 titulo: "Empezamos a caminar"
 slug: "novedades-septiembre-2026-01"
-image: "../../assets/blog_novedades_202609-01.png"
+image: "../../assets/blog_novedades_202609-01.webp"
 autor: "Iván Ezequiel Iencinella"
 fecha_creación: "2026-09-01"
 fecha_modificación: "2026-09-01"
@@ -27,10 +27,10 @@ Comenzamos con la versión **El Pueblo de Dios** y, con el tiempo, iremos incorp
 
 Con **Biblia** podrás:
 
-* 📚 Leer la Biblia completa, capítulo por capítulo y sin restricciones.
-* 🔎 Buscar citas y pasajes a partir de palabras clave o diferentes temáticas.
-* ✝️ Consultar el Evangelio del día.
-* 📲 Compartir tus citas bíblicas favoritas con familiares, amigos y comunidades a través de las redes sociales.
+- 📚 Leer la Biblia completa, capítulo por capítulo y sin restricciones.
+- 🔎 Buscar citas y pasajes a partir de palabras clave o diferentes temáticas.
+- ✝️ Consultar el Evangelio del día.
+- 📲 Compartir tus citas bíblicas favoritas con familiares, amigos y comunidades a través de las redes sociales.
 
 Y hay una razón especial para presentar esta herramienta en este momento: **septiembre es el Mes de la Biblia**.
 
