@@ -1,5 +1,5 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "buildCommand": "pnpm turbo run build --filter=horarios",
-  "ignoreCommand": "pnpm turbo query affected --packages horarios --tasks build --exit-code"
+  "ignoreCommand": "pnpm dlx turbo-ignore horarios --fallback=HEAD^1"
 }
