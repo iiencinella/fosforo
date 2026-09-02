@@ -238,7 +238,7 @@ const motorKicker: Record<SearchEngine, string> = {
                 result.items.map((song) => (
                   <article class="card cancionero-song-card">
                     <div class="cancionero-song-head">
-                      <h3 class="card-title">{song.titulo}</h3>
+                      <h3 class="card-title">{song.titulo}{song.version > 1 ? ` (v${song.version})` : ""}</h3>
                     </div>
                     <p class="app-desc">{song.excerpt}</p>
                     <div class="cancionero-tag-row">

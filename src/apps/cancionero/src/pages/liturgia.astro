@@ -107,7 +107,7 @@ const result = await listSongs({
               {
                 result.items.map((song) => (
                   <article class="card cancionero-song-card">
-                    <h3 class="card-title">{song.titulo}</h3>
+                    <h3 class="card-title">{song.titulo}{song.version > 1 ? ` (v${song.version})` : ""}</h3>
                     <p class="app-desc">{song.excerpt}</p>
                     <div class="cancionero-tag-row">
                       {song.etiquetas.slice(0, 4).map((tag) => <span class="pill">{tag.tiempoLiturgico} · {tag.momentoMisa}</span>)}

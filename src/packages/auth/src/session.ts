@@ -129,7 +129,8 @@ export async function getSessionFromRequest(
     const user = await getSessionFromToken(token);
     const profile = await getUserProfileById(user.id, token);
     return { token, user, profile };
-  } catch {
+  } catch (error) {
+    console.error("[auth] getSessionFromRequest falló:", error);
     return null;
   }
 }

@@ -42,10 +42,25 @@ export const POST: APIRoute = async ({ request }) => {
       session.user.id,
     );
 
+    if (!payload.ok) {
+      return new Response(
+        JSON.stringify({
+          ok: false,
+          code: payload.code,
+          error: `Ya existe una canción con el título "${payload.tituloExistente}" (versión ${payload.versionExistente})`,
+          tituloExistente: payload.tituloExistente,
+          versionExistente: payload.versionExistente,
+          versionSiguiente: payload.versionSiguiente,
+        }),
+        { status: 409, headers: { "content-type": "application/json" } },
+      );
+    }
+
     return jsonOk(
       {
         id: payload.id,
         source: payload.source,
+        version: payload.version,
         message: "Tu canción fue enviada para moderación",
       },
       201,

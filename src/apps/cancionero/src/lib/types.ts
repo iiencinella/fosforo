@@ -14,6 +14,7 @@ export type ChordPosition = {
 export type SongSummary = {
   id: string;
   titulo: string;
+  version: number;
   excerpt: string;
   estado: SongStatus;
   updatedAt: string;
@@ -23,6 +24,7 @@ export type SongSummary = {
 export type SongDetail = {
   id: string;
   titulo: string;
+  version: number;
   letra: string;
   acordes: ChordPosition[];
   pdfUrl: string | null;
@@ -57,7 +59,23 @@ export type ContributionInput = {
   pdfUrl?: string;
   youtubeUrl?: string;
   etiquetas: SongTag[];
+  confirmarNuevaVersion?: boolean;
 };
+
+export type CreateContributionResult =
+  | {
+      ok: true;
+      id: string;
+      version: number;
+      source: "database" | "fallback";
+    }
+  | {
+      ok: false;
+      code: "CANCION_TITULO_DUPLICADO";
+      tituloExistente: string;
+      versionExistente: number;
+      versionSiguiente: number;
+    };
 
 export type ModerationAction = "aprobar" | "rechazar" | "corregir_etiquetas";
 

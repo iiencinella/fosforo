@@ -51,7 +51,7 @@ const rechazadas = payload.items.filter((s) => s.estado === "rechazado");
                     class={`card cancionero-song-card cancionero-song-card--${song.estado}`}
                     data-song-id={song.id}
                   >
-                    <h3 class="card-title">{song.titulo}</h3>
+                    <h3 class="card-title">{song.titulo}{song.version > 1 ? ` (v${song.version})` : ""}</h3>
                     <span class={`pill cancionero-estado-badge cancionero-estado-badge--${song.estado}`}>
                       {song.estado === "publicado" ? "Publicada" : song.estado === "rechazado" ? "Rechazada" : "Pendiente"}
                     </span>
