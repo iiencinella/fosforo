@@ -424,16 +424,20 @@ import SiteHeader from "@/components/SiteHeader.astro";
     }
   });
 
-  document.addEventListener("submit", (event) => {
-    const form = event.target;
-    if (!(form instanceof HTMLFormElement)) return;
-    if (form.id !== "contribucion-form") return;
-    const status = getStatus();
-    if (!status) return;
+  document.addEventListener(
+    "submit",
+    (event) => {
+      const form = event.target;
+      if (!(form instanceof HTMLFormElement)) return;
+      if (form.id !== "contribucion-form") return;
+      const status = getStatus();
+      if (!status) return;
 
-    event.preventDefault();
-    void handleSubmit(form, status);
-  });
+      event.preventDefault();
+      void handleSubmit(form, status);
+    },
+    true,
+  );
 
   async function handleSubmit(
     form: HTMLFormElement,
