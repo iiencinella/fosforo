@@ -10,6 +10,20 @@ const timesPayload = await listLiturgicalTimes();
 const pendientes = payload.items.filter((s) => s.estado === "pendiente");
 const publicadas = payload.items.filter((s) => s.estado === "publicado");
 const rechazadas = payload.items.filter((s) => s.estado === "rechazado");
+const url = new URL(Astro.request.url);
+const estado = url.searchParams.get("estado") ?? "pendiente";
+const query = (url.searchParams.get("q") ?? "").trim().toLocaleLowerCase();
+const tiempo = url.searchParams.get("tiempo") ?? "";
+const momento = url.searchParams.get("momento") ?? "";
+const normalize = (value: string) => value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase();
+const stateItems = estado === "todas" ? payload.items : payload.items.filter((song) => song.estado === estado);
+const filteredItems = stateItems.filter((song) => {
+  const matchesQuery = !query || normalize(`${song.titulo} ${song.etiquetas.map((tag) => `${tag.tiempoLiturgico} ${tag.momentoMisa}`).join(" ")}`).includes(normalize(query));
+  const matchesTime = !tiempo || song.etiquetas.some((tag) => tag.tiempoLiturgico === tiempo);
+  const matchesMoment = !momento || song.etiquetas.some((tag) => tag.momentoMisa === momento);
+  return matchesQuery && matchesTime && matchesMoment;
+});
+const moments = [...new Set(timesPayload.items.flatMap((time) => time.momentosMisa))].sort();
 ---
 
 <Layout
@@ -30,12 +44,54 @@ const rechazadas = payload.items.filter((s) => s.estado === "rechazado");
         </div>
 
         <article class="card cancionero-results-head">
-          <h2 class="card-title">Pendientes: {pendientes.length} · Publicadas: {publicadas.length} · Rechazadas: {rechazadas.length}</h2>
+          <h2 class="card-title">{filteredItems.length} canciones en esta vista</h2>
           <p class="app-desc">Fuente: {payload.source === "database" ? "Supabase" : "Fallback local"}</p>
         </article>
 
+        <nav class="cancionero-moderation-tabs" aria-label="Estado de canciones" role="tablist">
+          {[
+            ["pendiente", `Pendientes (${pendientes.length})`],
+            ["publicado", `Publicadas (${publicadas.length})`],
+            ["rechazado", `Rechazadas (${rechazadas.length})`],
+            ["todas", `Todas (${payload.items.length})`],
+          ].map(([value, label]) => (
+            <a
+              href={`/moderacion?estado=${value}&q=${encodeURIComponent(query)}&tiempo=${encodeURIComponent(tiempo)}&momento=${encodeURIComponent(momento)}`}
+              class:list={["cancionero-moderation-tab", { "is-active": estado === value }]}
+              role="tab"
+              aria-selected={estado === value ? "true" : "false"}
+            >{label}</a>
+          ))}
+        </nav>
+
+        <form class="card cancionero-moderation-filters" method="get">
+          <input type="hidden" name="estado" value={estado} />
+          <label class="form-row">
+            <span>Buscar por nombre o etiqueta</span>
+            <input type="search" name="q" value={query} placeholder="Ej: Mensajero, Comunión..." />
+          </label>
+          <label class="form-row">
+            <span>Tiempo litúrgico</span>
+            <select name="tiempo">
+              <option value="">Todos los tiempos</option>
+              {timesPayload.items.map((time) => <option value={time.nombre} selected={time.nombre === tiempo}>{time.nombre}</option>)}
+            </select>
+          </label>
+          <label class="form-row">
+            <span>Momento de misa</span>
+            <select name="momento">
+              <option value="">Todos los momentos</option>
+              {moments.map((item) => <option value={item} selected={item === momento}>{item}</option>)}
+            </select>
+          </label>
+          <div class="cancionero-card-actions">
+            <button class="button" type="submit">Aplicar filtros</button>
+            <a class="button secondary" href={`/moderacion?estado=${estado}`}>Limpiar</a>
+          </div>
+        </form>
+
         {
-          payload.items.length === 0 ? (
+          filteredItems.length === 0 ? (
             <article class="card cancionero-empty-card">
               <h3 class="card-title">No hay canciones</h3>
               <p class="app-desc">Cuando se contribuya una canción aparecerá aquí.</p>
@@ -46,7 +102,7 @@ const rechazadas = payload.items.filter((s) => s.estado === "rechazado");
               data-liturgical-times={JSON.stringify(timesPayload.items)}
             >
               {
-                payload.items.map((song) => (
+                 filteredItems.map((song) => (
                   <article
                     class={`card cancionero-song-card cancionero-song-card--${song.estado}`}
                     data-song-id={song.id}
@@ -200,6 +256,32 @@ const rechazadas = payload.items.filter((s) => s.estado === "rechazado");
   }
   .tag-row-add {
     margin-top: 0.25rem;
+  }
+  .cancionero-moderation-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    border-bottom: 1px solid var(--color-line);
+  }
+  .cancionero-moderation-tab {
+    padding: 0.7rem 0.9rem;
+    color: var(--color-muted);
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+  }
+  .cancionero-moderation-tab.is-active {
+    color: var(--color-text);
+    border-color: var(--color-accent);
+    font-weight: 700;
+  }
+  .cancionero-moderation-filters {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr auto;
+    gap: 0.75rem;
+    align-items: end;
+  }
+  @media (max-width: 760px) {
+    .cancionero-moderation-filters { grid-template-columns: 1fr; }
   }
 </style>
 

@@ -49,9 +49,9 @@ Incluye un flujo completo de contribución y validación: los músicos suben rec
 
 ## Estado de implementación
 
-- **Completado:** scaffold documental completo, workspace base con Astro, esqueleto de 3 motores de búsqueda (A libre, B tiempo, C momento) en `/buscar` con pestañas accesibles, comportamiento laxo "sin filtros = catalogo completo aprobado" en `/buscar` y `/api/cancionero/search`, primitive `Tabs` reutilizable en `@repo/ui`, integración de identidad real del ecosistema vía `@repo/auth` con páginas propias `/auth/login` y `/auth/register`, perfil en `/perfil`, middleware SSR que popula `Astro.locals.{session, appRole, canContribute, canModerate}`, guards SSR en `/contribuir` y `/moderacion`, asignación automática del rol `musico` (id=5) al registro desde Cancionero, persistencia de `contribuyente_id` / `moderador_id` y `fecha_contribucion` / `fecha_moderacion` en DB, y remoción del header mock `x-cancionero-role`.
+- **Completado:** scaffold documental completo, workspace base con Astro, tres motores de búsqueda, identidad real, flujo de contribución/versionado, filtros de moderación por estado/nombre/etiquetas, validación bilingüe de acordes, transposición visual, control de tamaño de letra y diagramas de guitarra.
 - **En curso:** definición del modelo de datos en Supabase, integración con Calendario Litúrgico y Buscador central, refinamiento del flujo de contribución y panel de moderación con identidad real.
-- **Pendiente:** reproductor de acordes con transposición, modo offline PWA, recomendaciones automáticas por liturgia del día.
+- **Pendiente:** modo offline PWA, recomendaciones automáticas por liturgia del día y cobertura ampliada de diagramas para acordes extendidos.
 
 ## Ubicación del codigo
 

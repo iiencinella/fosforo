@@ -64,7 +64,7 @@ const tagsShape = z.array(
 const chordPositionShape = z.object({
   linea: z.number().int().min(0),
   posicion: z.number().int().min(0),
-  nombre: z.string().min(1).max(12),
+  nombre: z.string().min(1).max(24),
 });
 
 const chordPositionsShape = z.array(chordPositionShape);

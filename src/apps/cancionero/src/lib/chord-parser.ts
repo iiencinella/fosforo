@@ -1,8 +1,8 @@
 import type { ChordPosition } from "@/lib/types";
+import { isChordNameValid } from "@/lib/chord-names";
 
 export type ChordLineToken =
-  | { type: "text"; value: string }
-  | { type: "chord"; value: string };
+  { type: "text"; value: string } | { type: "chord"; value: string };
 
 export type ParsedChordLine = {
   raw: string;
@@ -72,9 +72,7 @@ function normalizeChordName(value: string): string {
 }
 
 function isValidChordName(value: string): boolean {
-  if (value.length === 0 || value.length > 12) return false;
-  if (value.trim().length === 0) return false;
-  return /^[A-Za-z0-9#/+\-()\s]+$/.test(value);
+  return value.length <= 24 && isChordNameValid(value);
 }
 
 function isValidPosition(value: number): boolean {

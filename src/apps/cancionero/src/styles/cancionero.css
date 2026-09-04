@@ -255,6 +255,81 @@
   line-height: 1.5;
 }
 
+.cancionero-song-toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0;
+  padding: 0.75rem;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--color-surface) 90%, transparent);
+}
+
+.cancionero-toolbar-divider {
+  width: 1px;
+  height: 1.5rem;
+  background: var(--color-line);
+}
+
+.cancionero-lyrics-block {
+  font-size: calc(1rem * var(--song-font-scale, 1));
+}
+
+.cancionero-lyrics-chord {
+  cursor: pointer;
+  border-radius: 0.25rem;
+  padding: 0.1rem 0.2rem;
+}
+
+.cancionero-lyrics-chord:hover,
+.cancionero-lyrics-chord:focus-visible {
+  outline: 2px solid var(--color-accent);
+  background: color-mix(in srgb, var(--color-accent) 12%, transparent);
+}
+
+.cancionero-diagram-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 0 0 1rem;
+  padding: 0.75rem;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+}
+
+.cancionero-diagram-strip figure {
+  margin: 0;
+}
+.cancionero-chord-diagram {
+  width: 6rem;
+  height: 7rem;
+  overflow: visible;
+}
+.cancionero-chord-diagram .grid {
+  stroke: var(--color-muted);
+  stroke-width: 1;
+}
+.cancionero-chord-diagram text {
+  fill: var(--color-text);
+  font: 12px var(--font-mono);
+}
+.cancionero-chord-diagram .dot {
+  fill: var(--color-accent);
+}
+.cancionero-diagram-unavailable {
+  color: var(--color-muted);
+  align-self: center;
+}
+.cancionero-chord-dialog {
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  padding: 1rem;
+}
+
 .cancionero-chord-editor {
   margin-top: 8px;
   display: grid;
@@ -396,6 +471,39 @@
 .cancionero-chord-popover .button {
   padding: 6px 10px;
   font-size: 0.85rem;
+}
+
+.cancionero-chord-popover-error {
+  flex-basis: 100%;
+  margin: 0;
+  color: var(--color-error);
+  font-size: 0.78rem;
+}
+
+.cancionero-version-alert {
+  align-items: start;
+  border: 1px solid
+    color-mix(in srgb, var(--color-warning) 55%, var(--color-line));
+  background: color-mix(
+    in srgb,
+    var(--color-warning) 12%,
+    var(--color-surface)
+  );
+  padding: 1rem;
+}
+
+.cancionero-version-cta {
+  background: var(--color-accent);
+  color: var(--color-bg);
+  font-weight: 800;
+  box-shadow: 0 8px 24px
+    color-mix(in srgb, var(--color-accent) 28%, transparent);
+}
+
+.cancionero-version-cta:hover,
+.cancionero-version-cta:focus-visible {
+  filter: brightness(1.12);
+  transform: translateY(-1px);
 }
 
 @media (min-width: 48rem) {
