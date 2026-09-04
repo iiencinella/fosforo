@@ -30,10 +30,12 @@ import SiteHeader from "@/components/SiteHeader.astro";
 
           <div class="form-row">
             <span>Letra y acordes</span>
-            <p class="cancionero-form-hint">
-              Escribe la letra en el área de texto. En la vista previa, haz click sobre
-              la sílaba para colocar un acorde encima. Usa el botón × para quitarlo.
-            </p>
+             <p class="cancionero-form-hint">
+               1. Escribí la letra. 2. Hacé click sobre la sílaba donde empieza el acorde.
+               3. Escribí un acorde y elegí <strong>Agregar</strong>. Hacé click sobre un
+               acorde para editarlo y usá <strong>Quitar</strong> para eliminarlo.
+               Se aceptan nomenclaturas como C, Cm, DO, DOm, F#7 y SIb.
+             </p>
             <textarea
               id="letra-input"
               name="letra"
@@ -47,7 +49,7 @@ import SiteHeader from "@/components/SiteHeader.astro";
               aria-label="Vista previa con acordes"
             >
               <p class="cancionero-chord-editor-empty">
-                Empieza a escribir la letra para ver la vista previa.
+                 Escribí la letra y luego hacé click sobre una sílaba para colocar un acorde.
               </p>
             </div>
             <input type="hidden" name="acordes" id="acordes-input" value="[]" />
@@ -279,7 +281,12 @@ import SiteHeader from "@/components/SiteHeader.astro";
     input.value = initial ?? "";
     input.autocomplete = "off";
     input.spellcheck = false;
-    input.setAttribute("aria-label", "Nombre del acorde");
+     input.setAttribute("aria-label", "Nombre del acorde");
+
+     const error = document.createElement("p");
+     error.className = "cancionero-chord-popover-error";
+     error.setAttribute("role", "alert");
+     error.hidden = true;
 
     const saveBtn = document.createElement("button");
     saveBtn.type = "button";
@@ -297,19 +304,25 @@ import SiteHeader from "@/components/SiteHeader.astro";
     cancelBtn.className = "button secondary";
     cancelBtn.textContent = "Cancelar";
 
-    popover.appendChild(input);
-    popover.appendChild(saveBtn);
+     popover.appendChild(input);
+     popover.appendChild(error);
+     popover.appendChild(saveBtn);
     if (initial) {
       popover.appendChild(removeBtn);
     }
     popover.appendChild(cancelBtn);
 
     const confirmChord = (): void => {
-      const nombre = input.value.trim();
-      if (!isValidChordInput(nombre)) {
-        input.focus();
-        return;
-      }
+       const nombre = input.value.trim();
+       if (!isValidChordInput(nombre)) {
+         error.textContent = "Acorde no válido. Ejemplos: C, Cm, DO, DOm, F#7 o SIb.";
+         error.hidden = false;
+         input.setAttribute("aria-invalid", "true");
+         input.focus();
+         return;
+       }
+       error.hidden = true;
+       input.removeAttribute("aria-invalid");
       try {
         const next = upsertChordAt(state.letra, state.acordes, linea, posicion, nombre);
         state.acordes = next.acordes;
@@ -517,7 +530,9 @@ import SiteHeader from "@/components/SiteHeader.astro";
         ? json.tituloExistente
         : String(payload.titulo ?? "");
 
-    status.className = "form-status error";
+    status.className = "form-status error cancionero-version-alert";
+    status.setAttribute("role", "alert");
+    status.setAttribute("aria-live", "assertive");
     status.textContent = "";
     status.style.display = "grid";
     status.style.gap = "0.5rem";
@@ -528,11 +543,12 @@ import SiteHeader from "@/components/SiteHeader.astro";
 
     const boton = document.createElement("button");
     boton.type = "button";
-    boton.className = "button secondary";
+    boton.className = "button cancionero-version-cta";
     boton.textContent = `Enviar como versión ${versionSiguiente}`;
 
     status.append(mensaje, boton);
     status.scrollIntoView({ behavior: "smooth", block: "center" });
+    window.setTimeout(() => boton.focus(), 0);
 
     boton.addEventListener(
       "click",

@@ -15,6 +15,13 @@ related:
 
 # Tests Unitarios - 0401_cancionero
 
+## Cobertura agregada
+
+- Validación y parseo de acordes anglosajones y españoles (`C`, `Cm`, `DO`, `DOm`, `SIb`, bajos alterados).
+- Conversión a nomenclatura anglosajona y transposición conservando la familia de nomenclatura ingresada.
+- Filtrado visual de moderación por estado, nombre y etiquetas.
+- Herramientas visuales de lectura y fallback de diagramas.
+
 ## 1. Ficha
 
 - ID base: `TC-0401-CANCIONERO-*`

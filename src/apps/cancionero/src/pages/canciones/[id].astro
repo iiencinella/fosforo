@@ -59,12 +59,29 @@ const alignedLyrics = song
                 </div>
               </article>
 
-              <article class="card cancionero-lyrics-card" aria-label="Letra con acordes">
-                <h2 class="card-title">Letra y acordes</h2>
+               <article class="card cancionero-lyrics-card" aria-label="Letra con acordes" data-song-lyrics={song.letra} data-song-chords={JSON.stringify(song.acordes)}>
+                 <h2 class="card-title">Letra y acordes</h2>
                 <p class="cancionero-lyrics-hint">
                   Los acordes se muestran alineados sobre la sílaba correspondiente.
                 </p>
-                <div class="cancionero-lyrics-block">
+                 <div class="cancionero-song-toolbar" role="toolbar" aria-label="Herramientas de la canción">
+                   <button type="button" class="button secondary" data-font="down" aria-label="Achicar letra">A−</button>
+                   <button type="button" class="button secondary" data-font="reset">A</button>
+                   <button type="button" class="button secondary" data-font="up" aria-label="Agrandar letra">A+</button>
+                   <span class="cancionero-toolbar-divider" aria-hidden="true"></span>
+                    <button type="button" class="button secondary" data-transpose="-1">−½</button>
+                    <span data-transpose-label>Tono original</span>
+                    <button type="button" class="button secondary" data-transpose="1">+½</button>
+                    <label class="cancionero-tone-select">
+                      <span class="sr-only">Transportar a tono</span>
+                      <select data-tone-select aria-label="Transportar a tono">
+                        <option value="">Elegir tono</option>
+                      </select>
+                    </label>
+                    <button type="button" class="button" data-diagrams-toggle aria-pressed="false">Mostrar diagramas</button>
+                 </div>
+                 <div class="cancionero-diagram-strip" data-diagram-strip hidden></div>
+                 <div class="cancionero-lyrics-block" data-lyrics-block>
                   {alignedLyrics.lines.length === 0 ? (
                     <p class="cancionero-lyrics-empty">Esta canción no tiene letra cargada.</p>
                   ) : (
@@ -75,6 +92,10 @@ const alignedLyrics = song
                             <span
                               class="cancionero-lyrics-chord"
                               style={`left: ${acorde.posicion}ch;`}
+                              data-chord-name={acorde.nombre}
+                              data-chord-original={acorde.nombre}
+                              role="button"
+                              tabindex="0"
                             >
                               {acorde.nombre}
                             </span>
@@ -103,3 +124,85 @@ const alignedLyrics = song
 
   <SiteFooter />
 </Layout>
+
+<script>
+  import { parseChordName, transposeChord } from "@/lib/chord-names";
+  import { getChordDiagram, renderChordDiagram } from "@/lib/chord-diagrams";
+
+  const card = document.querySelector<HTMLElement>("[data-song-lyrics]");
+  if (card) {
+    const block = card.querySelector<HTMLElement>("[data-lyrics-block]");
+    const label = card.querySelector<HTMLElement>("[data-transpose-label]");
+    const strip = card.querySelector<HTMLElement>("[data-diagram-strip]");
+    const chords = JSON.parse(card.dataset.songChords ?? "[]") as Array<{ linea: number; posicion: number; nombre: string }>;
+    const lyrics = card.dataset.songLyrics ?? "";
+    let shift = 0;
+    let fontSize = Number(localStorage.getItem("cancionero-font-size") ?? "1");
+    const originalRoot = parseChordName(chords[0]?.nombre ?? "")?.rootIndex ?? 0;
+    const toneSelect = card.querySelector<HTMLSelectElement>("[data-tone-select]");
+    const toneNames = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+    toneNames.forEach((tone, index) => {
+      const option = document.createElement("option");
+      option.value = String(index);
+      option.textContent = tone;
+      toneSelect?.appendChild(option);
+    });
+
+    const render = () => {
+      if (!block) return;
+      block.style.setProperty("--song-font-scale", String(fontSize));
+      block.querySelectorAll<HTMLElement>("[data-chord-name]").forEach((element) => {
+        const original = element.dataset.chordOriginal ?? element.dataset.chordName ?? "";
+        const current = transposeChord(original, shift) ?? original;
+        element.dataset.chordName = current;
+        element.textContent = current;
+      });
+      if (label) label.textContent = shift === 0 ? "Tono original" : `${shift > 0 ? "+" : ""}${shift} semitono${Math.abs(shift) === 1 ? "" : "s"}`;
+      if (strip && !strip.hidden) renderDiagrams();
+    };
+    const renderDiagrams = () => {
+      if (!strip) return;
+      const names = [...new Set(chords.map((chord) => transposeChord(chord.nombre, shift) ?? chord.nombre))];
+      strip.innerHTML = names.map((name) => {
+        const diagram = getChordDiagram(name);
+        return diagram ? `<figure>${renderChordDiagram(diagram)}</figure>` : `<span class="cancionero-diagram-unavailable">${name}: sin diagrama</span>`;
+      }).join("");
+    };
+    card.querySelectorAll<HTMLButtonElement>("[data-font]").forEach((button) => button.addEventListener("click", () => {
+      const action = button.dataset.font;
+      fontSize = action === "reset" ? 1 : Math.min(1.6, Math.max(0.8, fontSize + (action === "up" ? 0.1 : -0.1)));
+      localStorage.setItem("cancionero-font-size", String(fontSize));
+      render();
+    }));
+    card.querySelectorAll<HTMLButtonElement>("[data-transpose]").forEach((button) => button.addEventListener("click", () => {
+      shift = (shift + Number(button.dataset.transpose)) % 12;
+      render();
+    }));
+    toneSelect?.addEventListener("change", () => {
+      if (toneSelect.value === "") return;
+      shift = (Number(toneSelect.value) - originalRoot + 12) % 12;
+      render();
+    });
+    card.querySelector<HTMLButtonElement>("[data-diagrams-toggle]")?.addEventListener("click", (event) => {
+      const button = event.currentTarget as HTMLButtonElement;
+      if (!strip) return;
+      strip.hidden = !strip.hidden;
+      button.setAttribute("aria-pressed", String(!strip.hidden));
+      button.textContent = strip.hidden ? "Mostrar diagramas" : "Ocultar diagramas";
+      if (!strip.hidden) renderDiagrams();
+    });
+    card.querySelectorAll<HTMLElement>("[data-chord-name]").forEach((element) => element.addEventListener("click", () => {
+      const diagram = getChordDiagram(element.dataset.chordName ?? "");
+      if (!diagram) return;
+      const dialog = document.createElement("dialog");
+      dialog.className = "cancionero-chord-dialog";
+      dialog.innerHTML = `${renderChordDiagram(diagram)}<button class="button secondary" type="button">Cerrar</button>`;
+      dialog.querySelector("button")?.addEventListener("click", () => dialog.close());
+      document.body.appendChild(dialog);
+      dialog.showModal();
+      dialog.addEventListener("close", () => dialog.remove(), { once: true });
+    }));
+    void lyrics;
+    render();
+  }
+</script>

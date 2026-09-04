@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { isChordNameValid } from "@/lib/chord-names";
 
 const liturgicalLabel = z
   .string()
@@ -38,10 +39,10 @@ const chordNameSchema = z
   .string()
   .trim()
   .min(1, "El nombre del acorde no puede estar vacío")
-  .max(12, "El nombre del acorde es demasiado largo")
-  .regex(
-    /^[A-Za-z0-9#/+\-()\s]+$/,
-    "El nombre del acorde contiene caracteres no permitidos",
+  .max(24, "El nombre del acorde es demasiado largo")
+  .refine(
+    isChordNameValid,
+    "Ingrese un acorde válido, por ejemplo C, Cm, DO o SOLm",
   );
 
 const chordPositionSchema = z.object({

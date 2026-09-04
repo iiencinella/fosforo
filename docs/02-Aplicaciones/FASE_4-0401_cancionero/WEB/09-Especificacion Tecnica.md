@@ -21,7 +21,7 @@ related:
 - **Plataforma:** WEB
 - **Framework principal:** Astro v6
 - **Lenguaje principal:** TypeScript
-- **UI interactiva:** React islands (transposición de acordes, formularios)
+- **UI interactiva:** Astro + TypeScript vanilla para formularios, moderación, transposición y diagramas; React islands solo cuando el dominio lo requiera
 - **Estilos:** Tailwind CSS v4 + `@repo/ui` + `@repo/tailwind-config`
 - **Backend:** Astro API Endpoints
 - **Base de datos:** Supabase PostgreSQL
@@ -39,6 +39,8 @@ related:
   - **Servicio de contribuciones (contributions):** maneja la creación y validación de nuevos recursos; exige sesión real con `requireContributor` y persiste `contribuyente_id` + `fecha_contribucion`.
   - **Servicio de moderación (moderation):** lista pendientes, aplica cambios de estado y registra auditoría; exige sesión real con `requireAdmin` y persiste `moderador_id` + `fecha_moderacion`.
   - **Modelo de acordes (chord-parser):** utility que opera sobre el modelo `letra` + `acordes` (`ChordPosition[]`). Ofrece `migrateLegacyChordText` (one-shot de `[Acorde]` a coordenadas), `alignChordsWithLyrics` (devuelve la estructura por línea para render), `upsertChordAt`, `removeChordAt`, `getChordAtPosition` y `isValidChordInput`.
+  - **Nombres de acordes (chord-names):** valida raíces y alteraciones en nomenclatura anglosajona y española, conserva la forma introducida, convierte internamente a anglosajona y transpone acordes incluyendo bajos alterados.
+  - **Diagramas (chord-diagrams):** shapes de guitarra estándar para acordes frecuentes, render SVG accesible y fallback explícito cuando no existe una forma cargada.
   - **Módulo de auth (auth):** wrapper sobre `@repo/auth` que define `CANCIONERO_ROLE_MAP`, `CANCIONERO_ROLE_HIERARCHY`, `resolveAppRole`, `canContribute`, `canModerate`, `requireSession`, `requireContributor`, `requireAdmin`. Páginas y endpoints dependen exclusivamente de este módulo; la lógica de cookies/Supabase vive en `@repo/auth`.
   - **Middleware SSR (middleware):** `src/apps/cancionero/src/middleware.ts` resuelve la sesión en cada request y setea `Astro.locals.{session, appRole, canContribute, canModerate}` para que las páginas y endpoints los lean sin recalcular.
 - **Dependencias compartidas:** `@repo/env` (variables de entorno), `@repo/ui` (componentes base), `@repo/tailwind-config` (tokens de diseño), `@repo/api-utils` (helpers de respuesta HTTP), `@repo/auth` (sesión, cookies, role-mapping — paquete compartido del ecosistema, ver `docs/01-Arquitectura/Capacidades Compartidas/SRS-Identidad-y-Acceso.md`).
@@ -47,22 +49,22 @@ related:
 
 ### Tabla: `canciones`
 
-| Columna                    | Tipo                                     | Descripción                                                                                          |
-| -------------------------- | ---------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| id                         | uuid PK                                  | Identificador único                                                                                  |
-| titulo                     | varchar(200) NOT NULL                    | Título de la canción                                                                                 |
-| letra                      | text NOT NULL                            | Letra limpia multilinea (sin markup de acordes)                                                      |
-| acordes                    | jsonb NOT NULL DEFAULT '[]'              | Array de `{linea:int, posicion:int, nombre:string(1-12)}` con la coordenada del acorde en la letra   |
-| pdf_url                    | text                                     | URL a PDF de partitura                                                                               |
-| youtube_url                | text                                     | Link a video de YouTube                                                                              |
-| estado                     | varchar(20) NOT NULL DEFAULT 'pendiente' | pendiente/publicado/rechazado                                                                        |
-| observaciones_contribucion | text                                     | Comentarios opcionales del proponente para lectura del moderador (no visibles en búsquedas públicas) |
-| contribuyente_id           | uuid FK → usuarios.id                    | Quien contribuyó                                                                                     |
-| moderador_id               | uuid FK → usuarios.id                    | Quien moderó (nullable hasta moderación)                                                             |
-| fecha_contribucion         | timestamptz DEFAULT now()                |                                                                                                      |
-| fecha_moderacion           | timestamptz                              | Nullable hasta moderación                                                                            |
-| created_at                 | timestamptz DEFAULT now()                |                                                                                                      |
-| updated_at                 | timestamptz DEFAULT now()                |                                                                                                      |
+| Columna                    | Tipo                                     | Descripción                                                                                           |
+| -------------------------- | ---------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| id                         | uuid PK                                  | Identificador único                                                                                   |
+| titulo                     | varchar(200) NOT NULL                    | Título de la canción                                                                                  |
+| letra                      | text NOT NULL                            | Letra limpia multilinea (sin markup de acordes)                                                       |
+| acordes                    | jsonb NOT NULL DEFAULT '[]'              | Array de `{linea:int, posicion:int, nombre:string}` con coordenada y nomenclatura original del acorde |
+| pdf_url                    | text                                     | URL a PDF de partitura                                                                                |
+| youtube_url                | text                                     | Link a video de YouTube                                                                               |
+| estado                     | varchar(20) NOT NULL DEFAULT 'pendiente' | pendiente/publicado/rechazado                                                                         |
+| observaciones_contribucion | text                                     | Comentarios opcionales del proponente para lectura del moderador (no visibles en búsquedas públicas)  |
+| contribuyente_id           | uuid FK → usuarios.id                    | Quien contribuyó                                                                                      |
+| moderador_id               | uuid FK → usuarios.id                    | Quien moderó (nullable hasta moderación)                                                              |
+| fecha_contribucion         | timestamptz DEFAULT now()                |                                                                                                       |
+| fecha_moderacion           | timestamptz                              | Nullable hasta moderación                                                                             |
+| created_at                 | timestamptz DEFAULT now()                |                                                                                                       |
+| updated_at                 | timestamptz DEFAULT now()                |                                                                                                       |
 
 Constraint adicional: `canciones_acordes_shape_check` valida que cada objeto en `acordes` tenga `linea`/`posicion`/`nombre` con tipos y longitudes válidas.
 
