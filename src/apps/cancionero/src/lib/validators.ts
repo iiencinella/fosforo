@@ -86,6 +86,7 @@ export const contributionSchema = z
       .optional()
       .or(z.literal("")),
     etiquetas: z.array(songTagSchema).max(50).default([]),
+    confirmarNuevaVersion: z.boolean().optional(),
   })
   .superRefine((value, ctx) => {
     const lineLengths = value.letra.split(/\r?\n/).map((line) => line.length);

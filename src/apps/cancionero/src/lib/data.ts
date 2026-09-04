@@ -84,6 +84,7 @@ const FALLBACK_SONG_DETAILS: SongDetail[] = [
       { linea: 1, posicion: 5, nombre: "D" },
       { linea: 1, posicion: 16, nombre: "G" },
     ],
+    version: 1,
     pdfUrl: null,
     youtubeUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
     observacionesContribucion: null,
@@ -106,6 +107,7 @@ const FALLBACK_SONG_DETAILS: SongDetail[] = [
       { linea: 1, posicion: 22, nombre: "F" },
       { linea: 1, posicion: 33, nombre: "G" },
     ],
+    version: 1,
     pdfUrl: null,
     youtubeUrl: null,
     observacionesContribucion: null,
@@ -127,6 +129,7 @@ const FALLBACK_SONG_DETAILS: SongDetail[] = [
       { linea: 1, posicion: 0, nombre: "Dm" },
       { linea: 1, posicion: 9, nombre: "E7" },
     ],
+    version: 1,
     pdfUrl: null,
     youtubeUrl: null,
     observacionesContribucion:
@@ -182,6 +185,7 @@ export function toSongSummary(song: SongDetail): SongSummary {
   return {
     id: song.id,
     titulo: song.titulo,
+    version: song.version,
     excerpt,
     estado: song.estado,
     updatedAt: song.fechaModeracion ?? song.fechaContribucion ?? nowIso,

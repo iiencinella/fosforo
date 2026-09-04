@@ -38,7 +38,7 @@ const alignedLyrics = song
             <>
               <article class="card cancionero-stack">
                 <p class="badge">Cancionero</p>
-                <h1 class="cancionero-song-title">{song.titulo}</h1>
+                <h1 class="cancionero-song-title">{song.titulo}{song.version > 1 ? ` (v${song.version})` : ""}</h1>
                 <p class="app-desc">
                   Etiquetas litúrgicas: {song.etiquetas.map((tag) => `${tag.tiempoLiturgico} · ${tag.momentoMisa}`).join(" · ")}
                 </p>

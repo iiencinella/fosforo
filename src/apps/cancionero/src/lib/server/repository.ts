@@ -15,6 +15,7 @@ import { log } from "../log";
 import type {
   ChordPosition,
   ContributionInput,
+  CreateContributionResult,
   LiturgicalTime,
   ModerationInput,
   RepositoryHealth,
@@ -28,6 +29,7 @@ import type {
 type SongRow = {
   id: string;
   titulo: string;
+  version: number;
   letra: string;
   acordes: unknown;
   pdf_url: string | null;
@@ -118,6 +120,7 @@ function mapSongRow(row: SongRow, tags: SongTag[]): SongDetail {
   return {
     id: row.id,
     titulo: row.titulo,
+    version: row.version,
     letra: row.letra,
     acordes: parseChordPositions(row.acordes),
     pdfUrl: row.pdf_url,
@@ -158,7 +161,7 @@ async function listSongsFromDb(params: SearchParams): Promise<SearchResponse> {
   let query = supabase
     .from("canciones")
     .select(
-      "id, titulo, letra, acordes, pdf_url, youtube_url, observaciones_contribucion, estado, fecha_contribucion, fecha_moderacion, created_at, updated_at",
+      "id, titulo, version, letra, acordes, pdf_url, youtube_url, observaciones_contribucion, estado, fecha_contribucion, fecha_moderacion, created_at, updated_at",
     )
     .eq("estado", "publicado")
     .order("titulo", { ascending: true });
@@ -232,7 +235,7 @@ async function getSongByIdFromDb(id: string): Promise<SongDetail | null> {
   const { data, error } = await supabase
     .from("canciones")
     .select(
-      "id, titulo, letra, acordes, pdf_url, youtube_url, observaciones_contribucion, estado, fecha_contribucion, fecha_moderacion, created_at, updated_at",
+      "id, titulo, version, letra, acordes, pdf_url, youtube_url, observaciones_contribucion, estado, fecha_contribucion, fecha_moderacion, created_at, updated_at",
     )
     .eq("id", id)
     .limit(1)
@@ -256,17 +259,61 @@ async function listTimesFromDb(): Promise<LiturgicalTime[]> {
   return ((data ?? []) as LiturgicalTimeRow[]).map(mapTimeRow);
 }
 
+type TitleMatchRow = {
+  id: string;
+  titulo: string;
+  version: number;
+};
+
+async function findTitleMatches(titulo: string): Promise<TitleMatchRow[]> {
+  const supabase = getSupabaseServiceClient();
+  const { data, error } = await supabase.rpc("canciones_por_titulo", {
+    titulo_input: titulo,
+  });
+  if (error) throw error;
+  return (data ?? []) as TitleMatchRow[];
+}
+
+function isUniqueViolation(error: unknown): boolean {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "code" in error &&
+    (error as { code?: string }).code === "23505"
+  );
+}
+
 async function createContributionInDb(
   input: ContributionInput,
   actorUserId: string | null,
-): Promise<{ id: string }> {
+): Promise<CreateContributionResult> {
   const supabase = getSupabaseServiceClient();
   const timestamp = new Date().toISOString();
+
+  const matches = await findTitleMatches(input.titulo);
+  const versionMaxima = matches.reduce(
+    (max, match) => Math.max(max, match.version),
+    0,
+  );
+
+  if (versionMaxima > 0 && !input.confirmarNuevaVersion) {
+    const referencia = matches.find((match) => match.version === versionMaxima);
+    return {
+      ok: false,
+      code: "CANCION_TITULO_DUPLICADO",
+      tituloExistente: referencia?.titulo ?? input.titulo,
+      versionExistente: versionMaxima,
+      versionSiguiente: versionMaxima + 1,
+    };
+  }
+
+  const version = versionMaxima + 1;
 
   const { data: insertData, error: insertError } = await supabase
     .from("canciones")
     .insert({
       titulo: input.titulo,
+      version,
       letra: input.letra,
       acordes: input.acordes,
       pdf_url: input.pdfUrl || null,
@@ -279,7 +326,18 @@ async function createContributionInDb(
     .select("id")
     .single();
 
-  if (insertError) throw insertError;
+  if (insertError) {
+    if (isUniqueViolation(insertError)) {
+      return {
+        ok: false,
+        code: "CANCION_TITULO_DUPLICADO",
+        tituloExistente: input.titulo,
+        versionExistente: versionMaxima,
+        versionSiguiente: version + 1,
+      };
+    }
+    throw insertError;
+  }
   const songId = (insertData as { id: string }).id;
 
   if (input.etiquetas.length > 0) {
@@ -295,7 +353,7 @@ async function createContributionInDb(
     if (tagError) throw tagError;
   }
 
-  return { id: songId };
+  return { ok: true, id: songId, version, source: "database" };
 }
 
 async function listAllFromDb(): Promise<SongDetail[]> {
@@ -303,7 +361,7 @@ async function listAllFromDb(): Promise<SongDetail[]> {
   const { data, error } = await supabase
     .from("canciones")
     .select(
-      "id, titulo, letra, acordes, pdf_url, youtube_url, observaciones_contribucion, estado, fecha_contribucion, fecha_moderacion, created_at, updated_at",
+      "id, titulo, version, letra, acordes, pdf_url, youtube_url, observaciones_contribucion, estado, fecha_contribucion, fecha_moderacion, created_at, updated_at",
     )
     .order("created_at", { ascending: false });
 
@@ -318,7 +376,7 @@ async function listPendingFromDb(): Promise<SongSummary[]> {
   const { data, error } = await supabase
     .from("canciones")
     .select(
-      "id, titulo, letra, acordes, pdf_url, youtube_url, observaciones_contribucion, estado, fecha_contribucion, fecha_moderacion, created_at, updated_at",
+      "id, titulo, version, letra, acordes, pdf_url, youtube_url, observaciones_contribucion, estado, fecha_contribucion, fecha_moderacion, created_at, updated_at",
     )
     .eq("estado", "pendiente")
     .order("created_at", { ascending: true });
@@ -491,10 +549,9 @@ export async function listLiturgicalTimes(): Promise<{
 export async function createContribution(
   input: ContributionInput,
   actorUserId: string | null = null,
-): Promise<{ id: string; source: "database" | "fallback" }> {
+): Promise<CreateContributionResult> {
   try {
-    const result = await createContributionInDb(input, actorUserId);
-    return { ...result, source: "database" };
+    return await createContributionInDb(input, actorUserId);
   } catch (error) {
     if (!canFallback()) {
       throw error;
@@ -502,7 +559,12 @@ export async function createContribution(
     warnFallbackOnce(
       `No se pudo crear contribucion en Supabase: ${String(error)}`,
     );
-    return { id: `fallback-${Date.now()}`, source: "fallback" };
+    return {
+      ok: true,
+      id: `fallback-${Date.now()}`,
+      version: 1,
+      source: "fallback",
+    };
   }
 }
 

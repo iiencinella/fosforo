@@ -99,23 +99,37 @@ import SiteHeader from "@/components/SiteHeader.astro";
 
   const state: EditorState = { letra: "", acordes: [] };
 
-  const letraEl = document.getElementById("letra-input");
-  const editorEl = document.getElementById("chord-editor");
-  const acordesInput = document.getElementById("acordes-input") as HTMLInputElement | null;
-  const form = document.getElementById("contribucion-form");
-  const status = document.getElementById("form-status");
+  function getLetraEl(): HTMLTextAreaElement | null {
+    const el = document.getElementById("letra-input");
+    return el instanceof HTMLTextAreaElement ? el : null;
+  }
+
+  function getEditorEl(): HTMLElement | null {
+    return document.getElementById("chord-editor");
+  }
+
+  function getAcordesInput(): HTMLInputElement | null {
+    const el = document.getElementById("acordes-input");
+    return el instanceof HTMLInputElement ? el : null;
+  }
+
+  function getStatus(): HTMLElement | null {
+    return document.getElementById("form-status");
+  }
 
   function buildChordKey(linea: number, posicion: number): string {
     return `${linea}:${posicion}`;
   }
 
   function syncHiddenInput(): void {
+    const acordesInput = getAcordesInput();
     if (acordesInput) {
       acordesInput.value = JSON.stringify(state.acordes);
     }
   }
 
   function renderEmpty(): void {
+    const editorEl = getEditorEl();
     if (!editorEl) return;
     editorEl.innerHTML = "";
     const empty = document.createElement("p");
@@ -127,12 +141,13 @@ import SiteHeader from "@/components/SiteHeader.astro";
   }
 
   function renderLines(): void {
+    const editorEl = getEditorEl();
     if (!editorEl) return;
     const aligned = alignChordsWithLyrics(state.letra, state.acordes);
     editorEl.innerHTML = "";
 
     aligned.lines.forEach((line) => {
-      editorEl!.appendChild(renderLine(line));
+      editorEl.appendChild(renderLine(line));
     });
   }
 
@@ -200,7 +215,7 @@ import SiteHeader from "@/components/SiteHeader.astro";
   }
 
   function render(): void {
-    if (!editorEl) return;
+    if (!getEditorEl()) return;
     if (state.letra.length === 0) {
       renderEmpty();
       return;
@@ -209,7 +224,7 @@ import SiteHeader from "@/components/SiteHeader.astro";
   }
 
   function handleAddOrEditChord(linea: number, posicion: number): void {
-    if (!editorEl) return;
+    if (!getEditorEl()) return;
     const existing = state.acordes.find(
       (acorde) => acorde.linea === linea && acorde.posicion === posicion,
     );
@@ -238,6 +253,7 @@ import SiteHeader from "@/components/SiteHeader.astro";
     initial: string | null,
   ): void {
     closeChordPopover();
+    const editorEl = getEditorEl();
     if (!editorEl) return;
 
     const lineEl = editorEl.querySelector<HTMLElement>(
@@ -347,6 +363,7 @@ import SiteHeader from "@/components/SiteHeader.astro";
     popover: HTMLElement,
     target: HTMLElement,
   ): void {
+    const editorEl = getEditorEl();
     if (!editorEl) return;
     const targetRect = target.getBoundingClientRect();
     const popoverRect = popover.getBoundingClientRect();
@@ -367,6 +384,7 @@ import SiteHeader from "@/components/SiteHeader.astro";
   }
 
   function closeChordPopover(): void {
+    const editorEl = getEditorEl();
     if (!editorEl) return;
     const popover = editorEl.querySelector(".cancionero-chord-popover");
     const activeChar = editorEl.querySelector(".cancionero-lyric-char.is-active");
@@ -378,22 +396,24 @@ import SiteHeader from "@/components/SiteHeader.astro";
     }
   }
 
-  if (letraEl instanceof HTMLTextAreaElement) {
-    letraEl.addEventListener("input", () => {
-      state.letra = letraEl.value;
-      const filtered = state.acordes.filter((acorde) => {
-        const lines = state.letra.split(/\r?\n/);
-        if (acorde.linea >= lines.length) return false;
-        const lineLength = lines[acorde.linea]?.length ?? 0;
-        return acorde.posicion <= lineLength;
-      });
-      if (filtered.length !== state.acordes.length) {
-        state.acordes = filtered;
-        syncHiddenInput();
-      }
-      render();
+  document.addEventListener("input", (event) => {
+    const target = event.target;
+    if (!(target instanceof HTMLTextAreaElement)) return;
+    if (target.id !== "letra-input") return;
+
+    state.letra = target.value;
+    const filtered = state.acordes.filter((acorde) => {
+      const lines = state.letra.split(/\r?\n/);
+      if (acorde.linea >= lines.length) return false;
+      const lineLength = lines[acorde.linea]?.length ?? 0;
+      return acorde.posicion <= lineLength;
     });
-  }
+    if (filtered.length !== state.acordes.length) {
+      state.acordes = filtered;
+      syncHiddenInput();
+    }
+    render();
+  });
 
   document.addEventListener("click", (event) => {
     const target = event.target;
@@ -404,11 +424,29 @@ import SiteHeader from "@/components/SiteHeader.astro";
     }
   });
 
-  if (form instanceof HTMLFormElement && status instanceof HTMLElement) {
-    form.addEventListener("submit", async (event) => {
-      event.preventDefault();
+  document.addEventListener("submit", (event) => {
+    const form = event.target;
+    if (!(form instanceof HTMLFormElement)) return;
+    if (form.id !== "contribucion-form") return;
+    const status = getStatus();
+    if (!status) return;
+
+    event.preventDefault();
+    void handleSubmit(form, status);
+  });
+
+  async function handleSubmit(
+    form: HTMLFormElement,
+    status: HTMLElement,
+  ): Promise<void> {
+      status.removeAttribute("style");
       status.className = "form-status pending";
       status.textContent = "Enviando contribución...";
+
+      const letraEl = getLetraEl();
+      if (letraEl) {
+        state.letra = letraEl.value;
+      }
 
       const data = new FormData(form);
       const titulo = String(data.get("titulo") ?? "").trim();
@@ -440,33 +478,138 @@ import SiteHeader from "@/components/SiteHeader.astro";
         return;
       }
       try {
-        const response = await fetch("/api/cancionero/contribuciones", {
-          method: "POST",
-          headers: {
-            "content-type": "application/json",
-          },
-          body: JSON.stringify(payload),
-        });
-
-        const json = await response.json();
-        if (!response.ok || !json?.ok) {
-          throw new Error(json?.error ?? "No se pudo enviar la contribución");
-        }
-
-        status.className = "form-status success";
-        status.textContent = "Tu canción fue enviada para moderación.";
-        form.reset();
-        state.letra = "";
-        state.acordes = [];
-        syncHiddenInput();
-        renderEmpty();
+        await enviarContribucion(payload, form, status);
       } catch (error) {
         status.className = "form-status error";
         status.textContent =
           error instanceof Error ? error.message : "No se pudo enviar la contribución";
       }
+  }
+
+  async function postContribucion(
+    payload: Record<string, unknown>,
+  ): Promise<{ response: Response; json: Record<string, unknown> }> {
+    const response = await fetch("/api/cancionero/contribuciones", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(payload),
     });
+    const json = (await response.json()) as Record<string, unknown>;
+    return { response, json };
+  }
+
+  function mostrarAvisoDuplicado(
+    json: Record<string, unknown>,
+    payload: Record<string, unknown>,
+    form: HTMLFormElement,
+    status: HTMLElement,
+  ): void {
+    const versionSiguiente =
+      typeof json.versionSiguiente === "number" ? json.versionSiguiente : 2;
+    const tituloExistente =
+      typeof json.tituloExistente === "string"
+        ? json.tituloExistente
+        : String(payload.titulo ?? "");
+
+    status.className = "form-status error";
+    status.textContent = "";
+    status.style.display = "grid";
+    status.style.gap = "0.5rem";
+    status.style.justifyItems = "start";
+
+    const mensaje = document.createElement("span");
+    mensaje.textContent = `Ya existe una canción con el título "${tituloExistente}". Si es otra versión, podés registrarla como nueva versión.`;
+
+    const boton = document.createElement("button");
+    boton.type = "button";
+    boton.className = "button secondary";
+    boton.textContent = `Enviar como versión ${versionSiguiente}`;
+
+    status.append(mensaje, boton);
+    status.scrollIntoView({ behavior: "smooth", block: "center" });
+
+    boton.addEventListener(
+      "click",
+      () => {
+        void (async () => {
+          boton.disabled = true;
+          status.className = "form-status pending";
+          status.textContent = "Enviando contribución...";
+          try {
+            await enviarContribucion(
+              { ...payload, confirmarNuevaVersion: true },
+              form,
+              status,
+            );
+          } catch (error) {
+            status.className = "form-status error";
+            status.textContent =
+              error instanceof Error
+                ? error.message
+                : "No se pudo enviar la contribución";
+          }
+        })();
+      },
+      { once: true },
+    );
+  }
+
+  async function enviarContribucion(
+    payload: Record<string, unknown>,
+    form: HTMLFormElement,
+    status: HTMLElement,
+  ): Promise<void> {
+        status.className = "form-status pending";
+        status.textContent = "Enviando contribución...";
+
+        const { response, json } = await postContribucion(payload);
+
+        if (
+          response.status === 409 &&
+          json?.code === "CANCION_TITULO_DUPLICADO"
+        ) {
+          mostrarAvisoDuplicado(json, payload, form, status);
+          return;
+        }
+
+        if (!response.ok || !json?.ok) {
+          throw new Error(
+            typeof json?.error === "string"
+              ? json.error
+              : "No se pudo enviar la contribución",
+          );
+        }
+
+        if (json?.source === "fallback") {
+          status.className = "form-status error";
+          status.textContent =
+            "No se pudo guardar en la base de datos: la canción NO quedó registrada. Avisa al administrador.";
+          return;
+        }
+
+        const version = typeof json?.version === "number" ? json.version : 1;
+        status.className = "form-status success";
+        status.textContent =
+          version > 1
+            ? `Tu canción fue enviada para moderación (versión ${version}).`
+            : "Tu canción fue enviada para moderación.";
+        form.reset();
+        state.letra = "";
+        state.acordes = [];
+        syncHiddenInput();
+        renderEmpty();
   }
 
   renderEmpty();
+
+  document.addEventListener("astro:page-load", () => {
+    const letraEl = getLetraEl();
+    if (!letraEl) return;
+    state.letra = letraEl.value;
+    state.acordes = [];
+    syncHiddenInput();
+    render();
+  });
 </script>
