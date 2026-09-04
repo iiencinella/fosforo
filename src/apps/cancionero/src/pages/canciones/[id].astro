@@ -69,10 +69,16 @@ const alignedLyrics = song
                    <button type="button" class="button secondary" data-font="reset">A</button>
                    <button type="button" class="button secondary" data-font="up" aria-label="Agrandar letra">A+</button>
                    <span class="cancionero-toolbar-divider" aria-hidden="true"></span>
-                   <button type="button" class="button secondary" data-transpose="-1">−½</button>
-                   <span data-transpose-label>Tono original</span>
-                   <button type="button" class="button secondary" data-transpose="1">+½</button>
-                   <button type="button" class="button" data-diagrams-toggle aria-pressed="false">Mostrar diagramas</button>
+                    <button type="button" class="button secondary" data-transpose="-1">−½</button>
+                    <span data-transpose-label>Tono original</span>
+                    <button type="button" class="button secondary" data-transpose="1">+½</button>
+                    <label class="cancionero-tone-select">
+                      <span class="sr-only">Transportar a tono</span>
+                      <select data-tone-select aria-label="Transportar a tono">
+                        <option value="">Elegir tono</option>
+                      </select>
+                    </label>
+                    <button type="button" class="button" data-diagrams-toggle aria-pressed="false">Mostrar diagramas</button>
                  </div>
                  <div class="cancionero-diagram-strip" data-diagram-strip hidden></div>
                  <div class="cancionero-lyrics-block" data-lyrics-block>
@@ -120,7 +126,7 @@ const alignedLyrics = song
 </Layout>
 
 <script>
-  import { transposeChord } from "@/lib/chord-names";
+  import { parseChordName, transposeChord } from "@/lib/chord-names";
   import { getChordDiagram, renderChordDiagram } from "@/lib/chord-diagrams";
 
   const card = document.querySelector<HTMLElement>("[data-song-lyrics]");
@@ -132,6 +138,15 @@ const alignedLyrics = song
     const lyrics = card.dataset.songLyrics ?? "";
     let shift = 0;
     let fontSize = Number(localStorage.getItem("cancionero-font-size") ?? "1");
+    const originalRoot = parseChordName(chords[0]?.nombre ?? "")?.rootIndex ?? 0;
+    const toneSelect = card.querySelector<HTMLSelectElement>("[data-tone-select]");
+    const toneNames = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+    toneNames.forEach((tone, index) => {
+      const option = document.createElement("option");
+      option.value = String(index);
+      option.textContent = tone;
+      toneSelect?.appendChild(option);
+    });
 
     const render = () => {
       if (!block) return;
@@ -163,6 +178,11 @@ const alignedLyrics = song
       shift = (shift + Number(button.dataset.transpose)) % 12;
       render();
     }));
+    toneSelect?.addEventListener("change", () => {
+      if (toneSelect.value === "") return;
+      shift = (Number(toneSelect.value) - originalRoot + 12) % 12;
+      render();
+    });
     card.querySelector<HTMLButtonElement>("[data-diagrams-toggle]")?.addEventListener("click", (event) => {
       const button = event.currentTarget as HTMLButtonElement;
       if (!strip) return;

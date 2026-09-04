@@ -273,6 +273,15 @@
   background: var(--color-line);
 }
 
+.cancionero-tone-select select {
+  min-width: 7rem;
+  padding: 0.45rem 0.6rem;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
 .cancionero-lyrics-block {
   font-size: calc(1rem * var(--song-font-scale, 1));
 }
