@@ -18,6 +18,10 @@ const authzMocks = vi.hoisted(() => ({
   CMS_APP_SLUG: "cms",
 }));
 
+const dispatchMocks = vi.hoisted(() => ({
+  queuePublishNotifications: vi.fn(),
+}));
+
 vi.mock("@/lib/entries-repository", () => ({
   createEntriesRepository: () => repoMocks,
 }));
@@ -25,6 +29,8 @@ vi.mock("@/lib/entries-repository", () => ({
 vi.mock("@/lib/content-types-repository", () => ({
   createContentTypesRepository: () => typesRepoMocks,
 }));
+
+vi.mock("@/lib/webhooks-dispatch", () => dispatchMocks);
 
 vi.mock("@/lib/authz", () => authzMocks);
 
@@ -99,6 +105,7 @@ beforeEach(() => {
   repoMocks.create.mockResolvedValue(entry);
   repoMocks.update.mockResolvedValue({ ...entry, status: "draft" });
   repoMocks.transition.mockResolvedValue({ ...entry, status: "review" });
+  dispatchMocks.queuePublishNotifications.mockReset();
 });
 
 function jsonContext(
@@ -338,6 +345,29 @@ describe("POST /api/admin/entries/[id]/transition (FR-CMS-004)", () => {
       "revisor-1",
       "revisor",
     );
+    // FR-CMS-010: al aprobar se dispara el despacho (webhooks + cache +
+    // RUM) sin bloquear la respuesta.
+    expect(dispatchMocks.queuePublishNotifications).toHaveBeenCalledWith({
+      contentTypeSlug: "oracion",
+      slug: "padre-nuestro",
+    });
+  });
+
+  it("no dispara el despacho en transiciones que no publican", async () => {
+    repoMocks.transition.mockResolvedValue({ ...entry, status: "review" });
+
+    await transitionPost(
+      jsonContext(
+        "/api/admin/entries/entry-1/transition",
+        {
+          action: "submit",
+        },
+        "POST",
+        { id: "entry-1" },
+      ),
+    );
+
+    expect(dispatchMocks.queuePublishNotifications).not.toHaveBeenCalled();
   });
 
   it("403 si el rol no habilita la transicion (RB-CMS-004)", async () => {

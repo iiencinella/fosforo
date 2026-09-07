@@ -27,6 +27,7 @@ export default defineConfig({
         "src/lib/content-types-repository.ts",
         "src/lib/entries-repository.ts",
         "src/lib/taxonomies-repository.ts",
+        "src/lib/webhooks-repository.ts",
         "src/lib/media-repository.ts",
         "src/lib/search-repository.ts",
         "**/*.test.ts",

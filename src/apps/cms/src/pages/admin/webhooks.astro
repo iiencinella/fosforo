@@ -1,0 +1,116 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import DataTable from "@repo/ui/astro/DataTable.astro";
+import FormField from "@repo/ui/astro/FormField.astro";
+import { getAccessTokenFromRequest, getSessionFromRequest } from "@repo/auth";
+import { createWebhooksRepository } from "@/lib/webhooks-repository";
+
+const token = getAccessTokenFromRequest(Astro.request);
+const session = token ? await getSessionFromRequest(Astro.request) : null;
+const role = session?.profile.roleSlug ?? "";
+const isAdmin = role === "admin";
+
+const errorParam = Astro.url.searchParams.get("error");
+const okParam = Astro.url.searchParams.get("ok");
+
+let subscriptions: Awaited<
+  ReturnType<ReturnType<typeof createWebhooksRepository>["list"]>
+> = [];
+
+if (isAdmin && token) {
+  try {
+    subscriptions = await createWebhooksRepository().list(token);
+  } catch {
+    subscriptions = [];
+  }
+}
+
+const rows = subscriptions.map((subscription) => ({
+  app: subscription.appName,
+  url: subscription.targetUrl,
+  activo: subscription.isActive ? "Si" : "No",
+}));
+
+const deleteHref = (id: string) =>
+  `/api/admin/webhooks?_method=delete&id=${id}&return_to=${encodeURIComponent("/admin/webhooks")}`;
+---
+
+<BaseLayout title="Webhooks · Fosforo CMS">
+  <SiteHeader />
+
+  <main id="main-content" class="page cms-main">
+    <section class="cms-hero">
+      <p class="cms-hero__kicker">Solo administradores</p>
+      <h1 class="cms-hero__title">Webhooks de publicacion</h1>
+      <p class="cms-hero__subtitle">
+        Al publicar una entrada (FR-CMS-010) se envia un POST firmado con
+        HMAC-SHA256 (header x-cms-signature). Verifica la firma en tu
+        consumidor antes de procesar.
+      </p>
+    </section>
+
+    {
+      errorParam && <p class="cms-alert cms-alert--error" role="alert">{errorParam}</p>
+    }
+    {okParam && <p class="cms-alert" role="status">Operacion aplicada: {okParam}</p>}
+
+    {
+      isAdmin ? (
+        <>
+          <section class="surface-card">
+            <p class="surface-card__label">Nueva suscripcion</p>
+            <form class="cms-form" method="post" action="/api/admin/webhooks">
+              <FormField label="App consumidora" name="app_name" required maxlength={100} />
+              <FormField
+                label="URL de destino (https)"
+                name="target_url"
+                required
+                maxlength={500}
+                helpText="Ejemplo: https://misal.fosforo.app/api/webhooks/cms"
+              />
+              <FormField
+                label="Secreto HMAC"
+                name="secret"
+                required
+                minlength={16}
+                maxlength={200}
+                helpText="Compartilo con la app consumidora para verificar la firma."
+              />
+              <button class="button" type="submit">Crear suscripcion</button>
+            </form>
+          </section>
+
+          <section class="surface-card">
+            <p class="surface-card__label">Suscripciones</p>
+            <DataTable
+              columns={[
+                { key: "app", label: "App" },
+                { key: "url", label: "URL" },
+                { key: "activo", label: "Activa" },
+              ]}
+              rows={rows}
+              emptyMessage="Sin suscripciones todavia. Las apps consumidoras usaran el TTL de cache (5 min) hasta configurar el webhook."
+            />
+            <div class="cms-terms">
+              {
+                subscriptions.map((subscription) => (
+                  <form method="post" action={deleteHref(subscription.id)}>
+                    <button class="button secondary" type="submit">
+                      Eliminar {subscription.appName}
+                    </button>
+                  </form>
+                ))
+              }
+            </div>
+          </section>
+        </>
+      ) : (
+        <section class="surface-card">
+          <p class="surface-card__label">Solo administradores</p>
+          <p class="cms-hero__subtitle">Tu rol: {role || "sin rol"}.</p>
+        </section>
+      )
+    }
+  </main>
+</BaseLayout>
