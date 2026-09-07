@@ -6,6 +6,7 @@ import FormField from "@repo/ui/astro/FormField.astro";
 import { getAccessTokenFromRequest, getSessionFromRequest } from "@repo/auth";
 import { createEntriesRepository } from "@/lib/entries-repository";
 import { createTaxonomiesRepository } from "@/lib/taxonomies-repository";
+import { listMedia } from "@/lib/media-repository";
 import {
   availableActions,
   type EditorialRole,
@@ -44,6 +45,7 @@ let taxonomies: Awaited<
   ReturnType<ReturnType<typeof createTaxonomiesRepository>["list"]>
 > = [];
 let assignedTermIds: string[] = [];
+let media: Awaited<ReturnType<typeof listMedia>> = [];
 
 if (token && entryId) {
   try {
@@ -56,6 +58,7 @@ if (token && entryId) {
         token,
         entryId,
       );
+      media = await listMedia(token, entryId);
     }
   } catch {
     entry = null;
@@ -158,6 +161,48 @@ const dataJson = entry ? JSON.stringify(entry.data, null, 2) : "{}";
                 </div>
                 <div id="cms-preview" class="cms-preview" aria-live="polite"></div>
               </section>
+              <section class="surface-card">
+                <p class="surface-card__label">Medios (webp/jpeg, max 2MB)</p>
+                <form class="cms-form" method="post" action="/api/admin/media" enctype="multipart/form-data">
+                  <input type="hidden" name="entry_id" value={entry.id} />
+                  <input type="hidden" name="return_to" value={`/admin/entries/${entry.id}`} />
+                  <label>
+                    Imagen
+                    <input type="file" name="file" accept="image/webp,image/jpeg" required />
+                  </label>
+                  <button class="button secondary" type="submit">Subir medio</button>
+                </form>
+
+                <div class="cms-media-list">
+                  {
+                    media.map((item) => (
+                      <div class="cms-media-item">
+                        <img
+                          src={item.publicUrl}
+                          alt={`Medio ${item.storagePath}`}
+                          loading="lazy"
+                          width="96"
+                          height="96"
+                        />
+                        <div>
+                          <p class="cms-terms__taxonomy">{item.storagePath.split("/").pop()}</p>
+                          <p class="cms-hero__subtitle">
+                            {item.mimeType} · {Math.round(item.sizeBytes / 1024)} KB
+                          </p>
+                          <p class="cms-hero__subtitle">
+                            Ruta para campos media: <code>{item.storagePath}</code>
+                          </p>
+                        </div>
+                        <form method="post" action={`/api/admin/media?media_id=${item.id}&return_to=${encodeURIComponent(`/admin/entries/${entry.id}`)}&_method=delete`}>
+                          <button class="button secondary" type="submit">Eliminar</button>
+                        </form>
+                      </div>
+                    ))
+                  }
+                  {media.length === 0 && <p class="cms-hero__subtitle">Sin medios todavia.</p>}
+                </div>
+              </section>
+
               <section class="surface-card">
                 <p class="surface-card__label">Taxonomias (FR-CMS-003)</p>
                 {
