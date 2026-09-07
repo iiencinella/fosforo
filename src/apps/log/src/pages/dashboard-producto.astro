@@ -1,0 +1,240 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import AccessDeniedCard from "@/components/AccessDeniedCard.astro";
+import HourlyChart from "@/components/dashboard/HourlyChart.astro";
+import { getAccessTokenFromRequest } from "@/lib/auth";
+import { getSessionFromToken } from "@/lib/auth-supabase";
+import type { UserRole } from "@/lib/auth-supabase";
+import {
+  PRODUCT_DASHBOARD_ROLES,
+  buildVitalsSummary,
+  getDailySessions,
+  getEventsByApp,
+  getTopPages,
+  getVitalsDistribution,
+} from "@/lib/rum-metrics";
+
+const token = getAccessTokenFromRequest(Astro.request);
+let role: UserRole = null;
+
+if (token) {
+  try {
+    const session = await getSessionFromToken(token);
+    role = session.role;
+  } catch {
+    role = null;
+  }
+}
+
+const canAccess =
+  role !== null && (PRODUCT_DASHBOARD_ROLES as readonly string[]).includes(role);
+const canSeeOperative = role === "dev" || role === "ops";
+
+const emptySeries: Array<{ label: string; count: number }> = [];
+
+let topPages: Array<{ page_path: string; count: number }> = [];
+let vitalsSummary: Array<{ metric_name: string; goodPct: number; total: number }> = [];
+let vitalsRows: Array<{ metric_name: string; rating: string; count: number }> = [];
+let dailySeries = emptySeries;
+let eventsByApp: Array<{ app: string; count: number }> = [];
+let activeDays30d = 0;
+
+if (canAccess) {
+  const hours = 168;
+  const [top, vitals, daily, byApp] = await Promise.all([
+    getTopPages(hours),
+    getVitalsDistribution(hours),
+    getDailySessions(30),
+    getEventsByApp(hours),
+  ]);
+  topPages = top;
+  vitalsRows = vitals;
+  vitalsSummary = buildVitalsSummary(vitals);
+  eventsByApp = byApp;
+  dailySeries = daily
+    .slice(-14)
+    .map((row) => ({ label: row.day, count: row.sessions }));
+  activeDays30d = daily.length;
+}
+---
+
+<BaseLayout title="Dashboard de producto · Fosforo Log" description="RUM y analiticas de producto del ecosistema Fosforo.">
+  <SiteHeader />
+
+  <main id="main-content" class="page log-main">
+    {
+      canAccess ? (
+        <>
+          <section class="log-hero">
+            <p class="log-hero__kicker">Panel producto</p>
+            <h1 class="log-hero__title">Dashboard de producto</h1>
+            <p class="log-hero__subtitle">
+              RUM anonimo: top paginas, Web Vitals, actividad diaria y eventos por app. Separado del panel operativo (RB-LOG-RUM-004).
+            </p>
+          </section>
+
+          <section class="surface-grid" aria-label="Metricas de producto">
+            <article class="surface-card surface-card--metric">
+              <p class="surface-card__label">Apps con trafico (7d)</p>
+              <p class="surface-card__value">{eventsByApp.length}</p>
+              <p class="surface-card__meta">Apps con eventos RUM en ventana</p>
+            </article>
+            <article class="surface-card surface-card--metric">
+              <p class="surface-card__label">Dias con actividad (30d)</p>
+              <p class="surface-card__value">{activeDays30d}</p>
+              <p class="surface-card__meta">Dias con sesiones registradas</p>
+            </article>
+            {
+              vitalsSummary.map((item) => (
+                <article class="surface-card surface-card--metric">
+                  <p class="surface-card__label">{item.metric_name} good</p>
+                  <p class="surface-card__value">{item.goodPct}%</p>
+                  <p class="surface-card__meta">{item.total} muestras (7d)</p>
+                </article>
+              ))
+            }
+          </section>
+
+          <section class="surface-grid dashboard-split" aria-label="Top paginas y actividad diaria">
+            <article class="surface-card dashboard-split__item">
+              <p class="surface-card__label">Top paginas (7d)</p>
+              <div class="log-table-wrap">
+                <table class="log-table">
+                  <thead>
+                    <tr>
+                      <th>Pagina</th>
+                      <th>Pageviews</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {
+                      topPages.length > 0 ? (
+                        topPages.slice(0, 10).map((item) => (
+                          <tr>
+                            <td>{item.page_path}</td>
+                            <td>{item.count}</td>
+                          </tr>
+                        ))
+                      ) : (
+                        <tr>
+                          <td colspan={2} class="surface-card__meta">
+                            Sin pageviews registrados todavia. Integra @repo/analytics en tu app.
+                          </td>
+                        </tr>
+                      )
+                    }
+                  </tbody>
+                </table>
+              </div>
+            </article>
+
+            <HourlyChart series={dailySeries} />
+          </section>
+
+          <section class="surface-grid dashboard-split" aria-label="Web Vitals y eventos por app">
+            <article class="surface-card dashboard-split__item">
+              <p class="surface-card__label">Distribucion Web Vitals (7d)</p>
+              <div class="log-table-wrap">
+                <table class="log-table">
+                  <thead>
+                    <tr>
+                      <th>Metrica</th>
+                      <th>Rating</th>
+                      <th>Muestras</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {
+                      vitalsRows.length > 0 ? (
+                        vitalsRows.map((item) => (
+                          <tr>
+                            <td>{item.metric_name}</td>
+                            <td>{item.rating}</td>
+                            <td>{item.count}</td>
+                          </tr>
+                        ))
+                      ) : (
+                        <tr>
+                          <td colspan={3} class="surface-card__meta">
+                            Sin muestras de Web Vitals todavia.
+                          </td>
+                        </tr>
+                      )
+                    }
+                  </tbody>
+                </table>
+              </div>
+            </article>
+
+            <article class="surface-card dashboard-split__item">
+              <p class="surface-card__label">Eventos por app (7d)</p>
+              <div class="log-table-wrap">
+                <table class="log-table">
+                  <thead>
+                    <tr>
+                      <th>App</th>
+                      <th>Eventos</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {
+                      eventsByApp.length > 0 ? (
+                        eventsByApp.map((item) => (
+                          <tr>
+                            <td>{item.app}</td>
+                            <td>{item.count}</td>
+                          </tr>
+                        ))
+                      ) : (
+                        <tr>
+                          <td colspan={2} class="surface-card__meta">
+                            Sin eventos RUM registrados todavia.
+                          </td>
+                        </tr>
+                      )
+                    }
+                  </tbody>
+                </table>
+              </div>
+            </article>
+          </section>
+
+          <section class="surface-card" aria-label="API debug endpoints">
+            <p class="surface-card__label">API producto</p>
+            <div class="inline-actions">
+              <a class="button secondary" href="/api/dashboard/producto">/api/dashboard/producto</a>
+              <a class="button secondary" href="/api/dashboard/producto/funnel?events=pageview,misal.lectio.started,misal.lectio.completed">
+                /api/dashboard/producto/funnel
+              </a>
+              <a class="button secondary" href="/api/dashboard/producto/retention?days=30">/api/dashboard/producto/retention</a>
+            </div>
+            <p class="surface-card__meta">
+              Embudo de ejemplo: pageview → misal.lectio.started → misal.lectio.completed. Cambia los eventos en la query.
+            </p>
+          </section>
+
+          <section class="inline-actions">
+            {
+              canSeeOperative && (
+                <a class="button secondary" href="/dashboard">Dashboard operativo</a>
+              )
+            }
+            <a class="button secondary" href="/logs">Ver logs</a>
+            <form method="post" action="/api/auth/logout">
+              <button class="button" type="submit">Cerrar sesion</button>
+            </form>
+          </section>
+        </>
+      ) : (
+        <AccessDeniedCard
+          title="Dashboard solo para producto"
+          message="Esta pantalla requiere rol dev, ops o product. Los datos RUM son anonimos y agregados."
+        />
+      )
+    }
+  </main>
+
+  <SiteFooter />
+</BaseLayout>
