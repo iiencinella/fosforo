@@ -1,0 +1,22 @@
+---
+import { PortalHeader } from "@repo/ui";
+
+const links = [
+  { href: "/", label: "Panel" },
+  { href: "/admin/entries", label: "Entradas" },
+  { href: "/admin/content-types", label: "Tipos" },
+  { href: "/admin/taxonomies", label: "Taxonomias" },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<PortalHeader
+  title="Fosforo CMS"
+  links={links}
+  currentPath={currentPath}
+  ctaHref="/admin/entries"
+  ctaLabel="Editar contenido"
+  logoAlt="Logo de Fosforo CMS"
+  client:load
+/>

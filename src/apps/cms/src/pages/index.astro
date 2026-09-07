@@ -1,0 +1,47 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import { getSessionFromRequest } from "@repo/auth";
+
+const session = await getSessionFromRequest(Astro.request);
+const name = session?.profile.name ?? "";
+const role = session?.profile.roleSlug ?? "";
+const isAdmin = role === "admin";
+---
+
+<BaseLayout title="Panel · Fosforo CMS">
+  <SiteHeader />
+
+  <main id="main-content" class="page cms-main">
+    <section class="cms-hero">
+      <p class="cms-hero__kicker">Gestion de contenidos</p>
+      <h1 class="cms-hero__title">Panel editorial</h1>
+      <p class="cms-hero__subtitle">
+        Hola{name ? `, ${name}` : ""}. Tu rol: {role || "sin rol"}.
+      </p>
+    </section>
+
+    <nav class="cms-section-list" aria-label="Secciones del panel">
+      <a href="/admin/entries">
+        <span>Entradas</span>
+        <span class="cms-hero__kicker">crear, editar, revisar, publicar</span>
+      </a>
+      {
+        isAdmin && (
+          <a href="/admin/content-types">
+            <span>Tipos de contenido</span>
+            <span class="cms-hero__kicker">solo admin</span>
+          </a>
+        )
+      }
+      {
+        isAdmin && (
+          <a href="/admin/taxonomies">
+            <span>Taxonomias</span>
+            <span class="cms-hero__kicker">solo admin</span>
+          </a>
+        )
+      }
+    </nav>
+  </main>
+</BaseLayout>

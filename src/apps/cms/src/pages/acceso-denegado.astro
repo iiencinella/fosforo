@@ -1,0 +1,30 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+const errorParam = Astro.url.searchParams.get("error");
+const messages: Record<string, string> = {
+  logueo_no_configurado:
+    "El panel no esta configurado: falta la variable de entorno PUBLIC_LOGUEO_URL que apunta a la app de identidad.",
+  default: "No tenes permiso para acceder al panel editorial del CMS.",
+};
+
+const message =
+  errorParam && messages[errorParam] ? messages[errorParam] : messages.default;
+---
+
+<BaseLayout title="Acceso denegado · Fosforo CMS">
+  <main id="main-content" class="page cms-main">
+    <section class="cms-hero">
+      <p class="cms-hero__kicker">Gestion de contenidos</p>
+      <h1 class="cms-hero__title">Acceso denegado</h1>
+    </section>
+
+    <section class="surface-card">
+      <p>{message}</p>
+      <p class="cms-hero__subtitle">
+        Para editar contenido necesitas un usuario con rol editor o revisor
+        (o admin) y permiso de acceso a la app cms.
+      </p>
+    </section>
+  </main>
+</BaseLayout>

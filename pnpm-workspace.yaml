@@ -17,6 +17,9 @@ catalog:
   "@tailwindcss/cli": 4.3.3
   "@supabase/supabase-js": 2.112.4
   zod: 4.4.3
+  marked: 16.0.0
+  sanitize-html: 2.17.0
+  "@types/sanitize-html": 2.16.0
   turbo: 2.10.11
   "@types/node": 24.13.3
   "@astrojs/check": 0.9.10

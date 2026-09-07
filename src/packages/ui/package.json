@@ -36,6 +36,8 @@
     "./astro/InfoPanel.astro": "./src/astro/InfoPanel.astro",
     "./astro/MetricGrid.astro": "./src/astro/MetricGrid.astro",
     "./astro/Tabs.astro": "./src/astro/Tabs.astro",
+    "./astro/DataTable.astro": "./src/astro/DataTable.astro",
+    "./astro/FormField.astro": "./src/astro/FormField.astro",
     "./tabs.css": "./src/tabs.css",
     "./portal.css": "./src/portal.css",
     "./calendar.css": "./src/calendar.css",
