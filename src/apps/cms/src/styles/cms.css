@@ -159,3 +159,27 @@
   gap: var(--spacing-2);
   font-size: var(--text-sm, 0.875rem);
 }
+
+.cms-media-list {
+  display: grid;
+  gap: var(--spacing-3);
+  margin-top: var(--spacing-4);
+}
+
+.cms-media-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+  padding: var(--spacing-3);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+}
+
+.cms-media-item img {
+  border-radius: var(--radius-md);
+  object-fit: cover;
+}
+
+.cms-media-item form {
+  margin-left: auto;
+}
