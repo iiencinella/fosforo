@@ -5,6 +5,7 @@ import DataTable from "@repo/ui/astro/DataTable.astro";
 import FormField from "@repo/ui/astro/FormField.astro";
 import { getAccessTokenFromRequest, getSessionFromRequest } from "@repo/auth";
 import { createEntriesRepository } from "@/lib/entries-repository";
+import { createTaxonomiesRepository } from "@/lib/taxonomies-repository";
 import {
   availableActions,
   type EditorialRole,
@@ -39,6 +40,10 @@ let revisions: Awaited<
   ReturnType<ReturnType<typeof createEntriesRepository>["listRevisions"]>
 > = [];
 let role: string = session?.profile.roleSlug ?? "";
+let taxonomies: Awaited<
+  ReturnType<ReturnType<typeof createTaxonomiesRepository>["list"]>
+> = [];
+let assignedTermIds: string[] = [];
 
 if (token && entryId) {
   try {
@@ -46,6 +51,11 @@ if (token && entryId) {
     entry = await repository.getById(token, entryId);
     if (entry) {
       revisions = await repository.listRevisions(token, entryId);
+      taxonomies = await createTaxonomiesRepository().list(token);
+      assignedTermIds = await createTaxonomiesRepository().getEntryTermIds(
+        token,
+        entryId,
+      );
     }
   } catch {
     entry = null;
@@ -147,6 +157,41 @@ const dataJson = entry ? JSON.stringify(entry.data, null, 2) : "{}";
                   </button>
                 </div>
                 <div id="cms-preview" class="cms-preview" aria-live="polite"></div>
+              </section>
+              <section class="surface-card">
+                <p class="surface-card__label">Taxonomias (FR-CMS-003)</p>
+                {
+                  taxonomies.length > 0 ? (
+                    <form class="cms-form" method="post" action={`/api/admin/entries/${entry.id}/terms`}>
+                      <div class="cms-terms">
+                        {taxonomies.map((taxonomy) => (
+                          <div class="cms-terms__group">
+                            <p class="cms-terms__taxonomy">{taxonomy.name}</p>
+                            {taxonomy.terms.map((term) => (
+                              <label class="cms-terms__option">
+                                <input
+                                  type="checkbox"
+                                  name="term_ids"
+                                  value={term.id}
+                                  checked={assignedTermIds.includes(term.id)}
+                                />
+                                {" "}{term.name}
+                              </label>
+                            ))}
+                            {taxonomy.terms.length === 0 && (
+                              <p class="cms-hero__subtitle">Sin terminos todavia.</p>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                      <button class="button secondary" type="submit">Guardar taxonomias</button>
+                    </form>
+                  ) : (
+                    <p class="cms-hero__subtitle">
+                      Sin taxonomias creadas. Un administrador puede crearlas en el panel de Taxonomias.
+                    </p>
+                  )
+                }
               </section>
             </>
           ) : (

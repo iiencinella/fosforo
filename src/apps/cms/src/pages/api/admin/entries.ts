@@ -26,6 +26,7 @@ export const GET: APIRoute = async ({ request, url }) => {
     contentTypeSlug: url.searchParams.get("content_type") ?? undefined,
     status: (url.searchParams.get("status") ?? undefined) as
       "draft" | "review" | "published" | "archived" | undefined,
+    termSlug: url.searchParams.get("term") ?? undefined,
   });
 
   return jsonOk(result);
