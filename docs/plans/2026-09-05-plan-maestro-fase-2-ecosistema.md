@@ -91,16 +91,26 @@ Consolidar la base de plataforma del ecosistema (contenidos, liturgia, notificac
 
 ## Orden de desarrollo propuesto
 
-### Fase 0 - Infraestructura compartida (prerequisitos de codigo, sin app de usuario)
+> Estado 2026-09-07: la Fase 0 esta COMPLETADA (8 pasos mergeados; ver
+> [[2026-09-05-plan-desarrollo-fase-0|Plan de Desarrollo Fase 0]] y
+> [[../00-General/12-Novedades-2026-09-07-cierre-fase-0|Novedades]]).
+> La proxima etapa es la Fase 1 (CMS -> Motor Liturgico), previa aprobacion
+> de los contratos en draft del Bloque B.
+
+### Fase 0 - Infraestructura compartida (prerequisitos de codigo, sin app de usuario) — COMPLETADA 2026-09-07
 
 Los contratos ya documentados se materializan como paquetes/endpointos que todo lo demas consumira:
 
-| Orden | Pieza                                                                                                      | Por que primero                                                                                       |
-| ----- | ---------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| 0.1   | Paquete `@repo/analytics` (SDK RUM)                                                                        | Todas las apps lo integran desde el dia 1; sin el, habria que retroceder app por app                  |
-| 0.2   | App Log: endpoints `/api/rum`, `/api/rum/vitals` + tablas `rum_events`, `rum_vitals`, `rum_sessions` + RLS | El SDK apunta a esta ingesta; sin ella no tiene destino. El dashboard de producto puede venir despues |
-| 0.3   | Implementacion minima de `notification-core` (plantillas + cola + API de eventos)                          | La consumen Oraciones, Vida de Misionero, Visita 7 y Lectio Divina                                    |
-| 0.4   | Sistema de Logueo (consolidacion de `@repo/auth` + endpoints)                                              | Evita que Misal/Visita/Lectio reimplementen auth                                                      |
+| Orden | Pieza                                                                                                      | Por que primero                                                                                       | Estado                                                                                                       |
+| ----- | ---------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| 0.1   | Paquete `@repo/analytics` (SDK RUM)                                                                        | Todas las apps lo integran desde el dia 1; sin el, habria que retroceder app por app                  | Hecho (paso 4)                                                                                               |
+| 0.2   | App Log: endpoints `/api/rum`, `/api/rum/vitals` + tablas `rum_events`, `rum_vitals`, `rum_sessions` + RLS | El SDK apunta a esta ingesta; sin ella no tiene destino. El dashboard de producto puede venir despues | Hecho (pasos 2-3, 5)                                                                                         |
+| 0.3   | Implementacion minima de `notification-core` (plantillas + cola + API de eventos)                          | La consumen Oraciones, Vida de Misionero, Visita 7 y Lectio Divina                                    | Hecho: paquete y esquema DB (pasos 6-7); API de eventos en la app Notificaciones queda para iteracion propia |
+| 0.4   | Sistema de Logueo (consolidacion de `@repo/auth` + endpoints)                                              | Evita que Misal/Visita/Lectio reimplementen auth                                                      | Hecho (pasos 1 y 8)                                                                                          |
+
+Pendiente operativo: aplicar las 5 migraciones en staging/produccion,
+asignar roles de plataforma a los usuarios actuales de log y E2E con
+Supabase real (ver plan de Fase 0).
 
 ### Fase 1 - Base de contenido
 
