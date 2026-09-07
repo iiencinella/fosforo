@@ -2,7 +2,7 @@
   "name": "portal",
   "private": true,
   "type": "module",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "engines": {
     "node": "^22.23.1"
   },
