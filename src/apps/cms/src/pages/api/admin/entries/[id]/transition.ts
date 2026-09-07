@@ -2,6 +2,7 @@ import type { APIRoute } from "astro";
 import { jsonError, jsonOk } from "@repo/api-utils";
 import { CMS_APP_SLUG, requireAppPermission } from "@/lib/authz";
 import { createEntriesRepository } from "@/lib/entries-repository";
+import { queuePublishNotifications } from "@/lib/webhooks-dispatch";
 import {
   CMS_003_NOT_IN_REVIEW,
   CMS_REASON_REQUIRED,
@@ -78,6 +79,15 @@ export const POST: APIRoute = async ({ request, params }) => {
       session.user.id,
       role as EditorialRole,
     );
+
+    // FR-CMS-010 / RB-CMS-010: al publicar se disparan (fire-and-forget)
+    // la invalidacion de cache, los webhooks firmados y el evento RUM.
+    if (parsed.data.action === "approve") {
+      queuePublishNotifications({
+        contentTypeSlug: entry.contentTypeSlug,
+        slug: entry.slug,
+      });
+    }
 
     if (isFormData) {
       return new Response(null, {
