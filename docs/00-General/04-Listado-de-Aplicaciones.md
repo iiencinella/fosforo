@@ -62,7 +62,7 @@ Estos modulos no deben pensarse como productos aislados, sino como capacidades b
 <!-- app-status-matrix:start -->
 | App | Fase | Plataforma | Documentada | Implementada | Workspace |
 | --- | --- | --- | --- | --- | --- |
-| Sistema de Logueo | 1 | WEB | Si | No | - |
+| Sistema de Logueo | 1 | WEB | Si | Si | src/apps/logueo |
 | Sistema de Notificaciónes | 2 | WEB | Si | No | - |
 | Sistema de Contenidos (CMS) | 2 | WEB | Si | No | - |
 | Biblia | 1 | WEB | Si | Si | src/apps/biblia |

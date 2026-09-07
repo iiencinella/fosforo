@@ -12,7 +12,7 @@ const PLATFORM_WORKSPACE_DIRS = {
 const APP_CATALOG = [
   {
     name: "Sistema de Logueo",
-    aliases: ["sistema-de-logueo", "auth"],
+    aliases: ["sistema-de-logueo", "logueo", "auth"],
     defaultPhase: "1",
     defaultPlatforms: ["WEB"],
   },

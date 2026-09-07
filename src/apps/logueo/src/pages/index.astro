@@ -1,0 +1,114 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import EcosystemFooter from "@repo/ui/astro/EcosystemFooter.astro";
+import { getAccessTokenFromRequest, getUserProfileById } from "@repo/auth";
+import { listConsents } from "@/lib/consents";
+
+const token = getAccessTokenFromRequest(Astro.request);
+
+let profile: Awaited<ReturnType<typeof getUserProfileById>> | null = null;
+let consents: Awaited<ReturnType<typeof listConsents>> = [];
+
+if (token) {
+  try {
+    profile = await getUserProfileById(token);
+    consents = await listConsents(token);
+  } catch {
+    profile = null;
+  }
+}
+
+const errorParam = Astro.url.searchParams.get("error");
+const noticeParam = Astro.url.searchParams.get("notice");
+---
+
+<BaseLayout title="Mi cuenta · Fosforo Logueo">
+  <SiteHeader />
+
+  <main id="main-content" class="page logueo-main">
+    <section class="logueo-hero">
+      <p class="logueo-hero__kicker">Identidad Fosforo</p>
+      <h1 class="logueo-hero__title">Mi cuenta</h1>
+      <p class="logueo-hero__subtitle">
+        Sesion unica del ecosistema: un login para todas las apps.
+      </p>
+    </section>
+
+    {
+      errorParam && <p class="logueo-error">{errorParam}</p>
+    }
+    {
+      noticeParam && <p class="logueo-notice">{noticeParam}</p>
+    }
+
+    {
+      profile ? (
+        <>
+          <section class="surface-card" aria-label="Datos de la cuenta">
+            <p class="surface-card__label">Datos de la cuenta</p>
+            <p><strong>{profile.name}</strong></p>
+            <p class="surface-card__meta">{profile.email}</p>
+            <p class="surface-card__meta">Rol: {profile.roleSlug}</p>
+          </section>
+
+          <section class="surface-card" aria-label="Consentimientos de comunicacion">
+            <p class="surface-card__label">Consentimientos de comunicacion</p>
+            <p class="surface-card__meta">
+              Las comunicaciones transaccionales (seguridad y confirmaciones) siempre estan activas.
+            </p>
+            <form method="post" action="/api/auth/consents" class="consent-list">
+              {
+                consents.map((consent) => (
+                  <div class="consent-row">
+                    <div>
+                      <p>{consent.category}</p>
+                      <p class="consent-row__meta">
+                        {consent.optedIn ? "Activado" : "Desactivado"}
+                      </p>
+                    </div>
+                    <label class="consent-row__meta">
+                      <input
+                        type="checkbox"
+                        name={`consent_${consent.category}`}
+                        checked={consent.optedIn}
+                      />
+                      {" "}Autorizar
+                    </label>
+                  </div>
+                ))
+              }
+              <button class="button" type="submit">Guardar consentimientos</button>
+            </form>
+          </section>
+
+          <section class="surface-card" aria-label="Sesiones">
+            <p class="surface-card__label">Sesiones</p>
+            <div class="inline-actions">
+              <form method="post" action="/api/auth/logout">
+                <input type="hidden" name="scope" value="local" />
+                <button class="button secondary" type="submit">Cerrar sesion</button>
+              </form>
+              <form method="post" action="/api/auth/logout">
+                <input type="hidden" name="scope" value="global" />
+                <button class="button" type="submit">
+                  Cerrar sesion en todos los dispositivos
+                </button>
+              </form>
+            </div>
+          </section>
+        </>
+      ) : (
+        <section class="surface-card" aria-label="Sesion no valida">
+          <p class="surface-card__label">Sesion no valida</p>
+          <p class="surface-card__meta">
+            Tu sesion expiro o el perfil no esta disponible.
+          </p>
+          <a class="button" href="/login">Iniciar sesion</a>
+        </section>
+      )
+    }
+  </main>
+
+  <EcosystemFooter leftText="Fosforo · Logueo" rightText="Fase 1 · 2026" />
+</BaseLayout>

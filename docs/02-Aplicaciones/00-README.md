@@ -55,10 +55,10 @@ Notas:
 ## Estado actual de implementación del repo
 
 <!-- app-implementation-status:start -->
-- `src/apps/`: `src/apps/administracion`, `src/apps/biblia`, `src/apps/calendario`, `src/apps/cancionero`, `src/apps/horarios`, `src/apps/log`, `src/apps/portal`, `src/apps/usuario`.
+- `src/apps/`: `src/apps/administracion`, `src/apps/biblia`, `src/apps/calendario`, `src/apps/cancionero`, `src/apps/horarios`, `src/apps/log`, `src/apps/logueo`, `src/apps/portal`, `src/apps/usuario`.
 - `src/mobile/`: sin workspaces implementados actualmente.
 - `src/desktop/`: sin workspaces implementados actualmente.
-- `src/packages/`: paquetes compartidos activos `api-utils`, `auth`, `env`, `eslint-config`, `mobile-auth-client`, `notification-core`, `tailwind-config`, `typescript-config`, `ui`.
+- `src/packages/`: paquetes compartidos activos `analytics`, `api-utils`, `auth`, `env`, `eslint-config`, `mobile-auth-client`, `notification-core`, `tailwind-config`, `typescript-config`, `ui`.
 <!-- app-implementation-status:end -->
 
 Cuando se implemente una app nueva, su workspace debe crearse en `src/<plataforma>/` y mantenerse alineado con su carpeta documental en `docs/02-Aplicaciones/`.
