@@ -13,6 +13,7 @@ related:
   - "[[README|Indice de documentación]]"
   - "[[03-Indice-General|Indice General]]"
   - "[[2026-09-05-auditoria-horarios-migracion|Auditoria Horarios]]"
+  - "[[2026-09-05-plan-desarrollo-fase-0|Plan Desarrollo Fase 0]]"
 ---
 
 # Plan Maestro Fase 2 - Ecosistema Fósforo
