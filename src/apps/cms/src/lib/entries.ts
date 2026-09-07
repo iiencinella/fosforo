@@ -157,6 +157,8 @@ export type EntryListFilters = {
   limit?: number;
   contentTypeSlug?: string;
   status?: EntryStatus;
+  /** Slug de termino de taxonomia (FR-CMS-003). */
+  termSlug?: string;
 };
 
 /**

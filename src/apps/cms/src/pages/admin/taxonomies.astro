@@ -1,0 +1,122 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import DataTable from "@repo/ui/astro/DataTable.astro";
+import FormField from "@repo/ui/astro/FormField.astro";
+import { getAccessTokenFromRequest, getSessionFromRequest } from "@repo/auth";
+import { createTaxonomiesRepository } from "@/lib/taxonomies-repository";
+
+const token = getAccessTokenFromRequest(Astro.request);
+const session = token ? await getSessionFromRequest(Astro.request) : null;
+const role = session?.profile.roleSlug ?? "";
+const isAdmin = role === "admin";
+
+const errorParam = Astro.url.searchParams.get("error");
+const okParam = Astro.url.searchParams.get("ok");
+
+let taxonomies: Awaited<
+  ReturnType<ReturnType<typeof createTaxonomiesRepository>["list"]>
+> = [];
+
+if (isAdmin && token) {
+  try {
+    taxonomies = await createTaxonomiesRepository().list(token);
+  } catch {
+    taxonomies = [];
+  }
+}
+
+const taxonomyRows = taxonomies.map((taxonomy) => ({
+  nombre: taxonomy.name,
+  slug: taxonomy.slug,
+  terminos: taxonomy.terms.map((term) => term.slug).join(", ") || "-",
+}));
+
+const termSelectOptions = taxonomies.map((taxonomy) => ({
+  value: taxonomy.id,
+  label: `${taxonomy.name} (${taxonomy.slug})`,
+}));
+---
+
+<BaseLayout title="Taxonomias · Fosforo CMS">
+  <SiteHeader />
+
+  <main id="main-content" class="page cms-main">
+    <section class="cms-hero">
+      <p class="cms-hero__kicker">Solo administradores</p>
+      <h1 class="cms-hero__title">Taxonomias</h1>
+      <p class="cms-hero__subtitle">
+        Clasifican el contenido por categoria (liturgia, tema, epoca) para
+        filtros del panel y de la API (FR-CMS-003).
+      </p>
+    </section>
+
+    {
+      errorParam && <p class="cms-alert cms-alert--error" role="alert">{errorParam}</p>
+    }
+    {okParam && <p class="cms-alert" role="status">Operacion aplicada: {okParam}</p>}
+
+    {
+      isAdmin ? (
+        <>
+          <section class="surface-card">
+            <p class="surface-card__label">Crear taxonomia</p>
+            <form class="cms-form" method="post" action="/api/admin/taxonomies">
+              <FormField label="Nombre" name="name" required maxlength={120} />
+              <FormField
+                label="Slug"
+                name="slug"
+                required
+                maxlength={100}
+                helpText="Minusculas, numeros y guiones. Inmutable (RB-CMS-008)."
+              />
+              <button class="button" type="submit">Crear taxonomia</button>
+            </form>
+          </section>
+
+          <section class="surface-card">
+            <p class="surface-card__label">Crear termino</p>
+            <form class="cms-form" method="post" action="/api/admin/taxonomies/terms">
+              <label>
+                Taxonomia
+                <select name="taxonomy_id" required>
+                  {termSelectOptions.map((option) => (
+                    <option value={option.value}>{option.label}</option>
+                  ))}
+                </select>
+              </label>
+              <FormField label="Nombre" name="name" required maxlength={120} />
+              <FormField label="Slug" name="slug" required maxlength={100} />
+              <button class="button" type="submit">Crear termino</button>
+            </form>
+            {
+              termSelectOptions.length === 0 && (
+                <p class="cms-hero__subtitle">Crea primero una taxonomia.</p>
+              )
+            }
+          </section>
+
+          <section class="surface-card">
+            <p class="surface-card__label">Taxonomias existentes</p>
+            <DataTable
+              columns={[
+                { key: "nombre", label: "Nombre" },
+                { key: "slug", label: "Slug" },
+                { key: "terminos", label: "Terminos" },
+              ]}
+              rows={taxonomyRows}
+              emptyMessage="Sin taxonomias todavia."
+            />
+          </section>
+        </>
+      ) : (
+        <section class="surface-card">
+          <p class="surface-card__label">Solo administradores</p>
+          <p class="cms-hero__subtitle">
+            La gestion de taxonomias requiere rol admin (RB-CMS-004). Tu rol: {role || "sin rol"}.
+          </p>
+        </section>
+      )
+    }
+  </main>
+</BaseLayout>

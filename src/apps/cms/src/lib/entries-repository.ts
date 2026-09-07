@@ -155,6 +155,26 @@ async function listFromDb(accessToken: string, filters: EntryListFilters) {
   if (filters.status) {
     query = query.eq("status", filters.status);
   }
+  if (filters.termSlug) {
+    // Filtro por termino de taxonomia (FR-CMS-003): ids de entradas que
+    // tienen el termino, luego IN sobre el listado.
+    const { data: termRows, error: termError } = await supabase
+      .from("content_entry_terms")
+      .select("entry_id, content_terms!inner(slug)")
+      .eq("content_terms.slug", filters.termSlug);
+    if (termError) {
+      throw termError;
+    }
+    const ids = ((termRows ?? []) as Array<{ entry_id: string }>).map(
+      (row) => row.entry_id,
+    );
+    if (ids.length === 0) {
+      const page = Math.max(1, filters.page ?? 1);
+      const limit = Math.min(50, Math.max(1, filters.limit ?? 20));
+      return { data: [], total: 0, page, limit };
+    }
+    query = query.in("id", ids);
+  }
 
   const page = Math.max(1, filters.page ?? 1);
   const limit = Math.min(50, Math.max(1, filters.limit ?? 20));
