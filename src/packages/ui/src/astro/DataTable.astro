@@ -1,0 +1,95 @@
+---
+// DataTable — tabla de datos accesible para paneles del ecosistema.
+// Reutilizable: columnas + filas planas + estado vacio integrado
+// (AGENTS.md: las primitivas van en @repo/ui antes que en una app).
+type Column = {
+  key: string;
+  label: string;
+  align?: "left" | "right";
+};
+
+type Props = {
+  columns: Column[];
+  rows: Array<Record<string, unknown>>;
+  caption?: string;
+  emptyMessage?: string;
+};
+
+const { columns, rows, caption, emptyMessage = "Sin datos todavia." } =
+  Astro.props as Props;
+
+const hasRows = rows.length > 0;
+---
+
+<div class="cms-data-table" role="region" aria-label={caption ?? "Tabla de datos"}>
+  <table>
+    {
+      caption && <caption class="visually-hidden">{caption}</caption>
+    }
+    <thead>
+      <tr>
+        {
+          columns.map((column) => (
+            <th scope="col" class:list={[column.align === "right" && "is-right"]}>
+              {column.label}
+            </th>
+          ))
+        }
+      </tr>
+    </thead>
+    <tbody>
+      {
+        hasRows ? (
+          rows.map((row) => (
+            <tr>
+              {columns.map((column) => (
+                <td class:list={[column.align === "right" && "is-right"]}>
+                  {row[column.key] ?? ""}
+                </td>
+              ))}
+            </tr>
+          ))
+        ) : (
+          <tr>
+            <td colspan={columns.length} class="cms-data-table__empty">
+              {emptyMessage}
+            </td>
+          </tr>
+        )
+      }
+    </tbody>
+  </table>
+</div>
+
+<style>
+  .cms-data-table {
+    overflow-x: auto;
+  }
+
+  .cms-data-table table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--text-sm, 0.875rem);
+  }
+
+  .cms-data-table th,
+  .cms-data-table td {
+    padding: var(--spacing-2, 0.5rem) var(--spacing-3, 0.75rem);
+    border-bottom: 1px solid var(--color-line, #e0e0e0);
+    text-align: left;
+  }
+
+  .cms-data-table th {
+    font-weight: 600;
+    color: var(--color-text-muted, #666);
+  }
+
+  .cms-data-table th.is-right,
+  .cms-data-table td.is-right {
+    text-align: right;
+  }
+
+  .cms-data-table__empty {
+    color: var(--color-text-muted, #666);
+  }
+</style>

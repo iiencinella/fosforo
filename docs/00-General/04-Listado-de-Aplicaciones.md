@@ -64,7 +64,7 @@ Estos modulos no deben pensarse como productos aislados, sino como capacidades b
 | --- | --- | --- | --- | --- | --- |
 | Sistema de Logueo | 1 | WEB | Si | Si | src/apps/logueo |
 | Sistema de Notificaciónes | 2 | WEB | Si | No | - |
-| Sistema de Contenidos (CMS) | 2 | WEB | Si | No | - |
+| Sistema de Contenidos (CMS) | 2 | WEB | Si | Si | src/apps/cms |
 | Biblia | 1 | WEB | Si | Si | src/apps/biblia |
 | Calendario Liturgico | 1 | WEB | Si | Si | src/apps/calendario |
 | Fósforo Portal | 1 | WEB | Si | Si | src/apps/portal |
@@ -74,7 +74,7 @@ Estos modulos no deben pensarse como productos aislados, sino como capacidades b
 | Horarios de Misas | 1 | WEB | Si | Si | src/apps/horarios |
 | Espiritualidad diaria | 2 | WEB | No | No | - |
 | Sistema de Notificaciónes | 2 | - | No | No | - |
-| Sistema de Contenidos (CMS) | 2 | - | No | No | - |
+| Sistema de Contenidos (CMS) | 2 | - | No | Si | src/apps/cms |
 | Log | 1 | WEB | Si | Si | src/apps/log |
 | Misal | 2 | WEB | Si | No | - |
 | Oraciones | 2 | WEB | Si | No | - |
