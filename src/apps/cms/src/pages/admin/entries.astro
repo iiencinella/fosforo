@@ -1,0 +1,139 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import DataTable from "@repo/ui/astro/DataTable.astro";
+import { getAccessTokenFromRequest, getSessionFromRequest } from "@repo/auth";
+import { createEntriesRepository } from "@/lib/entries-repository";
+
+const token = getAccessTokenFromRequest(Astro.request);
+const session = token ? await getSessionFromRequest(Astro.request) : null;
+const role = session?.profile.roleSlug ?? "";
+
+const statusParam = Astro.url.searchParams.get("status");
+const typeParam = Astro.url.searchParams.get("content_type");
+const pageParam = Number(Astro.url.searchParams.get("page") ?? 1) || 1;
+const limitParam = Number(Astro.url.searchParams.get("limit") ?? 20) || 20;
+
+const STATUSES = ["draft", "review", "published", "archived"] as const;
+
+let list: Awaited<ReturnType<ReturnType<typeof createEntriesRepository>["list"]>> = {
+  data: [],
+  total: 0,
+  page: 1,
+  limit: limitParam,
+};
+
+if (token) {
+  try {
+    list = await createEntriesRepository().list(token, {
+      page: pageParam,
+      limit: limitParam,
+      contentTypeSlug: typeParam ?? undefined,
+      status: STATUSES.includes((statusParam ?? "") as (typeof STATUSES)[number])
+        ? (statusParam as (typeof STATUSES)[number])
+        : undefined,
+    });
+  } catch {
+    list = { data: [], total: 0, page: pageParam, limit: limitParam };
+  }
+}
+
+const canCreate = role === "editor" || role === "admin";
+
+const statusLabels: Record<string, string> = {
+  draft: "Borrador",
+  review: "En revision",
+  published: "Publicada",
+  archived: "Archivada",
+};
+
+const rows = list.data.map((entry) => ({
+  titulo: String(entry.data.titulo ?? entry.data.title ?? entry.slug),
+  tipo: entry.contentTypeName || entry.contentTypeSlug,
+  estado: statusLabels[entry.status] ?? entry.status,
+  actualizado: entry.updatedAt.slice(0, 16).replace("T", " "),
+}));
+
+const totalPages = Math.max(1, Math.ceil(list.total / list.limit));
+const buildPageHref = (page: number) => {
+  const params = new URLSearchParams();
+  if (statusParam) params.set("status", statusParam);
+  if (typeParam) params.set("content_type", typeParam);
+  params.set("page", String(page));
+  return `/admin/entries?${params.toString()}`;
+};
+---
+
+<BaseLayout title="Entradas · Fosforo CMS">
+  <SiteHeader />
+
+  <main id="main-content" class="page cms-main">
+    <section class="cms-hero">
+      <p class="cms-hero__kicker">Flujo editorial</p>
+      <h1 class="cms-hero__title">Entradas</h1>
+      <p class="cms-hero__subtitle">
+        {list.total} entrada(s) · pagina {list.page} de {totalPages}
+      </p>
+    </section>
+
+    <section class="surface-card">
+      <form class="cms-filters" method="get" action="/admin/entries">
+        <label>
+          Estado
+          <select name="status">
+            <option value="">Todos</option>
+            {STATUSES.map((status) => (
+              <option value={status} selected={statusParam === status}>
+                {statusLabels[status]}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label>
+          Tipo de contenido
+          <input type="text" name="content_type" value={typeParam ?? ""} placeholder="slug (opcional)" />
+        </label>
+        <button class="button secondary" type="submit">Filtrar</button>
+      </form>
+    </section>
+
+    {
+      canCreate && (
+        <div class="inline-actions">
+          <a class="button" href="/admin/entries/new">Nueva entrada</a>
+        </div>
+      )
+    }
+
+    <section class="surface-card">
+      <p class="surface-card__label">Resultados</p>
+      <DataTable
+        columns={[
+          { key: "titulo", label: "Titulo" },
+          { key: "tipo", label: "Tipo" },
+          { key: "estado", label: "Estado" },
+          { key: "actualizado", label: "Actualizado" },
+        ]}
+        rows={rows}
+        emptyMessage="Sin entradas todavia. Crea la primera segun tu rol."
+      />
+    </section>
+
+    {
+      totalPages > 1 && (
+        <div class="inline-actions">
+          {list.page > 1 && (
+            <a class="button secondary" href={buildPageHref(list.page - 1)}>
+              Anterior
+            </a>
+          )}
+          {list.page < totalPages && (
+            <a class="button secondary" href={buildPageHref(list.page + 1)}>
+              Siguiente
+            </a>
+          )}
+        </div>
+      )
+    }
+  </main>
+</BaseLayout>

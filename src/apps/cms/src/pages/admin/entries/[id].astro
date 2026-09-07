@@ -1,0 +1,218 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import DataTable from "@repo/ui/astro/DataTable.astro";
+import FormField from "@repo/ui/astro/FormField.astro";
+import { getAccessTokenFromRequest, getSessionFromRequest } from "@repo/auth";
+import { createEntriesRepository } from "@/lib/entries-repository";
+import {
+  availableActions,
+  type EditorialRole,
+  type EntryAction,
+} from "@/lib/entries";
+
+const token = getAccessTokenFromRequest(Astro.request);
+const session = token ? await getSessionFromRequest(Astro.request) : null;
+const entryId = Astro.params.id;
+
+const actionLabels: Record<EntryAction, string> = {
+  submit: "Enviar a revision",
+  approve: "Publicar",
+  reject: "Rechazar con motivo",
+  archive: "Archivar",
+  restore: "Restaurar a borrador",
+};
+
+const errorParam = Astro.url.searchParams.get("error");
+const okParam = Astro.url.searchParams.get("ok");
+
+const statusLabels: Record<string, string> = {
+  draft: "Borrador",
+  review: "En revision",
+  published: "Publicada",
+  archived: "Archivada",
+};
+
+let entry: Awaited<ReturnType<ReturnType<typeof createEntriesRepository>["getById"]>> =
+  null;
+let revisions: Awaited<
+  ReturnType<ReturnType<typeof createEntriesRepository>["listRevisions"]>
+> = [];
+let role: string = session?.profile.roleSlug ?? "";
+
+if (token && entryId) {
+  try {
+    const repository = createEntriesRepository();
+    entry = await repository.getById(token, entryId);
+    if (entry) {
+      revisions = await repository.listRevisions(token, entryId);
+    }
+  } catch {
+    entry = null;
+  }
+}
+
+const editorialRoles: EditorialRole[] = ["admin", "editor", "revisor"];
+const canEdit =
+  entry !== null && editorialRoles.includes(role as EditorialRole);
+const actions: EntryAction[] =
+  entry && editorialRoles.includes(role as EditorialRole)
+    ? availableActions(entry.status, role as EditorialRole)
+    : [];
+
+const revisionRows = revisions.map((revision) => ({
+  numero: `#${revision.revisionNumber}`,
+  estado: statusLabels[revision.status] ?? revision.status,
+  fecha: revision.createdAt.slice(0, 16).replace("T", " "),
+}));
+
+const dataJson = entry ? JSON.stringify(entry.data, null, 2) : "{}";
+---
+
+<BaseLayout title="Editar entrada · Fosforo CMS">
+  <SiteHeader />
+
+  <main id="main-content" class="page cms-main">
+    {
+      entry ? (
+        <>
+          <section class="cms-hero">
+            <p class="cms-hero__kicker">
+              {entry.contentTypeName || entry.contentTypeSlug} · {statusLabels[entry.status] ?? entry.status}
+            </p>
+            <h1 class="cms-hero__title">{String(entry.data.titulo ?? entry.data.title ?? entry.slug)}</h1>
+            <p class="cms-hero__subtitle">
+              /{entry.contentTypeSlug}/{entry.slug} · actualizada {entry.updatedAt.slice(0, 16).replace("T", " ")}
+            </p>
+          </section>
+
+          {errorParam && <p class="cms-alert cms-alert--error" role="alert">{errorParam}</p>}
+          {okParam && <p class="cms-alert" role="status">Operacion aplicada: {okParam}</p>}
+
+          {canEdit ? (
+            <>
+              <section class="surface-card">
+                <p class="surface-card__label">Contenido (JSON de campos)</p>
+                <form class="cms-form" method="post" action={`/api/admin/entries/${entry.id}`}>
+                  <FormField
+                    label="Data"
+                    name="data"
+                    as="textarea"
+                    required
+                    rows={14}
+                    value={dataJson}
+                  />
+                  <input type="hidden" name="expected_updated_at" value={entry.updatedAt} />
+                  <button class="button" type="submit">Guardar (crea revision)</button>
+                </form>
+                <p class="cms-hero__subtitle">
+                  Si otra persona edito despues de que cargaste la pagina, el guardado se
+                  rechaza con conflicto (ERM-CMS-001).
+                </p>
+              </section>
+
+              <section class="surface-card">
+                <p class="surface-card__label">Acciones del flujo editorial</p>
+                {
+                  actions.length > 0 ? (
+                    <form class="cms-form" method="post" action={`/api/admin/entries/${entry.id}/transition`}>
+                      <label>
+                        Accion
+                        <select name="action">
+                          {actions.map((action) => (
+                            <option value={action}>{actionLabels[action]}</option>
+                          ))}
+                        </select>
+                      </label>
+                      <FormField
+                        label="Motivo (obligatorio para rechazar)"
+                        name="reason"
+                        maxlength={500}
+                      />
+                      <button class="button" type="submit">Aplicar</button>
+                    </form>
+                  ) : (
+                    <p class="cms-hero__subtitle">
+                      No hay acciones disponibles para tu rol en el estado actual.
+                    </p>
+                  )
+                }
+              </section>
+
+              <section class="surface-card">
+                <p class="surface-card__label">Vista previa</p>
+                <div class="inline-actions">
+                  <button class="button secondary" id="cms-preview-button" type="button">
+                    Generar vista previa
+                  </button>
+                </div>
+                <div id="cms-preview" class="cms-preview" aria-live="polite"></div>
+              </section>
+            </>
+          ) : (
+            <section class="surface-card">
+              <p class="surface-card__label">Solo lectura</p>
+              <p class="cms-hero__subtitle">Tu rol ({role || "sin rol"}) no puede editar esta entrada.</p>
+            </section>
+          )}
+
+          <section class="surface-card">
+            <p class="surface-card__label">Historial de revisiones (inmutables)</p>
+            <DataTable
+              columns={[
+                { key: "numero", label: "Revision" },
+                { key: "estado", label: "Estado al guardar" },
+                { key: "fecha", label: "Fecha" },
+              ]}
+              rows={revisionRows}
+              emptyMessage="Sin revisiones registradas."
+            />
+          </section>
+
+          <div class="inline-actions">
+            <a class="button secondary" href="/admin/entries">Volver al listado</a>
+          </div>
+
+          <script>
+            const button = document.getElementById("cms-preview-button");
+            const target = document.getElementById("cms-preview");
+            const textarea = document.querySelector<HTMLTextAreaElement>(
+              'textarea[name="data"]',
+            );
+
+            button?.addEventListener("click", async () => {
+              if (!textarea || !target) return;
+              try {
+                const data = JSON.parse(textarea.value) as Record<string, unknown>;
+                const firstMarkdown = Object.values(data).find(
+                  (value) => typeof value === "string" && value.length > 0,
+                );
+                if (typeof firstMarkdown !== "string") {
+                  target.textContent = "Sin contenido de texto para previsualizar.";
+                  return;
+                }
+                const response = await fetch("/api/admin/preview", {
+                  method: "POST",
+                  headers: { "content-type": "application/json" },
+                  body: JSON.stringify({ markdown: firstMarkdown }),
+                });
+                const json = (await response.json()) as { html?: string; error?: string };
+                target.innerHTML = json.html ?? "";
+                if (json.error) {
+                  target.textContent = `No se pudo generar la vista previa: ${json.error}`;
+                }
+              } catch {
+                target.textContent = "JSON invalido: corrige el contenido antes de previsualizar.";
+              }
+            });
+          </script>
+        </>
+      ) : (
+        <section class="surface-card">
+          <p class="surface-card__label">Entrada no encontrada</p>
+          <a class="button secondary" href="/admin/entries">Volver al listado</a>
+        </section>
+      )
+    }
+  </main>
+</BaseLayout>
