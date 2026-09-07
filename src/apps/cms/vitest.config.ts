@@ -25,6 +25,7 @@ export default defineConfig({
         "src/lib/supabase.ts",
         "src/lib/auth-supabase.ts",
         "src/lib/content-types-repository.ts",
+        "src/lib/entries-repository.ts",
         "**/*.test.ts",
       ],
       thresholds: {

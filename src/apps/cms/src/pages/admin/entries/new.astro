@@ -1,0 +1,95 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import FormField from "@repo/ui/astro/FormField.astro";
+import { getAccessTokenFromRequest, getSessionFromRequest } from "@repo/auth";
+import { createContentTypesRepository } from "@/lib/content-types-repository";
+
+const token = getAccessTokenFromRequest(Astro.request);
+const session = token ? await getSessionFromRequest(Astro.request) : null;
+const role = session?.profile.roleSlug ?? "";
+const canCreate = role === "editor" || role === "admin";
+
+const errorParam = Astro.url.searchParams.get("error");
+
+let contentTypes: Awaited<
+  ReturnType<ReturnType<typeof createContentTypesRepository>["list"]>
+> = [];
+
+if (canCreate && token) {
+  try {
+    contentTypes = await createContentTypesRepository().list(token);
+  } catch {
+    contentTypes = [];
+  }
+}
+---
+
+<BaseLayout title="Nueva entrada · Fosforo CMS">
+  <SiteHeader />
+
+  <main id="main-content" class="page cms-main">
+    <section class="cms-hero">
+      <p class="cms-hero__kicker">Flujo editorial</p>
+      <h1 class="cms-hero__title">Nueva entrada</h1>
+      <p class="cms-hero__subtitle">
+        Se guarda como borrador y luego se envia a revision (FR-CMS-004).
+      </p>
+    </section>
+
+    {
+      errorParam && <p class="cms-alert cms-alert--error" role="alert">{errorParam}</p>
+    }
+
+    {
+      canCreate ? (
+        contentTypes.length > 0 ? (
+          <section class="surface-card">
+            <form class="cms-form" method="post" action="/api/admin/entries">
+              <label>
+                Tipo de contenido
+                <select name="content_type_slug" required>
+                  {contentTypes.map((contentType) => (
+                    <option value={contentType.slug}>
+                      {contentType.name} ({contentType.slug})
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <FormField
+                label="Slug"
+                name="slug"
+                required
+                maxlength={100}
+                helpText="Unico por tipo de contenido (RB-CMS-001)."
+              />
+              <FormField
+                label="Contenido (JSON de campos)"
+                name="data"
+                as="textarea"
+                required
+                rows={12}
+                helpText={'Ejemplo: {"titulo":"Padre Nuestro","cuerpo":"# Padre nuestro..."}'}
+              />
+              <button class="button" type="submit">Crear borrador</button>
+            </form>
+          </section>
+        ) : (
+          <section class="surface-card">
+            <p class="surface-card__label">Sin tipos de contenido</p>
+            <p class="cms-hero__subtitle">
+              Un administrador debe crear primero un content type.
+            </p>
+          </section>
+        )
+      ) : (
+        <section class="surface-card">
+          <p class="surface-card__label">Sin permiso para crear</p>
+          <p class="cms-hero__subtitle">
+            Solo los roles editor y admin crean entradas (RB-CMS-004). Tu rol: {role || "sin rol"}.
+          </p>
+        </section>
+      )
+    }
+  </main>
+</BaseLayout>
