@@ -1,0 +1,77 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+
+const errorMap: Record<string, string> = {
+  register_failed: "No pudimos crear la cuenta. Revisa los datos e intenta de nuevo.",
+  invalid_input: "Datos invalidos. Revisa email, contraseña y nombre.",
+};
+
+const errorParam = Astro.url.searchParams.get("error");
+const noticeParam = Astro.url.searchParams.get("notice");
+const errorMessage = errorParam ? (errorMap[errorParam] ?? errorParam) : null;
+---
+
+<BaseLayout title="Crear cuenta · Fosforo Logueo">
+  <SiteHeader />
+
+  <main id="main-content" class="page logueo-main">
+    <section class="logueo-hero">
+      <p class="logueo-hero__kicker">Identidad Fosforo</p>
+      <h1 class="logueo-hero__title">Crear cuenta</h1>
+      <p class="logueo-hero__subtitle">
+        Accede a Misal, Oraciones, Santopedia y todo el ecosistema con una cuenta.
+      </p>
+    </section>
+
+    {
+      errorMessage && <p class="logueo-error" role="alert">{errorMessage}</p>
+    }
+    {
+      noticeParam === "check_email" && (
+        <p class="logueo-notice" role="status">
+          Cuenta creada. Revisa tu email para confirmar y despues inicia sesion.
+        </p>
+      )
+    }
+
+    <section class="surface-card">
+      <form class="logueo-form" method="post" action="/api/auth/register">
+        <label for="name">Nombre</label>
+        <input
+          id="name"
+          name="name"
+          type="text"
+          autocomplete="name"
+          required
+          minlength="2"
+          maxlength="80"
+        />
+        <label for="email">Email</label>
+        <input
+          id="email"
+          name="email"
+          type="email"
+          autocomplete="email"
+          required
+          maxlength="120"
+        />
+        <label for="password">Contraseña (minimo 8 caracteres)</label>
+        <input
+          id="password"
+          name="password"
+          type="password"
+          autocomplete="new-password"
+          required
+          minlength="8"
+          maxlength="72"
+        />
+        <button class="button" type="submit">Crear cuenta</button>
+      </form>
+    </section>
+
+    <p class="logueo-notice">
+      ¿Ya tenes cuenta? <a href="/login">Iniciar sesion</a>
+    </p>
+  </main>
+</BaseLayout>

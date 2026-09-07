@@ -1,0 +1,77 @@
+---
+import EcosystemFooter from "@repo/ui/astro/EcosystemFooter.astro";
+
+type Props = {
+  title: string;
+  description?: string;
+};
+
+const {
+  title,
+  description = "Identidad y acceso del ecosistema Fosforo.",
+} = Astro.props as Props;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <style>
+      @import "@repo/ui/foundation.css";
+      @import "@repo/ui/portal.css";
+      @import "../styles/logueo.css";
+    </style>
+    <script>
+      import {
+        captureVitals,
+        hasConsent,
+        init,
+        setConsent,
+      } from "@repo/analytics";
+
+      const rumApiUrl = import.meta.env.PUBLIC_RUM_API_URL;
+
+      if (rumApiUrl && typeof window !== "undefined") {
+        init({ appName: "logueo", apiUrl: rumApiUrl });
+        captureVitals();
+
+        const banner = document.getElementById("rum-consent");
+        const accept = document.getElementById("rum-consent-accept");
+        const reject = document.getElementById("rum-consent-reject");
+
+        if (banner && !hasConsent()) {
+          banner.hidden = false;
+          accept?.addEventListener("click", () => {
+            setConsent(true);
+            banner.hidden = true;
+          });
+          reject?.addEventListener("click", () => {
+            setConsent(false);
+            banner.hidden = true;
+          });
+        }
+      }
+    </script>
+  </head>
+  <body class="logueo-app">
+    <a class="skip-link" href="#main-content">Saltar al contenido</a>
+    <div class="app-shell" transition:animate="fade">
+      <slot />
+    </div>
+    <div id="rum-consent" class="rum-consent" hidden>
+      <p>
+        Usamos telemetria anonima para mejorar el ecosistema. Sin datos
+        personales ni seguimiento entre sesiones.
+      </p>
+      <div class="inline-actions">
+        <button id="rum-consent-accept" class="button" type="button">Aceptar</button>
+        <button id="rum-consent-reject" class="button secondary" type="button">Rechazar</button>
+      </div>
+    </div>
+    <EcosystemFooter leftText="Fosforo · Logueo" rightText="Fase 1 · 2026" />
+  </body>
+</html>

@@ -1,0 +1,61 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+
+const errorMap: Record<string, string> = {
+  invalid_credentials: "Email o contraseña invalidos.",
+  register_failed: "No pudimos crear la cuenta. Intenta de nuevo.",
+  logout_failed: "No pudimos cerrar la sesion. Intenta de nuevo.",
+  session_expired: "Tu sesion expiro. Inicia sesion de nuevo.",
+};
+
+const errorParam = Astro.url.searchParams.get("error");
+const errorMessage = errorParam ? (errorMap[errorParam] ?? errorParam) : null;
+---
+
+<BaseLayout title="Iniciar sesion · Fosforo Logueo">
+  <SiteHeader />
+
+  <main id="main-content" class="page logueo-main">
+    <section class="logueo-hero">
+      <p class="logueo-hero__kicker">Identidad Fosforo</p>
+      <h1 class="logueo-hero__title">Iniciar sesion</h1>
+      <p class="logueo-hero__subtitle">
+        Una sola cuenta para todo el ecosistema Fosforo.
+      </p>
+    </section>
+
+    {
+      errorMessage && <p class="logueo-error" role="alert">{errorMessage}</p>
+    }
+
+    <section class="surface-card">
+      <form class="logueo-form" method="post" action="/api/auth/login">
+        <label for="email">Email</label>
+        <input
+          id="email"
+          name="email"
+          type="email"
+          autocomplete="email"
+          required
+          maxlength="120"
+        />
+        <label for="password">Contraseña</label>
+        <input
+          id="password"
+          name="password"
+          type="password"
+          autocomplete="current-password"
+          required
+          minlength="8"
+          maxlength="72"
+        />
+        <button class="button" type="submit">Entrar</button>
+      </form>
+    </section>
+
+    <p class="logueo-notice">
+      ¿No tenes cuenta? <a href="/register">Crear cuenta</a>
+    </p>
+  </main>
+</BaseLayout>

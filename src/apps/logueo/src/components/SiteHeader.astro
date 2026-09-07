@@ -1,0 +1,21 @@
+---
+import { PortalHeader } from "@repo/ui";
+
+const links = [
+  { href: "/", label: "Mi cuenta" },
+  { href: "/login", label: "Login" },
+  { href: "/register", label: "Crear cuenta" },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<PortalHeader
+  title="Fosforo Logueo"
+  links={links}
+  currentPath={currentPath}
+  ctaHref="/"
+  ctaLabel="Mi cuenta"
+  logoAlt="Logo de Fosforo Logueo"
+  client:load
+/>
