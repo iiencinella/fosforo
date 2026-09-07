@@ -17,6 +17,8 @@ describe("role mapping", () => {
       "coordinador",
       "musico",
       "usuario",
+      "editor",
+      "revisor",
     ]);
   });
 
@@ -32,6 +34,17 @@ describe("role mapping", () => {
     );
     expect(ECOSYSTEM_ROLE_HIERARCHY.musico).toBeLessThan(
       ECOSYSTEM_ROLE_HIERARCHY.usuario,
+    );
+    // Roles editoriales del CMS: el revisor autoriza la publicacion, por
+    // lo que queda por encima del editor (menor hierarchy_level).
+    expect(ECOSYSTEM_ROLE_HIERARCHY.sacerdote).toBeLessThan(
+      ECOSYSTEM_ROLE_HIERARCHY.editor,
+    );
+    expect(ECOSYSTEM_ROLE_HIERARCHY.editor).toBeLessThan(
+      ECOSYSTEM_ROLE_HIERARCHY.revisor,
+    );
+    expect(ECOSYSTEM_ROLE_HIERARCHY.revisor).toBeLessThan(
+      ECOSYSTEM_ROLE_HIERARCHY.coordinador,
     );
   });
 
