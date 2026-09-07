@@ -73,8 +73,6 @@ Estos modulos no deben pensarse como productos aislados, sino como capacidades b
 | Motor Liturgico | 2 | WEB | Si | No | - |
 | Horarios de Misas | 1 | WEB | Si | Si | src/apps/horarios |
 | Espiritualidad diaria | 2 | WEB | No | No | - |
-| Sistema de Notificaciónes | 2 | - | No | No | - |
-| Sistema de Contenidos (CMS) | 2 | - | No | Si | src/apps/cms |
 | Log | 1 | WEB | Si | Si | src/apps/log |
 | Misal | 2 | WEB | Si | No | - |
 | Oraciones | 2 | WEB | Si | No | - |
