@@ -8,12 +8,19 @@ type: srs-componente
 area: plataforma
 status: draft
 created: 2026-03-07
-updated: 2026-03-07
+updated: 2026-09-05
 related:
   - "[[README|Indice componentes compartidos]]"
+  - "[[../../02-Aplicaciones/FASE_2-Sistema-de-Notificaciones/WEB/00-README|App Sistema de Notificaciones]]"
 ---
 
 # SRS - Notificaciónes y Plantillas
+
+> Generado con Kimi K3 (Moonshot AI). Owner: Iván Ezequiel Iencinella.
+
+Este SRS es el contrato funcional de la capacidad de notificaciónes. La app `Sistema de Notificaciones` (`docs/02-Aplicaciones/FASE_2-Sistema-de-Notificaciones/WEB/`) lo materializa como servicio del ecosistema.
+
+Estado de implementación (2026-09-05): el paquete `src/packages/notification-core` existe solo como shell vacio (sin código fuente). Toda la lógica de orquestación, plantillas y preferencias queda pendiente de implementación según este SRS y la documentación de la app.
 
 ## 1. Proposito
 

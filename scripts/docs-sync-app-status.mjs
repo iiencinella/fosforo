@@ -11,15 +11,26 @@ const PLATFORM_WORKSPACE_DIRS = {
 
 const APP_CATALOG = [
   {
-    name: "Auth",
-    aliases: ["auth"],
+    name: "Sistema de Logueo",
+    aliases: ["sistema-de-logueo", "auth"],
     defaultPhase: "1",
     defaultPlatforms: ["WEB"],
   },
   {
-    name: "Sistema de Logueo",
-    aliases: ["sistema-de-logueo"],
-    defaultPhase: "1",
+    name: "Sistema de Notificaciónes",
+    aliases: [
+      "sistema-de-notificaciónes",
+      "notificaciónes",
+      "sistema-de-notificaciones",
+      "notificaciones",
+    ],
+    defaultPhase: "2",
+    defaultPlatforms: ["WEB"],
+  },
+  {
+    name: "Sistema de Contenidos (CMS)",
+    aliases: ["sistema-de-contenidos", "cms", "sistema-de-contenidos-cms"],
+    defaultPhase: "2",
     defaultPlatforms: ["WEB"],
   },
   {
