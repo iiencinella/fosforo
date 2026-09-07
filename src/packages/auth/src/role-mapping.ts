@@ -4,6 +4,8 @@ export const ECOSYSTEM_ROLE_SLUGS = [
   "coordinador",
   "musico",
   "usuario",
+  "editor",
+  "revisor",
 ] as const;
 
 export type EcosystemRoleSlug = (typeof ECOSYSTEM_ROLE_SLUGS)[number];
@@ -14,6 +16,8 @@ export const ECOSYSTEM_ROLE_HIERARCHY: Record<EcosystemRoleSlug, number> = {
   coordinador: 40,
   musico: 60,
   usuario: 100,
+  editor: 30,
+  revisor: 31,
 };
 
 export const PLATFORM_ROLE_SLUGS = ["dev", "ops", "product"] as const;
