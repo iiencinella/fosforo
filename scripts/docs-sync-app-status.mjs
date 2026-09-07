@@ -80,16 +80,6 @@ const APP_CATALOG = [
     defaultPlatforms: ["WEB"],
   },
   {
-    name: "Sistema de Notificaciónes",
-    aliases: ["sistema-de-notificaciónes", "notificaciónes"],
-    defaultPhase: "2",
-  },
-  {
-    name: "Sistema de Contenidos (CMS)",
-    aliases: ["sistema-de-contenidos", "cms"],
-    defaultPhase: "2",
-  },
-  {
     name: "Log",
     aliases: ["log"],
     defaultPhase: "1",

@@ -114,10 +114,14 @@ Supabase real (ver plan de Fase 0).
 
 ### Fase 1 - Base de contenido
 
-| Orden | App             | Justificacion                                                                                                 |
-| ----- | --------------- | ------------------------------------------------------------------------------------------------------------- |
-| 1.1   | CMS             | Fuente de verdad de contenido; ninguna app de Fase 2 se alimenta sin el. Es el proyecto mas grande de la fase |
-| 1.2   | Motor Liturgico | Mas acotado (calculo determinista + API). Libera a Misal y Lectio Divina                                      |
+> Estado 2026-09-07: la app 1.1 (CMS) esta COMPLETADA (9 pasos mergeados
+> via PR #59..#68; ver [[../00-General/12-Novedades-2026-09-07-cierre-cms|
+> Novedades cierre CMS]]). La proxima etapa es la 1.2 (Motor Liturgico).
+
+| Orden | App             | Justificacion                                                                                                 | Estado                          |
+| ----- | --------------- | ------------------------------------------------------------------------------------------------------------- | ------------------------------- |
+| 1.1   | CMS             | Fuente de verdad de contenido; ninguna app de Fase 2 se alimenta sin el. Es el proyecto mas grande de la fase | Completada 2026-09-07 (9 pasos) |
+| 1.2   | Motor Liturgico | Mas acotado (calculo determinista + API). Libera a Misal y Lectio Divina                                      | Pendiente                       |
 
 ### Fase 2 - Piloto de migracion
 
