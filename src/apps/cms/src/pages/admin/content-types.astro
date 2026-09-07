@@ -1,0 +1,105 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import DataTable from "@repo/ui/astro/DataTable.astro";
+import FormField from "@repo/ui/astro/FormField.astro";
+import { getAccessTokenFromRequest, getSessionFromRequest } from "@repo/auth";
+import { createContentTypesRepository } from "@/lib/content-types-repository";
+
+const token = getAccessTokenFromRequest(Astro.request);
+const session = token ? await getSessionFromRequest(Astro.request) : null;
+const role = session?.profile.roleSlug ?? "";
+const isAdmin = role === "admin";
+
+const errorParam = Astro.url.searchParams.get("error");
+const okParam = Astro.url.searchParams.get("ok");
+
+let contentTypes: Awaited<ReturnType<
+  ReturnType<typeof createContentTypesRepository>["list"]
+>> = [];
+
+if (isAdmin && token) {
+  try {
+    contentTypes = await createContentTypesRepository().list(token);
+  } catch {
+    contentTypes = [];
+  }
+}
+
+const rows = contentTypes.map((contentType) => ({
+  nombre: contentType.name,
+  slug: contentType.slug,
+  campos: String(contentType.fields.length),
+  actualizado: contentType.updatedAt.slice(0, 10),
+}));
+---
+
+<BaseLayout title="Tipos de contenido · Fosforo CMS">
+  <SiteHeader />
+
+  <main id="main-content" class="page cms-main">
+    <section class="cms-hero">
+      <p class="cms-hero__kicker">Solo administradores</p>
+      <h1 class="cms-hero__title">Tipos de contenido</h1>
+      <p class="cms-hero__subtitle">
+        Definen la estructura de campos de cada familia de contenido (FR-CMS-001).
+      </p>
+    </section>
+
+    {
+      errorParam && <p class="cms-alert cms-alert--error" role="alert">{errorParam}</p>
+    }
+    {okParam && <p class="cms-alert" role="status">Content type creado: {okParam}</p>}
+
+    {
+      isAdmin ? (
+        <>
+          <section class="surface-card">
+            <p class="surface-card__label">Crear content type</p>
+            <form class="logueo-form cms-form" method="post" action="/api/admin/content-types">
+              <FormField label="Nombre" name="name" required maxlength={120} autocomplete="off" />
+              <FormField
+                label="Slug"
+                name="slug"
+                required
+                maxlength={100}
+                helpText="Minusculas, numeros y guiones. Inmutable despues de crear (RB-CMS-008)."
+              />
+              <FormField
+                label="Campos (JSON)"
+                name="fields"
+                as="textarea"
+                required
+                rows={10}
+                helpText={'Ejemplo: [{"name":"cuerpo","label":"Cuerpo","type":"markdown","required":true}]'}
+              />
+              <button class="button" type="submit">Crear content type</button>
+            </form>
+          </section>
+
+          <section class="surface-card">
+            <p class="surface-card__label">Content types existentes</p>
+            <DataTable
+              columns={[
+                { key: "nombre", label: "Nombre" },
+                { key: "slug", label: "Slug" },
+                { key: "campos", label: "Campos", align: "right" },
+                { key: "actualizado", label: "Actualizado" },
+              ]}
+              rows={rows}
+              emptyMessage="Sin content types todavia. Crea el primero con el formulario de arriba."
+            />
+          </section>
+        </>
+      ) : (
+        <section class="surface-card">
+          <p class="surface-card__label">Solo administradores</p>
+          <p class="cms-hero__subtitle">
+            La gestion de tipos de contenido y taxonomias requiere rol admin
+            (RB-CMS-004). Tu rol actual: {role || "sin rol"}.
+          </p>
+        </section>
+      )
+    }
+  </main>
+</BaseLayout>
