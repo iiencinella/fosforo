@@ -18,6 +18,7 @@
   "dependencies": {
     "@astrojs/react": "catalog:",
     "@astrojs/vercel": "catalog:",
+    "@repo/auth": "workspace:*",
     "@repo/env": "workspace:*",
     "@repo/api-utils": "workspace:*",
     "@repo/ui": "workspace:*",

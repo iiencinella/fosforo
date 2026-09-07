@@ -107,6 +107,33 @@ describe("requireRole / requireSession", () => {
     expect(session.role).toBe("ops");
   });
 
+  it("permite el rol product cuando se solicita explicitamente", async () => {
+    getSessionFromTokenMock.mockResolvedValue({
+      user: { id: "u1" },
+      role: "product",
+    });
+    const request = new Request("http://localhost/dashboard-producto", {
+      headers: { authorization: "Bearer token" },
+    });
+
+    const session = await requireRole(request, ["dev", "ops", "product"]);
+    expect(session.role).toBe("product");
+  });
+
+  it("niega el rol product para rutas restringidas a dev/ops", async () => {
+    getSessionFromTokenMock.mockResolvedValue({
+      user: { id: "u1" },
+      role: "product",
+    });
+    const request = new Request("http://localhost/dashboard", {
+      headers: { authorization: "Bearer token" },
+    });
+
+    await expect(requireRole(request, ["ops"])).rejects.toThrow(
+      "LOG_ACCESS_DENIED",
+    );
+  });
+
   it("requires a session token", async () => {
     const request = new Request("http://localhost/logs");
 

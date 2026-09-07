@@ -8,9 +8,10 @@ import HourlyChart from "@/components/dashboard/HourlyChart.astro";
 import { getAccessTokenFromRequest } from "@/lib/auth";
 import { getSessionFromToken } from "@/lib/auth-supabase";
 import { createLogRepository } from "@/lib/log-repository";
+import type { UserRole } from "@/lib/auth-supabase";
 
 const token = getAccessTokenFromRequest(Astro.request);
-let role: "dev" | "ops" | null = null;
+let role: UserRole = null;
 
 if (token) {
   try {

@@ -3,7 +3,10 @@ import {
   canPerformForAppRole,
   ECOSYSTEM_ROLE_HIERARCHY,
   ECOSYSTEM_ROLE_SLUGS,
+  isPlatformRoleSlug,
   mapRoleSlugToAppRole,
+  PLATFORM_ROLE_HIERARCHY,
+  PLATFORM_ROLE_SLUGS,
 } from "./role-mapping.js";
 
 describe("role mapping", () => {
@@ -97,5 +100,34 @@ describe("role mapping", () => {
       musico: "musico",
     };
     expect(mapRoleSlugToAppRole("sacerdote", cancioneroMap)).toBe("invitado");
+  });
+});
+
+describe("roles de plataforma", () => {
+  it("enumera los roles de plataforma", () => {
+    expect(PLATFORM_ROLE_SLUGS).toEqual(["dev", "ops", "product"]);
+  });
+
+  it("define jerarquia de plataforma debajo de admin", () => {
+    expect(PLATFORM_ROLE_HIERARCHY.dev).toBeLessThan(
+      PLATFORM_ROLE_HIERARCHY.ops,
+    );
+    expect(PLATFORM_ROLE_HIERARCHY.ops).toBeLessThan(
+      PLATFORM_ROLE_HIERARCHY.product,
+    );
+    expect(PLATFORM_ROLE_HIERARCHY.dev).toBeGreaterThan(
+      ECOSYSTEM_ROLE_HIERARCHY.admin,
+    );
+  });
+
+  it("isPlatformRoleSlug acepta solo slugs de plataforma", () => {
+    expect(isPlatformRoleSlug("dev")).toBe(true);
+    expect(isPlatformRoleSlug("ops")).toBe(true);
+    expect(isPlatformRoleSlug("product")).toBe(true);
+    expect(isPlatformRoleSlug("admin")).toBe(false);
+    expect(isPlatformRoleSlug("usuario")).toBe(false);
+    expect(isPlatformRoleSlug("desconocido")).toBe(false);
+    expect(isPlatformRoleSlug(null)).toBe(false);
+    expect(isPlatformRoleSlug(undefined)).toBe(false);
   });
 });

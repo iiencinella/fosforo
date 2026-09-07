@@ -28,11 +28,15 @@ export type {
 export {
   ECOSYSTEM_ROLE_SLUGS,
   ECOSYSTEM_ROLE_HIERARCHY,
+  PLATFORM_ROLE_SLUGS,
+  PLATFORM_ROLE_HIERARCHY,
+  isPlatformRoleSlug,
   mapRoleSlugToAppRole,
   canPerformForAppRole,
 } from "./role-mapping.js";
 export type {
   EcosystemRoleSlug,
+  PlatformRoleSlug,
   RoleMap,
   AppRole,
   AppRoleHierarchy,
