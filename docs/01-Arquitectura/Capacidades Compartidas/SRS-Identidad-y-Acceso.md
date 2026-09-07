@@ -8,13 +8,18 @@ type: srs-componente
 area: plataforma
 status: draft
 created: 2026-03-07
-updated: 2026-03-07
+updated: 2026-09-05
 related:
   - "[[README|Indice componentes compartidos]]"
   - "[[../../00-General/06-PRD Maestro|PRD Maestro]]"
+  - "[[../../02-Aplicaciones/FASE_1-Sistema-de-Logueo/WEB/00-README|App Sistema de Logueo]]"
 ---
 
 # SRS - Identidad y Acceso
+
+> Generado con Kimi K3 (Moonshot AI). Owner: Iván Ezequiel Iencinella.
+
+Este SRS es el contrato funcional de la capacidad de identidad. La app `Sistema de Logueo` (`docs/02-Aplicaciones/FASE_1-Sistema-de-Logueo/WEB/`) lo materializa como aplicación; ambos documentos deben mantenerse sincronizados.
 
 ## 1. Proposito
 

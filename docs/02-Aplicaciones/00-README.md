@@ -38,7 +38,17 @@ Notas:
 | 1 | Horarios de Misas | WEB | [./FASE_1-0106_horarios/WEB/](./FASE_1-0106_horarios/WEB/) |
 | 1 | Log | WEB | [./FASE_1-0105_log/WEB/](./FASE_1-0105_log/WEB/) |
 | 1 | Fósforo Portal | WEB | [./FASE_1-0101_portal/WEB/](./FASE_1-0101_portal/WEB/) |
+| 1 | Sistema de Logueo | WEB | [./FASE_1-Sistema-de-Logueo/WEB/](./FASE_1-Sistema-de-Logueo/WEB/) |
 | 1 | Gestion de Usuarios | WEB | [./FASE_1-0104_usuarios/WEB/](./FASE_1-0104_usuarios/WEB/) |
+| 2 | Lectio Divina | WEB | [./FASE_2-Lectio-Divina/WEB/](./FASE_2-Lectio-Divina/WEB/) |
+| 2 | Misal | WEB | [./FASE_2-Misal/WEB/](./FASE_2-Misal/WEB/) |
+| 2 | Motor Liturgico | WEB | [./FASE_2-Motor-Liturgico/WEB/](./FASE_2-Motor-Liturgico/WEB/) |
+| 2 | Oraciones | WEB | [./FASE_2-Oraciones/WEB/](./FASE_2-Oraciones/WEB/) |
+| 2 | Santopedia | WEB | [./FASE_2-Santopedia/WEB/](./FASE_2-Santopedia/WEB/) |
+| 2 | Sistema de Contenidos (CMS) | WEB | [./FASE_2-Sistema-de-Contenidos-CMS/WEB/](./FASE_2-Sistema-de-Contenidos-CMS/WEB/) |
+| 2 | Sistema de Notificaciónes | WEB | [./FASE_2-Sistema-de-Notificaciones/WEB/](./FASE_2-Sistema-de-Notificaciones/WEB/) |
+| 2 | Vida de Misionero | WEB | [./FASE_2-Vida-de-Misionero/WEB/](./FASE_2-Vida-de-Misionero/WEB/) |
+| 2 | Visita 7 Iglesias | WEB | [./FASE_2-Visita-7-Iglesias/WEB/](./FASE_2-Visita-7-Iglesias/WEB/) |
 | 4 | Cancionero | WEB | [./FASE_4-0401_cancionero/WEB/](./FASE_4-0401_cancionero/WEB/) |
 <!-- apps-generated-table:end -->
 

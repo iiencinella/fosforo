@@ -32,7 +32,17 @@ Este documento funciona como inventario maestro del ecosistema.
 - [Horarios de Misas](../02-Aplicaciones/FASE_1-0106_horarios/WEB/00-README.md)
 - [Log](../02-Aplicaciones/FASE_1-0105_log/WEB/00-README.md)
 - [Fósforo Portal](../02-Aplicaciones/FASE_1-0101_portal/WEB/00-README.md)
+- [Sistema de Logueo](../02-Aplicaciones/FASE_1-Sistema-de-Logueo/WEB/00-README.md)
 - [Gestion de Usuarios](../02-Aplicaciones/FASE_1-0104_usuarios/WEB/00-README.md)
+- [Lectio Divina](../02-Aplicaciones/FASE_2-Lectio-Divina/WEB/00-README.md)
+- [Misal](../02-Aplicaciones/FASE_2-Misal/WEB/00-README.md)
+- [Motor Liturgico](../02-Aplicaciones/FASE_2-Motor-Liturgico/WEB/00-README.md)
+- [Oraciones](../02-Aplicaciones/FASE_2-Oraciones/WEB/00-README.md)
+- [Santopedia](../02-Aplicaciones/FASE_2-Santopedia/WEB/00-README.md)
+- [Sistema de Contenidos (CMS)](../02-Aplicaciones/FASE_2-Sistema-de-Contenidos-CMS/WEB/00-README.md)
+- [Sistema de Notificaciónes](../02-Aplicaciones/FASE_2-Sistema-de-Notificaciones/WEB/00-README.md)
+- [Vida de Misionero](../02-Aplicaciones/FASE_2-Vida-de-Misionero/WEB/00-README.md)
+- [Visita 7 Iglesias](../02-Aplicaciones/FASE_2-Visita-7-Iglesias/WEB/00-README.md)
 - [Cancionero](../02-Aplicaciones/FASE_4-0401_cancionero/WEB/00-README.md)
 <!-- apps-docs-list:end -->
 
@@ -52,25 +62,26 @@ Estos modulos no deben pensarse como productos aislados, sino como capacidades b
 <!-- app-status-matrix:start -->
 | App | Fase | Plataforma | Documentada | Implementada | Workspace |
 | --- | --- | --- | --- | --- | --- |
-| Auth | 1 | WEB | No | No | - |
-| Sistema de Logueo | 1 | WEB | No | No | - |
+| Sistema de Logueo | 1 | WEB | Si | No | - |
+| Sistema de Notificaciónes | 2 | WEB | Si | No | - |
+| Sistema de Contenidos (CMS) | 2 | WEB | Si | No | - |
 | Biblia | 1 | WEB | Si | Si | src/apps/biblia |
 | Calendario Liturgico | 1 | WEB | Si | Si | src/apps/calendario |
 | Fósforo Portal | 1 | WEB | Si | Si | src/apps/portal |
 | Panel de Administración | 1 | WEB | Si | Si | src/apps/administracion |
 | Gestion de Usuarios | 1 | WEB | Si | Si | src/apps/usuario |
-| Motor Liturgico | 2 | - | No | No | - |
+| Motor Liturgico | 2 | WEB | Si | No | - |
 | Horarios de Misas | 1 | WEB | Si | Si | src/apps/horarios |
 | Espiritualidad diaria | 2 | WEB | No | No | - |
 | Sistema de Notificaciónes | 2 | - | No | No | - |
 | Sistema de Contenidos (CMS) | 2 | - | No | No | - |
 | Log | 1 | WEB | Si | Si | src/apps/log |
-| Misal | 2 | WEB | No | No | - |
-| Oraciones | 2 | WEB | No | No | - |
-| Santopedia | 2 | WEB | No | No | - |
-| Vida de Misionero | 2 | WEB | No | No | - |
-| Visita 7 Iglesias | 2 | WEB | No | No | - |
-| Lectio Divina | - | - | No | No | - |
+| Misal | 2 | WEB | Si | No | - |
+| Oraciones | 2 | WEB | Si | No | - |
+| Santopedia | 2 | WEB | Si | No | - |
+| Vida de Misionero | 2 | WEB | Si | No | - |
+| Visita 7 Iglesias | 2 | WEB | Si | No | - |
+| Lectio Divina | 2 | WEB | Si | No | - |
 | Meditvoz | 5 | - | No | No | - |
 | Agenda Comunitaria | 3 | - | No | No | - |
 | Carisma | 3 | - | No | No | - |
