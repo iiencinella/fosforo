@@ -6,11 +6,12 @@ import AccessDeniedCard from "@/components/AccessDeniedCard.astro";
 import AlertBanner from "@/components/AlertBanner.astro";
 import { getAccessTokenFromRequest } from "@/lib/auth";
 import { getSessionFromToken } from "@/lib/auth-supabase";
+import type { UserRole } from "@/lib/auth-supabase";
 import { createLogRepository } from "@/lib/log-repository";
 import { type LogLevel, type LogEntry } from "@/lib/log-data";
 
 const token = getAccessTokenFromRequest(Astro.request);
-let role: "dev" | "ops" | null = null;
+let role: UserRole = null;
 
 if (token) {
   try {

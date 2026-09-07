@@ -1,5 +1,6 @@
 import { getAccessTokenFromRequest } from "@/lib/auth";
 import { getSessionFromToken } from "@/lib/auth-supabase";
+import type { PlatformRoleSlug } from "@repo/auth";
 
 export async function requireSession(request: Request) {
   const token = getAccessTokenFromRequest(request);
@@ -17,7 +18,7 @@ export async function requireSession(request: Request) {
 
 export async function requireRole(
   request: Request,
-  allowed: Array<"dev" | "ops">,
+  allowed: readonly PlatformRoleSlug[],
 ) {
   const session = await requireSession(request);
   if (!session.role || !allowed.includes(session.role)) {

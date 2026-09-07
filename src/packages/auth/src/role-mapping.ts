@@ -16,6 +16,25 @@ export const ECOSYSTEM_ROLE_HIERARCHY: Record<EcosystemRoleSlug, number> = {
   usuario: 100,
 };
 
+export const PLATFORM_ROLE_SLUGS = ["dev", "ops", "product"] as const;
+
+export type PlatformRoleSlug = (typeof PLATFORM_ROLE_SLUGS)[number];
+
+export const PLATFORM_ROLE_HIERARCHY: Record<PlatformRoleSlug, number> = {
+  dev: 2,
+  ops: 3,
+  product: 4,
+};
+
+export function isPlatformRoleSlug(
+  value: string | null | undefined,
+): value is PlatformRoleSlug {
+  return (
+    typeof value === "string" &&
+    (PLATFORM_ROLE_SLUGS as readonly string[]).includes(value)
+  );
+}
+
 export type RoleMap = Partial<Record<EcosystemRoleSlug, string>>;
 
 export type AppRole = string;
