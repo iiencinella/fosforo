@@ -188,6 +188,20 @@ La convencion oficial del repositorio es usar `AGENTS.md`.
 
 Toda rama se crea desde `main` con el formato `<tipo>/<descripcion-kebab-case>`, espejando el tipo del conventional commit que la rama va a producir.
 
+### Flujo del agente al crear una rama
+
+Antes de crear cualquier rama, el agente debe seguir este orden:
+
+1. **Sincronizar la rama principal**: correr `git fetch origin` y verificar que la copia local de `main` esté al día con `origin/main` (por ejemplo con `git rev-list --left-right --count main...origin/main` o `git status -sb`). Si está desactualizada, actualizarla con `git pull --ff-only origin main`, o con `git fetch origin main:main` cuando `main` no esté chequeada. Nunca usar `--force` ni descartar cambios ajenos.
+2. **Analizar el pedido del usuario**: identificar alcance, archivos afectados y tipo de cambio (`feat`, `fix`, `docs`, etc.) antes de escribir código.
+3. **Crear la rama nueva** desde `main` actualizada, con la nomenclatura `<tipo>/<descripcion-kebab-case>` de la tabla y las reglas de abajo.
+4. **Aplicar los cambios pedidos** en la rama nueva, respetando la documentación vigente, el design system compartido y las skills correspondientes.
+
+Guardas del flujo:
+
+- Si el árbol de trabajo tiene cambios sin commitear ajenos al pedido, no descartarlos ni pisarlos: avisar al usuario y preguntar antes de continuar.
+- No commitear archivos que no correspondan al cambio solicitado.
+
 | Tipo        | Uso                                                  | Ejemplo                            |
 | ----------- | ---------------------------------------------------- | ---------------------------------- |
 | `feat/`     | Nueva funcionalidad                                  | `feat/log-mvp-completacion`        |
