@@ -60,10 +60,15 @@ El CMS expone una API REST y un panel de administración para gestionar tipos de
   + cache doble capa, medios en Storage (`cms-media`), busqueda por texto y taxonomia, y
   webhooks firmados HMAC-SHA256 de publicacion. Validaciones: 147 tests unitarios
   (15 suites) y builds completos en cada paso.
-- **En curso:** Cierre operativo: aplicar las 5 migraciones del CMS
-  (`20260907000001..000005`) en la base, configurar env vars de deploy
-  (`PUBLIC_LOGUEO_URL`, `PUBLIC_RUM_API_URL`, `CMS_CACHE_TTL_SECONDS`), sembrar la primera
-  API key y ejecutar la verificacion E2E del flujo editorial.
+- **Completado (cierre operativo 2026-11-15):** las migraciones `20260906000001`
+  (prerrequisito RBAC) y `20260907000001..000005` (CMS) aplicadas en produccion y
+  registradas en el historial via `migration repair`; verificacion de policies, grants,
+  bucket `cms-media` e inmutabilidad de `content_audit_log`; primera API key sembrada en
+  `content_api_keys` (ver
+  [Novedades del cierre operativo](../../../00-General/12-Novedades-2026-11-15-cierre-operativo-cms.md)).
+- **En curso:** Configurar env vars en Vercel (`SUPABASE_URL`, `SUPABASE_ANON_KEY`,
+  `PUBLIC_LOGUEO_URL`, `PUBLIC_RUM_API_URL` y opcional `CMS_CACHE_TTL_SECONDS`) y
+  verificacion E2E HTTP del flujo editorial post-deploy.
 - **Pendiente:** Incrementos post-MVP: panel de gestion de API keys, editor visual de
   content types (hoy JSON textarea) y correccion documental de retencion por cohorte en la
   app Log (ADR-LOG-RUM-004).
