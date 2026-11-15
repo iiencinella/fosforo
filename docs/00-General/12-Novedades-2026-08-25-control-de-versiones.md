@@ -9,6 +9,7 @@ area: general
 status: vigente
 version: -
 created: 2026-08-25
+updated: 2026-08-25
 related:
   - "[[17-Control-de-Versiones-y-Releases|Control de Versiones y Releases]]"
 ---

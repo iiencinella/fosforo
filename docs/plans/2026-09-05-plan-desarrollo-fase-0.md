@@ -6,7 +6,7 @@ tags:
   - fase-0
 type: plan-desarrollo
 area: general
-status: completado
+status: archivado
 created: 2026-09-05
 updated: 2026-09-07
 related:

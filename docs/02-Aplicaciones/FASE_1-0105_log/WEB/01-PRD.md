@@ -156,4 +156,4 @@ Proporcionar visibilidad de rendimiento percibido (Web Vitals) y comportamiento 
 
 - SRS derivado: [02-SRS.md](02-SRS.md)
 - FRD derivado: [03-FRD.md](03-FRD.md)
-- SRS transversal de Observabilidad: [SRS-Observabilidad-y-Auditoria](../../01-Arquitectura/Capacidades%20Compartidas/SRS-Observabilidad-y-Auditoria.md)
+- SRS transversal de Observabilidad: [SRS-Observabilidad-y-Auditoria](../../../01-Arquitectura/Capacidades%20Compartidas/SRS-Observabilidad-y-Auditoria.md)

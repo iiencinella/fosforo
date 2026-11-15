@@ -8,11 +8,12 @@ type: app-changelog
 area: aplicaciónes
 status: vigente
 created: 2026-08-14
+updated: 2026-08-14
 related:
   - "[[00-README|0103 Calendario]]"
 ---
 
-# Novedas - 2026-08-14 (Widget)
+# Novedades - 2026-08-14 (Widget)
 
 ## Widget embebible de jornada del día
 

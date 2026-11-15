@@ -6,7 +6,7 @@ tags:
   - componente-compartido
 type: plantilla-srs
 area: plataforma
-status: active
+status: vigente
 created: 2026-03-07
 updated: 2026-03-07
 related:

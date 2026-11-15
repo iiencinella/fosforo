@@ -102,6 +102,6 @@ Registro de riesgos operativos, técnicos y de contenido de Santopedia (fase WEB
 ## 4. Continuidad y backups
 
 - **Contenido:** vive en el CMS; sus backups y RPO son responsabilidad del CMS (no de esta app). Santopedia no retiene copias de contenido.
-- **Datos de usuario (`santopedia.favorites`, `santopedia.reports`):** backup diario gestionado por Supabase; RPO 24h; restauración puntual documentada en [db/README.md](../../../db/README.md).
+- **Datos de usuario (`santopedia.favorites`, `santopedia.reports`):** backup diario gestionado por Supabase; RPO 24h; restauración puntual documentada en [db/README.md](../../../../db/README.md).
 - **RTO 4h:** ante caída total, el servicio se considera restaurado si las fichas sirven desde cache en modo degradado y la escritura de favoritos se re-habilita.
 - **Revisión del registro:** trimestral o tras cualquier incidente (post-mortem actualiza este documento).

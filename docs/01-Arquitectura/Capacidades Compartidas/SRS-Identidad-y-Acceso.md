@@ -11,7 +11,7 @@ created: 2026-03-07
 updated: 2026-09-05
 related:
   - "[[README|Indice componentes compartidos]]"
-  - "[[../../00-General/06-PRD Maestro|PRD Maestro]]"
+  - "[[../../00-General/06-PRD-Maestro|PRD Maestro]]"
   - "[[../../02-Aplicaciones/FASE_1-Sistema-de-Logueo/WEB/00-README|App Sistema de Logueo]]"
 ---
 
