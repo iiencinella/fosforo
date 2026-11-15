@@ -6,12 +6,13 @@ tags:
   - contenidos
 type: app-readme
 area: aplicaciones
-status: draft
+status: vigente
 created: 2026-09-05
-updated: 2026-09-05
+updated: 2026-09-07
 related:
   - "[[../00-README|Indice de aplicaciones]]"
   - "[[../../01-Arquitectura/Capacidades Compartidas/SRS-Datos-y-Taxonomias-Compartidas|SRS Datos y Taxonomias]]"
+  - "[[../../../00-General/12-Novedades-2026-09-07-cierre-cms|Novedades cierre CMS]]"
 ---
 
 # Sistema de Contenidos (CMS)
@@ -21,12 +22,12 @@ related:
 ## Metadatos
 
 - Plataforma: WEB
-- Estado: draft
+- Estado: vigente
 - Owner producto: Iván Ezequiel Iencinella
 - Owner tecnico: Iván Ezequiel Iencinella
 - QA owner: Iván Ezequiel Iencinella
 - Seguridad owner: Iván Ezequiel Iencinella
-- Fecha ultima actualización: 2026-09-05
+- Fecha ultima actualización: 2026-09-07
 
 ## Descripcion
 
@@ -49,13 +50,32 @@ El CMS expone una API REST y un panel de administración para gestionar tipos de
 
 ## Estado de implementación
 
-- **Completado:** Sin implementación. Documentación draft generada en 2026-09-05.
-- **En curso:** Ninguno.
-- **Pendiente:** Implementación completa del MVP.
+- **Completado:** MVP completo de la app CMS, cerrado el 2026-09-07 en 9 pasos
+  (PRs #59–#68; ver [Novedades del cierre](../../../00-General/12-Novedades-2026-09-07-cierre-cms.md)).
+  Incluye: roles editoriales (`editor`, `revisor`) en el RBAC compartido, esquema con las 8
+  tablas del contrato y RLS por rol con las transiciones de estado aplicadas en DB, panel
+  Astro SSR con auth delegada en logueo y RUM dia 1, content types con validacion Zod
+  estricta del jsonb `data`, entradas con revisiones inmutables y flujo editorial con
+  locking optimista, taxonomias y terminos, API de lectura publica con API key + rate limit
+  + cache doble capa, medios en Storage (`cms-media`), busqueda por texto y taxonomia, y
+  webhooks firmados HMAC-SHA256 de publicacion. Validaciones: 147 tests unitarios
+  (15 suites) y builds completos en cada paso.
+- **Completado (cierre operativo 2026-11-15):** las migraciones `20260906000001`
+  (prerrequisito RBAC) y `20260907000001..000005` (CMS) aplicadas en produccion y
+  registradas en el historial via `migration repair`; verificacion de policies, grants,
+  bucket `cms-media` e inmutabilidad de `content_audit_log`; primera API key sembrada en
+  `content_api_keys` (ver
+  [Novedades del cierre operativo](../../../00-General/12-Novedades-2026-11-15-cierre-operativo-cms.md)).
+- **En curso:** Configurar env vars en Vercel (`SUPABASE_URL`, `SUPABASE_ANON_KEY`,
+  `PUBLIC_LOGUEO_URL`, `PUBLIC_RUM_API_URL` y opcional `CMS_CACHE_TTL_SECONDS`) y
+  verificacion E2E HTTP del flujo editorial post-deploy.
+- **Pendiente:** Incrementos post-MVP: panel de gestion de API keys, editor visual de
+  content types (hoy JSON textarea) y correccion documental de retencion por cohorte en la
+  app Log (ADR-LOG-RUM-004).
 
 ## Ubicación del codigo
 
-- App: `src/apps/cms/` (a crear)
+- App: `src/apps/cms/`
 - Componentes: `src/apps/cms/src/components/`
 - Estilos: `src/apps/cms/src/styles/` + `src/packages/tailwind-config/` + `src/packages/ui/`
 - API: `src/apps/cms/src/pages/api/`

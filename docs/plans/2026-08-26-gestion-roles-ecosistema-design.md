@@ -1,3 +1,18 @@
+---
+tags:
+  - proyecto/fosforo
+  - plan
+  - administracion
+  - roles
+type: plan-implementacion
+area: general
+status: archivado
+created: 2026-08-26
+updated: 2026-08-26
+related:
+  - "[[../02-Aplicaciones/FASE_1-0107_administracion/WEB/00-README|Administracion]]"
+---
+
 # Plan de implementación: Gestión de roles del ecosistema en Administración
 
 ## Objetivo

@@ -44,7 +44,6 @@ _build
 .astro/
 **/.astro/
 
-
 # local logs and smoke-test output
 *.log
 *-smoke.err.log

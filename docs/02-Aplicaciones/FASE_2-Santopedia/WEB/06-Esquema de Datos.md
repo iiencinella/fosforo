@@ -143,6 +143,6 @@ erDiagram
 
 ## 5. Migraciones y entorno
 
-- Migraciones SQL versionadas en `db/scripts/` siguiendo [db/README.md](../../../db/README.md), con el esquema `santopedia` como unidad.
+- Migraciones SQL versionadas en `db/scripts/` siguiendo [db/README.md](../../../../db/README.md), con el esquema `santopedia` como unidad.
 - RLS habilitado obligatoriamente en ambas tablas; un despliegue sin RLS activo debe fallar el pipeline.
 - Sin datos semilla de contenido de santos en Postgres: el contenido es del CMS.

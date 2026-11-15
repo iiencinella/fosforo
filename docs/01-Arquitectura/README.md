@@ -22,7 +22,7 @@ related:
 - [Arquitectura General](Arquitectura%20General.md)
 - [Stack Tecnologico](Stack%20Tecnologico.md)
 - [Estructura Monorepo](Estructura%20Monorepo.md)
-- [Plan Unificación Estilos Globales](Plan-Unificación-Estilos-Globales.md)
+- [Plan Unificación Estilos Globales](Plan-Unificacion-Estilos-Globales.md)
 
 ### Arquitectura por plataforma
 

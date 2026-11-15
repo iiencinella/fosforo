@@ -26,9 +26,9 @@ Esta matriz conecta la documentación general del ecosistema con la documentaci�
 
 | Nivel                  | Documento                                                          | Proposito                                                      |
 | ---------------------- | ------------------------------------------------------------------ | -------------------------------------------------------------- |
-| Vision de producto     | [06-PRD Maestro.md](06-PRD%20Maestro.md)                           | Define alcance, objetivos, fases y dependencias del ecosistema |
-| Requisitos de software | [07-SRS Maestro.md](07-SRS%20Maestro.md)                           | Traduce la vision a requisitos verificables                    |
-| Requisitos funcionales | [08-FRD Maestro.md](08-FRD%20Maestro.md)                           | Consolida capacidades funcionales transversales                |
+| Vision de producto     | [06-PRD Maestro.md](06-PRD-Maestro.md)                           | Define alcance, objetivos, fases y dependencias del ecosistema |
+| Requisitos de software | [07-SRS Maestro.md](07-SRS-Maestro.md)                           | Traduce la vision a requisitos verificables                    |
+| Requisitos funcionales | [08-FRD Maestro.md](08-FRD-Maestro.md)                           | Consolida capacidades funcionales transversales                |
 | Arquitectura           | [../01-Arquitectura/README.md](../01-Arquitectura/README.md)       | Describe plataforma, monorepo y decisiones técnicas            |
 | Aplicaciones           | [../02-Aplicaciones/00-README.md](../02-Aplicaciones/00-README.md) | Centraliza la documentación por app                            |
 

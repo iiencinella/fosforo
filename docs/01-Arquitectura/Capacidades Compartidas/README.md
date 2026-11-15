@@ -27,8 +27,8 @@ Esta carpeta centraliza la documentación de capacidades reutilizables del ecosi
 
 1. [SRS-Identidad-y-Acceso.md](SRS-Identidad-y-Acceso.md)
 2. [SRS-Datos-y-Taxonomias-Compartidas.md](SRS-Datos-y-Taxonomias-Compartidas.md)
-3. [SRS-Notificaciónes-y-Plantillas.md](SRS-Notificaciónes-y-Plantillas.md)
-4. [SRS-Búsqueda-y-Conocimiento-Compartido.md](SRS-Búsqueda-y-Conocimiento-Compartido.md)
+3. [SRS-Notificaciones-y-Plantillas.md](SRS-Notificaciones-y-Plantillas.md)
+4. [SRS-Busqueda-y-Conocimiento-Compartido.md](SRS-Busqueda-y-Conocimiento-Compartido.md)
 5. [SRS-Pagos-y-Transacciones-Compartidas.md](SRS-Pagos-y-Transacciones-Compartidas.md)
 6. [SRS-Observabilidad-y-Auditoria.md](SRS-Observabilidad-y-Auditoria.md)
 7. [SRS-Design-System-y-Navegacion-Global.md](SRS-Design-System-y-Navegacion-Global.md)

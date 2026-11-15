@@ -87,7 +87,7 @@ Detalle del proceso: [13-Runbook-Operativo](13-Runbook-Operativo.md).
 | [03-FRD](03-FRD.md)                                                     | [02-SRS](02-SRS.md)                                                   | [04-Flujos y Secuencias](04-Flujos%20y%20Secuencias.md)               | vigente |
 | [04-Flujos y Secuencias](04-Flujos%20y%20Secuencias.md)                 | [03-FRD](03-FRD.md)                                                   | [05-Tests Unitarios](05-Tests%20Unitarios.md)                         | vigente |
 | [06-Esquema de Datos](06-Esquema%20de%20Datos.md) / [07-ERM](07-ERM.md) | [02-SRS](02-SRS.md)                                                   | [08-Decisiones de Arquitectura](08-Decisiones%20de%20Arquitectura.md) | vigente |
-| [08-Decisiones de Arquitectura](08-Decisiones%20de%20Arquitectura.md)   | [02-SRS](02-SRS.md) + [03-FRD](03-FRD.md)                             | [09-Especificación Tecnica](09-Especificación%20Tecnica.md)           | vigente |
+| [08-Decisiones de Arquitectura](08-Decisiones%20de%20Arquitectura.md)   | [02-SRS](02-SRS.md) + [03-FRD](03-FRD.md)                             | [09-Especificación Tecnica](09-Especificacion%20Tecnica.md)           | vigente |
 | [10-OWASP](10-OWASP.md)                                                 | [08-Decisiones de Arquitectura](08-Decisiones%20de%20Arquitectura.md) | Tecnica                                                               | vigente |
 | [11-SLA y SLO](11-SLA%20y%20SLO.md)                                     | [01-PRD](01-PRD.md)                                                   | Tecnica                                                               | vigente |
 
@@ -96,7 +96,7 @@ Detalle del proceso: [13-Runbook-Operativo](13-Runbook-Operativo.md).
 | Documento                                                   | Descripcion                                                                                     | Estado  |
 | ----------------------------------------------------------- | ----------------------------------------------------------------------------------------------- | ------- |
 | [05-Tests Unitarios](05-Tests%20Unitarios.md)               | Estrategia de validación de reglas, formularios, servicios y trazabilidad funcional del portal. | vigente |
-| [09-Especificación Tecnica](09-Especificación%20Tecnica.md) | Definicion de stack, modulos, endpoints, contratos y estructura esperada del workspace web.     | vigente |
+| [09-Especificación Tecnica](09-Especificacion%20Tecnica.md) | Definicion de stack, modulos, endpoints, contratos y estructura esperada del workspace web.     | vigente |
 
 Notas:
 

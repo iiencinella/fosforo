@@ -1,3 +1,18 @@
+---
+tags:
+  - proyecto/fosforo
+  - plan
+  - portal
+  - supabase
+type: plan-implementacion
+area: general
+status: archivado
+created: 2026-08-19
+updated: 2026-08-19
+related:
+  - "[[../02-Aplicaciones/FASE_1-0101_portal/WEB/00-README|Portal]]"
+---
+
 # Plan de implementación: Portal + Supabase
 
 ## Objetivo

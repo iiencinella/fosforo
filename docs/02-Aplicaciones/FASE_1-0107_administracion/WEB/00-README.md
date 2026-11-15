@@ -48,7 +48,7 @@ Esta aplicacion no tiene un alcance MVP cerrado: su desarrollo se dara en parale
 
 - **Completado:** Workspace `src/apps/administracion/` funcional con CRUD de iglesias, gestion de horarios, dashboard con metricas, autenticacion con roles (admin/editor/viewer), auditoria de operaciones y esquema Supabase completo
 - **En curso:** Ampliacion de modulos a medida que crece el ecosistema (gestion de contenido, notificaciones)
-- **Pendiente:** Tests unitarios automatizados (matriz definida en 05-Tests Unitarios.md, pendiente de implementacion)
+- **Pendiente:** Completar la matriz de tests unitarios definida en 05-Tests Unitarios.md (ya hay 5 suites automatizadas en su lugar)
 
 ## Ubicacion del codigo
 
@@ -86,7 +86,7 @@ Esta aplicacion no tiene un alcance MVP cerrado: su desarrollo se dara en parale
 | [03-FRD](03-FRD.md)                                                     | [02-SRS](02-SRS.md)                                                   | [04-Flujos y Secuencias](04-Flujos%20y%20Secuencias.md)               | vigente |
 | [04-Flujos y Secuencias](04-Flujos%20y%20Secuencias.md)                 | [03-FRD](03-FRD.md)                                                   | [05-Tests Unitarios](05-Tests%20Unitarios.md)                         | vigente |
 | [06-Esquema de Datos](06-Esquema%20de%20Datos.md) / [07-ERM](07-ERM.md) | [02-SRS](02-SRS.md)                                                   | [08-Decisiones de Arquitectura](08-Decisiones%20de%20Arquitectura.md) | vigente |
-| [08-Decisiones de Arquitectura](08-Decisiones%20de%20Arquitectura.md)   | [02-SRS](02-SRS.md) + [03-FRD](03-FRD.md)                             | [09-Especificacion Tecnica](09-Especificaci%C3%B3n%20Tecnica.md)      | vigente |
+| [08-Decisiones de Arquitectura](08-Decisiones%20de%20Arquitectura.md)   | [02-SRS](02-SRS.md) + [03-FRD](03-FRD.md)                             | [09-Especificacion Tecnica](09-Especificacion%20Tecnica.md)      | vigente |
 | [10-OWASP](10-OWASP.md)                                                 | [08-Decisiones de Arquitectura](08-Decisiones%20de%20Arquitectura.md) | Tecnica                                                               | vigente |
 | [11-SLA y SLO](11-SLA%20y%20SLO.md)                                     | [01-PRD](01-PRD.md)                                                   | Tecnica                                                               | vigente |
 
@@ -95,7 +95,7 @@ Esta aplicacion no tiene un alcance MVP cerrado: su desarrollo se dara en parale
 | Documento                                                        | Descripcion                                               | Estado  |
 | ---------------------------------------------------------------- | --------------------------------------------------------- | ------- |
 | [05-Tests Unitarios](05-Tests%20Unitarios.md)                    | Pruebas unitarias y de integracion para modulos del panel | vigente |
-| [09-Especificacion Tecnica](09-Especificaci%C3%B3n%20Tecnica.md) | Detalle tecnico de implementacion, componentes y APIs     | vigente |
+| [09-Especificacion Tecnica](09-Especificacion%20Tecnica.md) | Detalle tecnico de implementacion, componentes y APIs     | vigente |
 
 Notas:
 

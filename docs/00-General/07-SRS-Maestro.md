@@ -198,8 +198,8 @@ Fósforo debe operar como un ecosistema con identidad compartida, datos interope
 
 ## 13. Trazabilidad documental
 
-- Vision y alcance: [[06-PRD Maestro|PRD Maestro]].
-- Fases y orden de entrega: [[06-PRD Maestro|PRD Maestro]] (seccion 12).
+- Vision y alcance: [[06-PRD-Maestro|PRD Maestro]].
+- Fases y orden de entrega: [[06-PRD-Maestro|PRD Maestro]] (seccion 12).
 - Stack y restricciones tecnicas: [[../01-Arquitectura/Stack Tecnologico|Stack Tecnologico]].
 - Backlog resumido por producto: [[04-Listado-de-Aplicaciones|Listado de Aplicaciones]].
 - Requisitos por aplicación: [[../02-Aplicaciones/00-README|Indice de aplicaciónes]].

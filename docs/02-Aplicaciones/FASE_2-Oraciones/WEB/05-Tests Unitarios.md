@@ -13,7 +13,7 @@ created: 2026-09-05
 updated: 2026-09-05
 related:
   - "[[02-SRS]]"
-  - "[[docs/00-General/05-Tests|Framework de tests]]"
+  - "[[../_Plantilla-App/05-Tests Unitarios|Framework de tests]]"
 ---
 
 # Oraciones - Web - Tests Unitarios
