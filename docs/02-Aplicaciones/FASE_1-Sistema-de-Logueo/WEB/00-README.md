@@ -7,9 +7,9 @@ tags:
   - auth
 type: app-readme
 area: aplicaciones
-status: draft
+status: vigente
 created: 2026-09-05
-updated: 2026-09-05
+updated: 2026-11-15
 related:
   - "[[../00-README|Indice de aplicaciones]]"
   - "[[../../01-Arquitectura/Capacidades Compartidas/SRS-Identidad-y-Acceso|SRS Identidad y Acceso]]"
@@ -50,9 +50,19 @@ Se distingue de la app Log (observabilidad/RUM), que se encarga de telemetría d
 
 ## Estado de implementación
 
-- **Completado:** Paquetes `@repo/auth` y `@repo/mobile-auth-client` existen como implementaciones parciales.
-- **En curso:** Documentación de la app dedicada (draft 2026-09-05).
-- **Pendiente:** App dedicada en `src/apps/logueo/`, endpoints de API completos, gestión de roles UI, gestión de consentimientos UI, panel de auditoría, tests unitarios y de integración.
+- **Completado:** App dedicada `src/apps/logueo/` cerrada en el paso 8 del plan Fase 0
+  (PR #58, 2026-09-07): login y registro con confirmación por email, cuenta única, logout
+  con alcance local/global, endpoints `api/auth/{login,register,logout,session,me,consents}`,
+  `GET /api/auth/session` como fuente de sesión para las demás apps, tabla `consents` con RLS
+  por dueño, auditoría en `audit_log` y RUM día 1 con banner de consentimiento. Paquetes
+  `@repo/auth` y `@repo/mobile-auth-client` en uso; modelo RBAC compartido (`profiles.role_id`
+  → roles + permissions) aplicado en la base de producción (2026-11-15).
+- **En curso:** Configuración operativa: URLs de recovery en el dashboard de Supabase y
+  verificación E2E con usuarios reales.
+- **Pendiente:** Aplicar en producción el lote DB restante de Fase 0 (`20260906000002..000005`:
+  consentimientos y RUM) para habilitar `consents` y la ingesta RUM; gestión de roles UI
+  (definida en la app administracion según su plan 2026-08-26) y panel de auditoría propio;
+  ampliar tests de integración.
 
 ## Ubicación del codigo
 
@@ -98,7 +108,7 @@ Se distingue de la app Log (observabilidad/RUM), que se encarga de telemetría d
 | [03-FRD](03-FRD.md)                                                     | [02-SRS](02-SRS.md)                                                   | [04-Flujos y Secuencias](04-Flujos%20y%20Secuencias.md)               | draft  |
 | [04-Flujos y Secuencias](04-Flujos%20y%20Secuencias.md)                 | [03-FRD](03-FRD.md)                                                   | [05-Tests Unitarios](05-Tests%20Unitarios.md)                         | draft  |
 | [06-Esquema de Datos](06-Esquema%20de%20Datos.md) / [07-ERM](07-ERM.md) | [02-SRS](02-SRS.md)                                                   | [08-Decisiones de Arquitectura](08-Decisiones%20de%20Arquitectura.md) | draft  |
-| [08-Decisiones de Arquitectura](08-Decisiones%20de%20Arquitectura.md)   | [02-SRS](02-SRS.md) + [03-FRD](03-FRD.md)                             | [09-Especificación Tecnica](09-Especificaci%C3%B3n%20Tecnica.md)      | draft  |
+| [08-Decisiones de Arquitectura](08-Decisiones%20de%20Arquitectura.md)   | [02-SRS](02-SRS.md) + [03-FRD](03-FRD.md)                             | [09-Especificación Tecnica](09-Especificacion%20Tecnica.md)      | draft  |
 | [10-OWASP](10-OWASP.md)                                                 | [08-Decisiones de Arquitectura](08-Decisiones%20de%20Arquitectura.md) | Tecnica                                                               | draft  |
 | [11-SLA y SLO](11-SLA%20y%20SLO.md)                                     | [01-PRD](01-PRD.md)                                                   | Tecnica                                                               | draft  |
 
@@ -107,7 +117,7 @@ Se distingue de la app Log (observabilidad/RUM), que se encarga de telemetría d
 | Documento                                                        | Descripcion                                                 | Estado |
 | ---------------------------------------------------------------- | ----------------------------------------------------------- | ------ |
 | [05-Tests Unitarios](05-Tests%20Unitarios.md)                    | Matriz de pruebas unitarias y de integración por requisito. | draft  |
-| [09-Especificación Tecnica](09-Especificaci%C3%B3n%20Tecnica.md) | Stack, módulos, endpoints y consideraciones UI/UX.          | draft  |
+| [09-Especificación Tecnica](09-Especificacion%20Tecnica.md) | Stack, módulos, endpoints y consideraciones UI/UX.          | draft  |
 
 Notas:
 

@@ -208,7 +208,7 @@ async function updateIndex(targetRoot) {
     "| `03-FRD.md` | `02-SRS.md` | `04-Flujos y Secuencias.md` |",
     "| `04-Flujos y Secuencias.md` | `03-FRD.md` | `05-Tests Unitarios.md` |",
     "| `06-Esquema de Datos.md` / `07-ERM.md` | `02-SRS.md` | `08-Decisiones de Arquitectura.md` |",
-    "| `08-Decisiones de Arquitectura.md` | `02-SRS.md` + `03-FRD.md` | `09-Especificación Tecnica.md` |",
+    "| `08-Decisiones de Arquitectura.md` | `02-SRS.md` + `03-FRD.md` | `09-Especificacion Tecnica.md` |",
     "| `10-OWASP.md` | `08-Decisiones de Arquitectura.md` | Definiciones tecnicas y controles |",
     "| `11-SLA y SLO.md` | `01-PRD.md` | Definiciones tecnicas y operativas |",
     "",
@@ -362,7 +362,7 @@ async function main() {
   console.log(`- ${platformDir}`);
   console.log(`- ${path.join(targetRoot, "00-README.md")}`);
   console.log(
-    "Archivos: 00-README.md, 01-PRD.md, 02-SRS.md, 03-FRD.md, 04-Flujos y Secuencias.md, 05-Tests Unitarios.md, 06-Esquema de Datos.md, 07-ERM.md, 08-Decisiones de Arquitectura.md, 09-Especificación Tecnica.md, 10-OWASP.md, 11-SLA y SLO.md",
+    "Archivos: 00-README.md, 01-PRD.md, 02-SRS.md, 03-FRD.md, 04-Flujos y Secuencias.md, 05-Tests Unitarios.md, 06-Esquema de Datos.md, 07-ERM.md, 08-Decisiones de Arquitectura.md, 09-Especificacion Tecnica.md, 10-OWASP.md, 11-SLA y SLO.md",
   );
 }
 

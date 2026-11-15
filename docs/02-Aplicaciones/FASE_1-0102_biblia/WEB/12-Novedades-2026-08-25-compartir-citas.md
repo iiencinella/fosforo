@@ -9,6 +9,7 @@ type: app-changelog
 area: aplicaciónes
 status: vigente
 created: 2026-08-25
+updated: 2026-08-25
 related:
   - "[[00-README|0102 Biblia]]"
 ---

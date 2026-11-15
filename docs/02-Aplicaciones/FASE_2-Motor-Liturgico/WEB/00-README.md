@@ -97,7 +97,7 @@ El Motor separa la logica calendrica (propia del Motor) del contenido textual de
 | [03-FRD](03-FRD.md)                                                     | [02-SRS](02-SRS.md)                                                   | [04-Flujos y Secuencias](04-Flujos%20y%20Secuencias.md)               | draft  |
 | [04-Flujos y Secuencias](04-Flujos%20y%20Secuencias.md)                 | [03-FRD](03-FRD.md)                                                   | [05-Tests Unitarios](05-Tests%20Unitarios.md)                         | draft  |
 | [06-Esquema de Datos](06-Esquema%20de%20Datos.md) / [07-ERM](07-ERM.md) | [02-SRS](02-SRS.md)                                                   | [08-Decisiones de Arquitectura](08-Decisiones%20de%20Arquitectura.md) | draft  |
-| [08-Decisiones de Arquitectura](08-Decisiones%20de%20Arquitectura.md)   | [02-SRS](02-SRS.md) + [03-FRD](03-FRD.md)                             | [09-Especificacion Tecnica](09-Especificaci%C3%B3n%20Tecnica.md)      | draft  |
+| [08-Decisiones de Arquitectura](08-Decisiones%20de%20Arquitectura.md)   | [02-SRS](02-SRS.md) + [03-FRD](03-FRD.md)                             | [09-Especificacion Tecnica](09-Especificacion%20Tecnica.md)      | draft  |
 | [10-OWASP](10-OWASP.md)                                                 | [08-Decisiones de Arquitectura](08-Decisiones%20de%20Arquitectura.md) | Tecnica                                                               | draft  |
 | [11-SLA y SLO](11-SLA%20y%20SLO.md)                                     | [01-PRD](01-PRD.md)                                                   | Tecnica                                                               | draft  |
 
@@ -106,7 +106,7 @@ El Motor separa la logica calendrica (propia del Motor) del contenido textual de
 | Documento                                                        | Descripcion                                                    | Estado |
 | ---------------------------------------------------------------- | -------------------------------------------------------------- | ------ |
 | [05-Tests Unitarios](05-Tests%20Unitarios.md)                    | Matriz de pruebas unitarias con Vitest y trazabilidad FR -> TC | draft  |
-| [09-Especificacion Tecnica](09-Especificaci%C3%B3n%20Tecnica.md) | Stack, modulos, endpoints y consideraciones UI/UX del Motor    | draft  |
+| [09-Especificacion Tecnica](09-Especificacion%20Tecnica.md) | Stack, modulos, endpoints y consideraciones UI/UX del Motor    | draft  |
 
 Notas:
 

@@ -6,7 +6,7 @@ tags:
   - estilos
 type: plan-tecnico
 area: arquitectura-web
-status: propuesto
+status: vigente
 created: 2026-04-17
 updated: 2026-04-17
 related:

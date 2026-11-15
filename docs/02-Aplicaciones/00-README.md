@@ -1,3 +1,18 @@
+---
+tags:
+  - proyecto/fosforo
+  - indice
+  - aplicaciones
+type: indice-aplicaciones
+area: aplicaciones
+status: vigente
+created: 2026-08-19
+updated: 2026-11-15
+related:
+  - "[[README|Indice de documentación]]"
+  - "[[03-Indice-General|Indice General]]"
+---
+
 # Indice - Aplicaciones
 
 > Este indice se actualiza automaticamente con `pnpm docs:new-app` y `pnpm docs:sync-app-status`.

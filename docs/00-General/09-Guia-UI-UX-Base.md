@@ -12,8 +12,8 @@ status: vigente
 created: 2026-03-09
 updated: 2026-04-04
 related:
-  - "[[01-Indice General|Guia General]]"
-  - "[[06-PRD Maestro|PRD Maestro]]"
+  - "[[03-Indice-General|Guia General]]"
+  - "[[06-PRD-Maestro|PRD Maestro]]"
 ---
 
 # Guia UI/UX Base - Ecosistema Fósforo
@@ -564,5 +564,5 @@ Una aplicación cumple esta guia cuando:
 
 ## Navegación
 
-- **Arriba**: [[01-Índice General|Índice General]]
+- **Arriba**: [[03-Indice-General|Índice General]]
 - **Proyecto**: [[../README|Índice de documentación]]

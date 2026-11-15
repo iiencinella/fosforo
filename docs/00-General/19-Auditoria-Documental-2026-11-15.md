@@ -40,7 +40,7 @@ Chequeos automatizados (scripts de un solo uso, reproducibles):
 | --- | --- |
 | Completitud del canon | 18/18 apps con 11/12 (unico hueco: convencion de nombre del doc 09, ver A1) |
 | Documentos en `draft` | 156 de 294 (53%) |
-| Enlaces rotos | 14 wiki-links (9 archivos) + 27 relativos (15 archivos) |
+| Enlaces rotos | 14 wiki-links (9 archivos) + 19 relativos (11 archivos) |
 | Desalineaciones con codigo | 4 (ver C1-C4) |
 | Vocabulario de `status` inconsistente | 3 archivos fuera del vocabulario vigente/draft |
 
@@ -86,8 +86,8 @@ desvio.
   `docs/plans/2026-08-26-gestion-roles-ecosistema-design.md`.
 - 8 archivos sin `updated` (novedades internas de biblia/calendario con typo "Novedas" y
   `Novedades-2026-08-25-control-de-versiones.md`).
-- Vocabulario inconsistente: `active` en `plans/2026-09-05-plan-desarrollo-fase-0.md`,
-  `propuesto` en `Plan-Unificacion-Estilos-Globales.md`, `completado` en
+- Vocabulario inconsistente: `completado` en `plans/2026-09-05-plan-desarrollo-fase-0.md`,
+  `propuesto` en `Plan-Unificacion-Estilos-Globales.md`, `active` en
   `Plantilla-SRS-Componente-Compartido.md`. Recomendacion: normalizar a `vigente`/`draft`
   (+ `archivado` si se necesita) y documentarlo en la guia de lectura.
 - Frescura: 143 archivos actualizados en la ola 2026-09 (documentacion Fase 2); sin actualizaciones
@@ -100,7 +100,7 @@ calendario, usuario, log, horarios, administracion, logueo, cms, cancionero)
 | ID | Hallazgo | Archivo |
 | --- | --- | --- |
 | C1 | CMS figura "Sin implementación" — **ya corregido** en el PR `docs/cms-readme-estado-implementacion` (pendiente de merge) | `FASE_2-Sistema-de-Contenidos-CMS/WEB/00-README.md` en `main` |
-| C2 | Sin seccion "Estado de implementación" pese a estar implementada y con `status: vigente` | `FASE_1-0107_administracion/WEB/00-README.md` |
+| C2 | Falso positivo de la auditoria: la seccion "Estado de implementacion" existe (escrita sin tilde; el script la buscaba con tilde). Su contenido era correcto; solo su linea de tests estaba desactualizada | `FASE_1-0107_administracion/WEB/00-README.md` |
 | C3 | `status: draft` con app implementada (inconsistente con horarios/cancionero/portal): usuarios, log, logueo | frontmatter de los 3 README |
 | C4 | Texto desactualizado: Santopedia declara "En curso: documentación completa de la fase WEB" pese a que los 12 documentos existen desde 2026-09 | `FASE_2-Santopedia/WEB/00-README.md` |
 
@@ -124,7 +124,7 @@ draft/sin implementacion, y la matriz generada de `02-Aplicaciones/00-README.md`
 - `../LICENSE` / `../NOTICE` (existen en la raiz, fuera del vault de docs):
   `05-Licencias-y-Contribucion`, `03-Legal/README`, `03-Legal/LICENCIA-EXPLICADA`. Baja prioridad.
 
-### D2 - Enlaces relativos (27 en 15 archivos)
+### D2 - Enlaces relativos (19 en 11 archivos)
 
 - 9x `09-Especificación Tecnica.md` con tilde (consecuencia directa de A1).
 - 3x "Maestro" con espacio en `10-Matriz-de-Trazabilidad.md`.
@@ -132,6 +132,8 @@ draft/sin implementacion, y la matriz generada de `02-Aplicaciones/00-README.md`
   (los reales son `SRS-Busqueda-y-Conocimiento-Compartido.md` y
   `SRS-Notificaciones-y-Plantillas.md`).
 - 1x `Plan-Unificación-Estilos-Globales.md` con tilde en `01-Arquitectura/README.md`.
+- 1x profundidad de `../` en `FASE_1-0105_log/WEB/01-PRD.md` hacia
+  `SRS-Observabilidad-y-Auditoria.md` (necesita 3 niveles, no 2).
 - 2x `db/README.md` con profundidad incorrecta en Santopedia `06`/`07` (usan `../../../db/...`
   desde `docs/02-Aplicaciones/<app>/WEB/`; requieren `../../../../db/README.md`).
 
@@ -153,3 +155,47 @@ draft/sin implementacion, y la matriz generada de `02-Aplicaciones/00-README.md`
 `docs/02-Aplicaciones/00-README.md` (regenerados, consistentes con `src/apps/`), plantilla de app
 (completa), capacidades compartidas (9 SRS + catalogo + guia de variables de entorno presentes),
 legal (LICENSE/NOTICE en raiz, referencias correctas desde `docs/03-Legal/README.md`).
+
+## Remediacion ejecutada (2026-11-15, misma rama)
+
+Ejecucion completa del plan propuesto. Estado final verificado: **0 enlaces relativos rotos
+(634 revisados) y 0 wiki-links rotos dentro de `docs/`** (quedan las referencias `../LICENSE` /
+`../NOTICE`, que resuelven en la raiz del repo fuera del vault, y el enlace a las novedades del
+CMS, que vive en la rama `docs/cierre-operativo-cms` pendiente de merge).
+
+- **A1/D2 (canon + relativos)**: canon fijado a `09-Especificacion Tecnica.md` (sin tilde) en
+  `AGENTS.md`, `docs/README.md` y el scaffold `scripts/docs-new-app.mjs` (lineas 211 y 365, la
+  causa generadora). Corregidos los 19 enlaces relativos: 9 del doc 09 con tilde (portal,
+  usuarios, administracion, logueo, motor-liturgico, santopedia, notificaciones, plantilla y
+  variante `%C3%B3n`), 3 de "Maestro" con espacio en la matriz de trazabilidad, 2 de SRS con
+  tilde/ñ, 1 de `Plan-Unificación`, 1 de profundidad en `log/01-PRD` (3 niveles), 2 de
+  `db/README.md` en Santopedia 06/07.
+- **D1 (wiki-links)**: `06-PRD Maestro` → `06-PRD-Maestro` (SRS-Maestro, Guia UI/UX,
+  SRS-Identidad); `01-Indice/Índice General` → `03-Indice-General` (Guia UI/UX); Oraciones
+  05-Tests (ruta real de plantilla `../_Plantilla-App/05-Tests Unitarios`, sin subcarpeta WEB)
+  y 10-OWASP (`FASE_1-Sistema-de-Logueo/WEB/00-README`); Visita 7 Iglesias 06-Esquema (catalogo
+  de capacidades compartidas). LICENSE/NOTICE: sin cambio (decidido).
+- **C2**: falso positivo — la seccion de administracion existia (el script la busco con tilde).
+  Informe corregido. Unica mejora real: su linea de "Pendiente: Tests" estaba desactualizada
+  (ya hay 5 suites) y se actualizo.
+- **C3**: `status` `draft` → `vigente` + `updated: 2026-11-15` en usuarios y log; en logueo
+  ademas se reescribio su seccion "Estado de implementación" (declaraba "Pendiente: App
+  dedicada" con la app ya cerrada en el PR #58 de Fase 0) y quedo pendiente documentado el
+  lote DB de Fase 0 (`20260906000002..000005`).
+- **C4**: Santopedia: la documentacion de la fase WEB pasa de "En curso" a "Completado"; la
+  app mantiene `status: draft` (no hay workspace, correcto).
+- **B**: vocabulario normalizado — `completado`→`archivado` (plan Fase 0), `propuesto`→`vigente`
+  (Plan Unificacion Estilos), `active`→`vigente` (Plantilla SRS). Frontmatter agregado a
+  `02-Aplicaciones/00-README.md` y a los 2 planes de `docs/plans/` que carecian de el (el sync
+  usa `replaceMarkedBlock`, seguro). `updated:` agregado a los 8 archivos que lo faltaban
+  (con su fecha de `created`). Ademas: renombrado `Novedades-2026-08-25-control-de-versiones.md`
+  → `12-Novedades-2026-08-25-control-de-versiones.md` (prefijo canonico faltante en
+  `00-General`) y tag `novedas`→`novedades` en biblia.
+- **A2**: 6 archivos `12-Novedas-*` renombrados a `12-Novedades-*` (`git mv`) + titulos H1
+  internos corregidos.
+- **A3**: extensiones del canon (slots 12/13) formalizadas en `AGENTS.md`.
+- **Correcciones al propio informe**: conteo real de relativos 19 (no 27) y valores de
+  frontmatter de plan Fase 0 (`completado`, no `active`) y Plantilla SRS (`active`, no
+  `completado`) — reportados intercambiados en la primera version.
+
+Registro completo en `12-Novedades-2026-11-15-remediacion-documental.md` (creado en esta misma rama).

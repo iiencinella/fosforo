@@ -78,8 +78,8 @@ related: []
 - [Catalogo de Capacidades](01-Arquitectura/Capacidades%20Compartidas/Catalogo-de-Capacidades-Compartidas.md)
 - [SRS Identidad y Acceso](01-Arquitectura/Capacidades%20Compartidas/SRS-Identidad-y-Acceso.md)
 - [SRS Datos y Taxonomias](01-Arquitectura/Capacidades%20Compartidas/SRS-Datos-y-Taxonomias-Compartidas.md)
-- [SRS Notificaciónes](01-Arquitectura/Capacidades%20Compartidas/SRS-Notificaciónes-y-Plantillas.md)
-- [SRS Búsqueda y Conocimiento](01-Arquitectura/Capacidades%20Compartidas/SRS-Búsqueda-y-Conocimiento-Compartido.md)
+- [SRS Notificaciónes](01-Arquitectura/Capacidades%20Compartidas/SRS-Notificaciones-y-Plantillas.md)
+- [SRS Búsqueda y Conocimiento](01-Arquitectura/Capacidades%20Compartidas/SRS-Busqueda-y-Conocimiento-Compartido.md)
 - [SRS Pagos y Transacciones](01-Arquitectura/Capacidades%20Compartidas/SRS-Pagos-y-Transacciones-Compartidas.md)
 - [SRS Observabilidad](01-Arquitectura/Capacidades%20Compartidas/SRS-Observabilidad-y-Auditoria.md)
 - [SRS Design System](01-Arquitectura/Capacidades%20Compartidas/SRS-Design-System-y-Navegacion-Global.md)
@@ -100,7 +100,7 @@ Orden canonico por app:
 7. `06-Esquema de Datos.md`
 8. `07-ERM.md`
 9. `08-Decisiones de Arquitectura.md`
-10. `09-Especificación Tecnica.md`
+10. `09-Especificacion Tecnica.md`
 11. `10-OWASP.md`
 12. `11-SLA y SLO.md`
 
@@ -110,7 +110,7 @@ Dependencias clave:
 - `02-SRS.md` genera `03-FRD.md` y alimenta datos/arquitectura.
 - `03-FRD.md` genera `04-Flujos y Secuencias.md`, que a su vez genera `05-Tests Unitarios.md`.
 - `06-Esquema de Datos.md` y `07-ERM.md` alimentan `08-Decisiones de Arquitectura.md`.
-- `08-Decisiones de Arquitectura.md` genera `09-Especificación Tecnica.md` y sirve de base para `10-OWASP.md`.
+- `08-Decisiones de Arquitectura.md` genera `09-Especificacion Tecnica.md` y sirve de base para `10-OWASP.md`.
 - `11-SLA y SLO.md` deriva de `01-PRD.md` y consolida compromisos técnicos y operativos.
 
 Scaffold automatizado:

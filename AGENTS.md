@@ -54,7 +54,7 @@ Si hay conflicto entre codigo y documentación, el agente debe:
   - `06-Esquema de Datos.md`
   - `07-ERM.md`
   - `08-Decisiones de Arquitectura.md`
-  - `09-Especificación Tecnica.md`
+  - `09-Especificacion Tecnica.md`
   - `10-OWASP.md`
   - `11-SLA y SLO.md`
 
@@ -69,9 +69,22 @@ Orden canonico esperado por app:
 7. `06-Esquema de Datos.md`
 8. `07-ERM.md`
 9. `08-Decisiones de Arquitectura.md`
-10. `09-Especificación Tecnica.md`
+10. `09-Especificacion Tecnica.md`
 11. `10-OWASP.md`
 12. `11-SLA y SLO.md`
+
+### Extensiones habilitadas del canon (slots 12/13 por app)
+
+Fuera del tramo canonico de 12 documentos, cada app puede tener estas extensiones legitimas
+(auditadas como tales, no como desvios):
+
+- `12-Novedades-<fecha>-<tema>.md`: novedades de cierre o hito de la app (patron: ver biblia,
+  calendario, CMS).
+- `12-Plan-Desarrollo-MVP.md`: plan de desarrollo del MVP en la app (patron: log).
+- `13-Runbook-Operativo.md`: runbook operativo de despliegue y soporte (patron: portal,
+  calendario).
+
+Otras extensiones nuevas deben documentarse primero en este listado antes de crearlas.
 
 ### Base de datos
 

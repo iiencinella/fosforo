@@ -8,9 +8,9 @@ tags:
   - analiticas
 type: app-readme
 area: aplicaciones
-status: draft
+status: vigente
 created: 2026-05-26
-updated: 2026-09-05
+updated: 2026-11-15
 related:
   - "[[../00-README|Indice de aplicaciones]]"
   - "[[../../01-Arquitectura/Capacidades Compartidas/SRS-Observabilidad-y-Auditoria|SRS Observabilidad]]"
@@ -76,14 +76,14 @@ El acceso está restringido a usuarios con roles `dev`, `ops` o `product` median
 
 ### RUM y analíticas (extensión 2026-09-05)
 
-- **Pendiente:**
-  - SDK `@repo/analytics` (<5KB, sendBeacon, no bloqueante, try-catch global)
-  - Ingesta RUM: tablas, endpoints, validación, rate limiting
-  - Captura de Web Vitals (LCP, INP, CLS) automática
-  - Captura de errores de frontend con contexto
-  - Dashboard de producto: embudos, retención, top páginas, segmentación
-  - Consentimiento y anonimización (DNT, sin PII)
-  - Sampling configurable por app y tipo de evento
+- **Completado (código, cierre Fase 0 2026-09-07):** SDK `@repo/analytics` (sendBeacon no
+  bloqueante, captura de Web Vitals LCP/INP/CLS, errores de frontend con contexto y banner
+  de consentimiento; 48 tests) y endpoints de ingesta `api/rum` y `api/rum/vitals` con
+  validación, rate limiting y tests unitarios en la app log.
+- **Pendiente:** aplicar en producción el lote DB de Fase 0 (`20260906000002..000005`:
+  tablas `rum_*`, métricas agregadas y consentimientos) — sin él, los endpoints no
+  persisten; dashboard de producto (embudos, retención, top páginas, segmentación);
+  sampling configurable por app y anonimización/DNT.
 
 ## Ubicación del codigo
 

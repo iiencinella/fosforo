@@ -53,8 +53,9 @@ La regla que gobierna el diseño es doble: el contenido SIEMPRE proviene del CMS
 
 ## Estado de implementación
 
-- **Completado:** nada; la app se encuentra en fase de diseño documental y aun no existe en el código del monorepo.
-- **En curso:** documentación completa de la fase WEB (PRD, SRS, FRD, flujos, tests, esquema de datos, ERM, ADRs, especificación técnica, OWASP y SLA/SLO).
+- **Completado:** documentación completa de la fase WEB (los 12 documentos canónicos del
+  canon, ola 2026-09-05). La app aún no existe en el código del monorepo.
+- **En curso:** ninguno — la siguiente etapa es la implementación.
 - **Pendiente:** creación de `src/apps/santopedia/`, contrato de lectura del content type `santo` con el CMS, integración con el Motor Litúrgico, esquema `santopedia` en Supabase, instrumentación RUM y auditoría OWASP.
 
 ## Ubicación del código
@@ -98,7 +99,7 @@ La regla que gobierna el diseño es doble: el contenido SIEMPRE proviene del CMS
 | [03-FRD](03-FRD.md)                                                     | [02-SRS](02-SRS.md)                                                   | [04-Flujos y Secuencias](04-Flujos%20y%20Secuencias.md)               | draft  |
 | [04-Flujos y Secuencias](04-Flujos%20y%20Secuencias.md)                 | [03-FRD](03-FRD.md)                                                   | [05-Tests Unitarios](05-Tests%20Unitarios.md)                         | draft  |
 | [06-Esquema de Datos](06-Esquema%20de%20Datos.md) / [07-ERM](07-ERM.md) | [02-SRS](02-SRS.md)                                                   | [08-Decisiones de Arquitectura](08-Decisiones%20de%20Arquitectura.md) | draft  |
-| [08-Decisiones de Arquitectura](08-Decisiones%20de%20Arquitectura.md)   | [02-SRS](02-SRS.md) + [03-FRD](03-FRD.md)                             | [09-Especificación Tecnica](09-Especificaci%C3%B3n%20Tecnica.md)      | draft  |
+| [08-Decisiones de Arquitectura](08-Decisiones%20de%20Arquitectura.md)   | [02-SRS](02-SRS.md) + [03-FRD](03-FRD.md)                             | [09-Especificación Tecnica](09-Especificacion%20Tecnica.md)      | draft  |
 | [10-OWASP](10-OWASP.md)                                                 | [08-Decisiones de Arquitectura](08-Decisiones%20de%20Arquitectura.md) | Tecnica                                                               | draft  |
 | [11-SLA y SLO](11-SLA%20y%20SLO.md)                                     | [01-PRD](01-PRD.md)                                                   | Tecnica                                                               | draft  |
 
@@ -107,7 +108,7 @@ La regla que gobierna el diseño es doble: el contenido SIEMPRE proviene del CMS
 | Documento                                                        | Descripcion                                                                                   | Estado |
 | ---------------------------------------------------------------- | --------------------------------------------------------------------------------------------- | ------ |
 | [05-Tests Unitarios](05-Tests%20Unitarios.md)                    | Casos TC-SANTO-001 a 015 trazados contra FR-SANTO-001 a 010; Vitest; cobertura >= 80% global. | draft  |
-| [09-Especificación Tecnica](09-Especificaci%C3%B3n%20Tecnica.md) | Stack, módulos, endpoints, modelos de datos y lineamientos UI/UX de implementación.           | draft  |
+| [09-Especificación Tecnica](09-Especificacion%20Tecnica.md) | Stack, módulos, endpoints, modelos de datos y lineamientos UI/UX de implementación.           | draft  |
 
 Notas:
 

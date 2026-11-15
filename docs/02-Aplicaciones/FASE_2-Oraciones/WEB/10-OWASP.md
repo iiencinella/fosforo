@@ -14,7 +14,7 @@ created: 2026-09-05
 updated: 2026-09-05
 related:
   - "[[06-Esquema de Datos]]"
-  - "[[docs/02-Aplicaciones/FASE_1-Sistema-Logueo|Sistema de Logueo]]"
+  - "[[../../FASE_1-Sistema-de-Logueo/WEB/00-README|Sistema de Logueo]]"
 ---
 
 # Oraciones - Web - OWASP (Controles de Seguridad)

@@ -5,9 +5,9 @@ tags:
   - aplicación
 type: app-readme
 area: aplicaciónes
-status: draft
+status: vigente
 created: 2026-03-07
-updated: 2026-06-07
+updated: 2026-11-15
 related:
   - "[[../00-README|Indice de aplicaciónes]]"
   - "[[../../01-Arquitectura/Capacidades Compartidas/SRS-Identidad-y-Acceso|SRS Identidad y Acceso]]"
@@ -92,7 +92,7 @@ Como core system del ecosistema, esta app garantiza que cada usuario tenga una i
 | [03-FRD](03-FRD.md)                                                     | [02-SRS](02-SRS.md)                                                   | [04-Flujos y Secuencias](04-Flujos%20y%20Secuencias.md)               | draft  |
 | [04-Flujos y Secuencias](04-Flujos%20y%20Secuencias.md)                 | [03-FRD](03-FRD.md)                                                   | [05-Tests Unitarios](05-Tests%20Unitarios.md)                         | draft  |
 | [06-Esquema de Datos](06-Esquema%20de%20Datos.md) / [07-ERM](07-ERM.md) | [02-SRS](02-SRS.md)                                                   | [08-Decisiones de Arquitectura](08-Decisiones%20de%20Arquitectura.md) | draft  |
-| [08-Decisiones de Arquitectura](08-Decisiones%20de%20Arquitectura.md)   | [02-SRS](02-SRS.md) + [03-FRD](03-FRD.md)                             | [09-Especificación Tecnica](09-Especificaci%C3%B3n%20Tecnica.md)      | draft  |
+| [08-Decisiones de Arquitectura](08-Decisiones%20de%20Arquitectura.md)   | [02-SRS](02-SRS.md) + [03-FRD](03-FRD.md)                             | [09-Especificación Tecnica](09-Especificacion%20Tecnica.md)      | draft  |
 | [10-OWASP](10-OWASP.md)                                                 | [08-Decisiones de Arquitectura](08-Decisiones%20de%20Arquitectura.md) | Tecnica                                                               | draft  |
 | [11-SLA y SLO](11-SLA%20y%20SLO.md)                                     | [01-PRD](01-PRD.md)                                                   | Tecnica                                                               | draft  |
 
@@ -101,7 +101,7 @@ Como core system del ecosistema, esta app garantiza que cada usuario tenga una i
 | Documento                                                        | Descripcion                                                                    | Estado |
 | ---------------------------------------------------------------- | ------------------------------------------------------------------------------ | ------ |
 | [05-Tests Unitarios](05-Tests%20Unitarios.md)                    | Matriz de pruebas unitarias para auth, roles, permisos y servicios de usuario. | draft  |
-| [09-Especificación Tecnica](09-Especificaci%C3%B3n%20Tecnica.md) | Stack, módulos, endpoints, esquemas y contratos del workspace de usuarios.     | draft  |
+| [09-Especificación Tecnica](09-Especificacion%20Tecnica.md) | Stack, módulos, endpoints, esquemas y contratos del workspace de usuarios.     | draft  |
 
 Notas:
 

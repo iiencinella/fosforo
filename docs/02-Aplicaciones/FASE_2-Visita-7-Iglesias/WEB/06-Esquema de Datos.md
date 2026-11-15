@@ -14,7 +14,7 @@ updated: 2026-09-05
 related:
   - "[[02-SRS]]"
   - "[[08-Decisiones de Arquitectura]]"
-  - "[[docs/01-Arquitectura/Capacidades Compartidas|Capacidades Compartidas]]"
+  - "[[../../../01-Arquitectura/Capacidades Compartidas/Catalogo-de-Capacidades-Compartidas|Catalogo de Capacidades Compartidas]]"
 ---
 
 # Esquema de Datos - Visita 7 Iglesias
