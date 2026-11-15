@@ -231,7 +231,7 @@ fosforo-ecosystem/
 └── skills-lock.json
 ```
 
-Los secretos `.env`, dependencias instaladas, salidas de build, logs, cobertura y la carpeta local generada `graphify-out/` no forman parte del árbol público versionado. El `.gitignore` los excluye para mantener visibles solo fuentes, documentación y configuración reproducible.
+Los secretos `.env`, dependencias instaladas, salidas de build, logs y cobertura no forman parte del árbol público versionado. El `.gitignore` los excluye para mantener visibles solo fuentes, documentación y configuración reproducible.
 
 ---
 
