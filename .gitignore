@@ -44,8 +44,6 @@ _build
 .astro/
 **/.astro/
 
-# graphify cache
-graphify-out/
 
 # local logs and smoke-test output
 *.log

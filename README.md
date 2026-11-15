@@ -67,7 +67,7 @@ fosforo/
 - `src/mobile/` y `src/desktop/` están reservados para futuras plataformas.
 - Los paquetes compartidos incluyen UI, configuración Tailwind, autenticación mobile, utilidades API, autenticación, notificaciones, entorno, TypeScript y ESLint.
 - La relación entre una app documentada y su workspace se mantiene en [`docs/00-General/04-Listado-de-Aplicaciones.md`](docs/00-General/04-Listado-de-Aplicaciones.md).
-- `graphify-out/`, logs, coberturas y otros artefactos locales son generados y no forman parte del árbol público versionado.
+- Los logs, coberturas y otros artefactos locales son generados y no forman parte del árbol público versionado.
 
 ## Stack y comandos
 
