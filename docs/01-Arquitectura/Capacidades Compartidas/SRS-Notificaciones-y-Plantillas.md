@@ -8,7 +8,7 @@ type: srs-componente
 area: plataforma
 status: draft
 created: 2026-03-07
-updated: 2026-09-05
+updated: 2026-11-17
 related:
   - "[[README|Indice componentes compartidos]]"
   - "[[../../02-Aplicaciones/FASE_2-Sistema-de-Notificaciones/WEB/00-README|App Sistema de Notificaciones]]"
@@ -20,7 +20,7 @@ related:
 
 Este SRS es el contrato funcional de la capacidad de notificaciónes. La app `Sistema de Notificaciones` (`docs/02-Aplicaciones/FASE_2-Sistema-de-Notificaciones/WEB/`) lo materializa como servicio del ecosistema.
 
-Estado de implementación (2026-09-05): el paquete `src/packages/notification-core` existe solo como shell vacio (sin código fuente). Toda la lógica de orquestación, plantillas y preferencias queda pendiente de implementación según este SRS y la documentación de la app.
+Estado de implementación (2026-11-17): el paquete `src/packages/notification-core` está implementado desde la Fase 0 (PR #56, 2026-09-07) — canales y categorías con categoría obligatoria, plantillas versionadas con render estricto, preferencias por canal+categoria y cola con idempotencia por `event_id`, máximo 3 intentos y backoff exponencial (23 tests unitarios). Su esquema DB (`notification_templates`, `notification_events`, `notification_preferences`, `notification_queue`) está definido en la migración `20260906000004` (PR #57), pendiente de aplicar en producción. Lo que sigue pendiente según este SRS y la documentación de la app es la app dedicada `src/apps/notificaciones/` (endpoints `POST /api/notifications`, panel de plantillas y envíos).
 
 ## 1. Proposito
 

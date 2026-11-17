@@ -9,7 +9,7 @@ type: app-readme
 area: aplicaciones
 status: draft
 created: 2026-09-05
-updated: 2026-09-05
+updated: 2026-11-17
 related:
   - "[[../00-README|Indice de aplicaciones]]"
   - "[[../../01-Arquitectura/Capacidades Compartidas/SRS-Notificaciones-y-Plantillas|SRS Notificaciones]]"
@@ -27,7 +27,7 @@ related:
 - Owner tecnico: Iván Ezequiel Iencinella
 - QA owner: Iván Ezequiel Iencinella
 - Seguridad owner: Iván Ezequiel Iencinella
-- Fecha ultima actualización: 2026-09-05
+- Fecha ultima actualización: 2026-11-17
 
 ## Descripcion
 
@@ -50,9 +50,9 @@ Se integra con el Sistema de Logueo (Auth) para validar identidad y permisos de 
 
 ## Estado de implementación
 
-- **Completado:** Sin implementación de código. El paquete `src/packages/notification-core` existe como shell vacío sin lógica.
-- **En curso:** Documentación de la app dedicada (draft 2026-09-05).
-- **Pendiente:** App dedicada en `src/apps/notificaciones/`, implementación de `notification-core`, endpoints de API, plantillas, cola de envíos, preferencias, trazabilidad, tests unitarios y de integración.
+- **Completado:** documentación draft de la app (ola 2026-09-05, 12 documentos canónicos) y paquete `@repo/notification-core` implementado en la Fase 0 (PR #56, 2026-09-07): canales y categorías con categoría obligatoria, plantillas versionadas inmutables con render estricto, preferencias por canal+categoria con defaults conservadores, y cola de envíos con idempotencia por `event_id`, máximo 3 intentos y backoff exponencial (23 tests unitarios en 3 suites). Esquema DB de las 4 tablas (`notification_templates`, `notification_events`, `notification_preferences`, `notification_queue`) con RLS definido en la migración `20260906000004` (PR #57).
+- **En curso:** ninguno — la app dedicada aún no tiene scaffold.
+- **Pendiente:** aplicar en producción el lote DB de Fase 0 (`20260906000002..000005`, incluida `20260906000004`); app dedicada en `src/apps/notificaciones/` (endpoints `POST /api/notifications`, panel de plantillas, envíos vía Edge Functions y trazabilidad por mensaje), integración de los consumidores (CMS, Misal, Oraciones, Vida de Misionero, Visita 7 Iglesias, Lectio Divina) y tests de integración.
 
 ## Ubicación del codigo
 
