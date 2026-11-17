@@ -40,11 +40,11 @@ Una funcionalidad debe formalizarse como componente compartido cuando cumpla al 
 - Su mantenimiento aislado por aplicación aumenta riesgo operativo o inconsistencia de UX.
 - Su dominio exige seguridad, auditoria o compliance común.
 
-## Mapeo con paquetes y documentación de apps (estado 2026-09-05)
+## Mapeo con paquetes y documentación de apps (estado 2026-11-17)
 
 | Capacidad                          | Paquetes activos relaciónados                                 | Documentación de app asociada                                                     | Estado   |
 | ---------------------------------- | ------------------------------------------------------------- | --------------------------------------------------------------------------------- | -------- |
-| Identidad y acceso                 | `@repo/mobile-auth-client`                                    | `FASE_1-Sistema-de-Logueo/WEB` (draft)                                            | Draft    |
+| Identidad y acceso                 | `@repo/auth`, `@repo/mobile-auth-client`                      | `FASE_1-Sistema-de-Logueo/WEB` (vigente; implementada PR #58)                     | Vigente  |
 | Datos y taxonomias compartidas     | `@repo/api-utils`                                             | Sin app dedicada; consumida por CMS y Motor Liturgico                             | Draft    |
 | Notificaciónes y plantillas        | `@repo/notification-core` (Fase 0, PR #56; app pendiente)      | `FASE_2-Sistema-de-Notificaciones/WEB` (draft)                                    | Draft    |
 | Búsqueda y conocimiento compartido | Sin paquete implementado hoy                                  | Sin app dedicada; Santopedia la declara como dependencia futura                   | Objetivo |
@@ -56,6 +56,6 @@ Una funcionalidad debe formalizarse como componente compartido cuando cumpla al 
 ## Observaciónes del estado actual
 
 - El repositorio ya tiene paquetes compartidos técnicos y de UI activos en `src/packages/`.
-- Las capacidades Identidad, Notificaciones y Contenidos/Motor tienen documentación de app en estado draft desde 2026-09-05 (ver `docs/plans/2026-09-05-plan-maestro-fase-2-ecosistema.md`).
+- Las capacidades Notificaciones y Motor Litúrgico tienen documentación de app en estado draft desde 2026-09-05 (ver `docs/plans/2026-09-05-plan-maestro-fase-2-ecosistema.md`); Identidad (Sistema de Logueo, PR #58) y Contenidos (CMS, PRs #59–#68) quedaron vigentes con su implementación.
 - `notification-core` está implementado (Fase 0, PR #56, 2026-09-07); lo pendiente es la app dedicada `Sistema de Notificaciones` (endpoints, panel y envíos) y aplicar su migración `20260906000004` en producción.
 - `@repo/eslint-config` y `@repo/typescript-config` son capacidades de tooling del monorepo; no reemplazan SRS funcionales, pero si deben considerarse activos compartidos vigentes.
