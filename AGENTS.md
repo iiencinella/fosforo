@@ -218,4 +218,7 @@ Reglas:
 2. Breve: 2 a 5 palabras que describan el cambio.
 3. Si el cambio responde a un issue, prefijar el número: `fix/142-health-endpoint`.
 4. Las ramas de ambiente (`preproduction-*`, `dev`) son una clase aparte y no siguen este esquema.
-5. Los pushes directos a `main` están bloqueados por el ruleset "proteger-main": todo cambio llega vía Pull Request.
+5. Antes de realizar una modificación en el proyecto se debe de asegurar que la rama main está actualizado. Una vez que se corrobora esto, se crea una nueva rama.
+6. Los pushes directos a `main` están bloqueados por el ruleset "proteger-main": todo cambio llega vía Pull Request.
+7. Una vez generado la PR, se debe de eliminar la rama en el directorio local para mantener limpio el repositorio.
+8. El agente tiene prohibido aceptar las PRs generadas y/o ya creadas.
