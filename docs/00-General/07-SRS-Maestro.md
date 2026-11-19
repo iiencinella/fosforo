@@ -8,7 +8,7 @@ type: srs-maestro
 area: ecosistema
 status: draft
 created: 2026-03-07
-updated: 2026-05-06
+updated: 2026-11-19
 related:
   - "[[README|Información General]]"
   - "[[06-PRD-Maestro|PRD Maestro]]"
@@ -98,10 +98,13 @@ Fósforo debe operar como un ecosistema con identidad compartida, datos interope
 
 ### 6.4 Operación y soporte
 
-- FR-ECO-013: Todas las aplicaciónes deben integrarse con el Sistema de Logueo para logs, eventos y metricas operativas.
+- FR-ECO-013: Todas las aplicaciónes deben integrarse con la app Log (`src/apps/log`, observabilidad/RUM) para logs, eventos y metricas operativas.
 - FR-ECO-014: Las aplicaciónes criticas deben definir runbook operativo, responsable y criterios de severidad antes de produccion.
 - FR-ECO-015: Toda app debe exponer salud minima, version desplegada y dependencia de servicios compartidos.
 - FR-ECO-016: Los incidentes de seguridad y disponibilidad deben tener flujo de escalamiento y trazabilidad.
+
+> [!note] Desambiguacion Log / Logueo
+> `Sistema de Logueo` = identidad y SSO (`src/apps/logueo`). `app Log` = observabilidad, RUM y analiticas (`src/apps/log`). Son apps distintas; ver `04-Listado-de-Aplicaciones.md` y `12-Novedades-2026-09-05-documentacion-fase-2.md`.
 
 ### 6.5 UI/UX compartida
 
@@ -188,7 +191,7 @@ Fósforo debe operar como un ecosistema con identidad compartida, datos interope
 ## 12. Criterios de aceptación del ecosistema
 
 - CA-ECO-001: Existe SSO operativo y al menos una estrategia documentada de roles base.
-- CA-ECO-002: Toda app en produccion reporta logs y metricas al Sistema de Logueo.
+- CA-ECO-002: Toda app en produccion reporta logs y metricas a la app Log (`src/apps/log`).
 - CA-ECO-003: Toda app con notificaciónes usa preferencias y plantillas reutilizables.
 - CA-ECO-004: Buscador indexa contenidos elegibles de las apps publicadas.
 - CA-ECO-005: Los runbooks de las apps criticas estan definidos antes del go-live.

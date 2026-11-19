@@ -8,7 +8,7 @@ type: prd-maestro
 area: ecosistema
 status: draft
 created: 2025-12-26
-updated: 2026-04-04
+updated: 2026-11-19
 related:
   - "[[../README|Indice de documentación]]"
   - "[[../01-Arquitectura/Stack Tecnologico|Stack Tecnologico]]"
@@ -324,6 +324,9 @@ Ejemplos esperados:
 - Fósforo Portal.
 - Calendario Liturgico.
 - Biblia.
+
+> [!note] `Sistema de Logueo` vs `app Log`
+> `Sistema de Logueo` (`src/apps/logueo`) es la capacidad de identidad y SSO. La `app Log` (`src/apps/log`) es observabilidad, RUM y analiticas y figura como app separada en `04-Listado-de-Aplicaciones.md`. No deben confundirse por la similitud de nombres.
 
 ### 11.3 Servicios Transversales
 
