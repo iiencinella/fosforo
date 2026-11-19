@@ -30,3 +30,26 @@ catalog:
   typescript: 6.0.3
   vitest: 4.1.11
   "@vitest/coverage-v8": 4.1.11
+
+# Settings de pnpm (antes en el campo "pnpm" del package.json; pnpm 12 ya no lo lee).
+# Docs: https://pnpm.io/settings
+overrides:
+  tar: ">=7.5.21"
+  svgo: ">=4.0.2"
+  "@babel/core": "7.29.7"
+
+packageExtensions:
+  "@tailwindcss/cli@*":
+    dependencies:
+      mri: "^1.2.0"
+
+# pnpm 12: los scripts de build de dependencias requieren revision explicita
+# (strictDepBuilds). Antes (pnpm 10, onlyBuiltDependencies) solo corria electron
+# y estos dos quedaban ignorados; se mantiene ese comportamiento sin ejecutar
+# sus scripts: ambos funcionan con los binarios prebuilt.
+allowBuilds:
+  esbuild: false
+  "@parcel/watcher": false
+
+patchedDependencies:
+  "@astrojs/internal-helpers@0.10.4": patches/@astrojs__internal-helpers@0.10.4.patch
