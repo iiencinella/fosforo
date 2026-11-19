@@ -31,28 +31,8 @@
     "turbo": "catalog:",
     "vitest": "catalog:"
   },
-  "packageManager": "pnpm@10.33.2",
+  "packageManager": "pnpm@12.21.0",
   "engines": {
     "node": "^24"
-  },
-  "pnpm": {
-    "overrides": {
-      "tar": ">=7.5.21",
-      "svgo": ">=4.0.2",
-      "@babel/core": "7.29.7"
-    },
-    "packageExtensions": {
-      "@tailwindcss/cli@*": {
-        "dependencies": {
-          "mri": "^1.2.0"
-        }
-      }
-    },
-    "onlyBuiltDependencies": [
-      "electron"
-    ],
-    "patchedDependencies": {
-      "@astrojs/internal-helpers@0.10.4": "patches/@astrojs__internal-helpers@0.10.4.patch"
-    }
   }
 }
