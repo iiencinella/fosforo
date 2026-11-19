@@ -8,7 +8,7 @@ type: guia-despliegue
 area: general
 status: vigente
 created: 2026-08-31
-updated: 2026-09-01
+updated: 2026-11-19
 related:
   - "[[17-Control-de-Versiones-y-Releases|Control de Versiones y Releases]]"
   - "[[../01-Arquitectura/Estructura Monorepo|Estructura Monorepo]]"
@@ -65,10 +65,15 @@ Semantica de `ignoreCommand` con `turbo-ignore`:
 | Biblia         | `biblia`         | `src/apps/biblia`         | `src/apps/biblia/vercel.json`         |
 | Calendario     | `calendario`     | `src/apps/calendario`     | `src/apps/calendario/vercel.json`     |
 | Cancionero     | `cancionero`     | `src/apps/cancionero`     | `src/apps/cancionero/vercel.json`     |
+| CMS            | `cms`            | `src/apps/cms`            | `src/apps/cms/vercel.json`            |
 | Horarios       | `horarios`       | `src/apps/horarios`       | `src/apps/horarios/vercel.json`       |
 | Log            | `log`            | `src/apps/log`            | `src/apps/log/vercel.json`            |
+| Logueo         | `logueo`         | `src/apps/logueo`         | `src/apps/logueo/vercel.json`         |
 | Portal         | `portal`         | `src/apps/portal`         | `src/apps/portal/vercel.json`         |
 | Usuario        | `usuario`        | `src/apps/usuario`        | `src/apps/usuario/vercel.json`        |
+
+> [!note] `log` y `logueo` son apps distintas
+> `log` (`src/apps/log`) es observabilidad, RUM y analiticas; `logueo` (`src/apps/logueo`) es identidad y SSO con Supabase Auth. La similitud de nombres no implica duplicidad: ambas tienen workspace, carpeta documental y proyecto Vercel propios (ver `04-Listado-de-Aplicaciones.md` y los `00-README.md` de cada app).
 
 ## Checklist rapido para onboarding de una app nueva
 

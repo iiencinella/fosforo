@@ -8,7 +8,7 @@ type: guia
 area: arquitectura
 status: vigente
 created: 2026-08-23
-updated: 2026-08-23
+updated: 2026-11-19
 related:
   - "[[README|Capacidades Compartidas]]"
   - "[[../Stack Tecnologico|Stack tecnologico]]"
@@ -109,6 +109,9 @@ Por aplicación:
 | `FEEDBACK_EMAIL_TO`             | portal (destinatario)                           | Sí para feedback/contacto         |
 | `EXPO_PUBLIC_API_BASE_URL`      | mobile (futuro, vía `@repo/mobile-auth-client`) | Sí para mobile                    |
 | `EXPO_PUBLIC_DEMO_USER_ID`      | mobile (futuro)                                 | No                                |
+| `PUBLIC_LOGUEO_URL`             | cms (redireccion de auth a la app logueo)       | Si para el panel CMS              |
+| `PUBLIC_RUM_API_URL`            | cms, logueo (RUM via app log)                   | No (RUM degrada sin URL)          |
+| `CMS_CACHE_TTL_SECONDS`         | cms (TTL de cache en segundos)                  | No (default 300 en codigo)        |
 
 Solo locales (CLI, CI, scripts; **no configurar en Vercel**):
 
@@ -127,11 +130,13 @@ Estado objetivo tras la unificación (Production y Preview):
 | `fosforo-biblia`                         | `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `BIBLIA_INTERNAL_INGESTION_KEY`, `LOGS_API_URL`, `LOGS_API_KEY`                       |
 | `fosforo-calendario`                     | `SUPABASE_URL`, `SUPABASE_ANON_KEY`                                                                                        |
 | `fosforo-cancionero`                     | `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `CALENDARIO_API_URL`, `LOGS_API_URL`, `LOGS_API_KEY`     |
+| `fosforo-cms`                            | `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `PUBLIC_LOGUEO_URL`, `PUBLIC_RUM_API_URL`, `CMS_CACHE_TTL_SECONDS` (opcional) |
 | `horariosdemisas-prod`                   | `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`                                                           |
 | `fosforo-log`                            | `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`                                                           |
+| `fosforo-logueo`                         | `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `PUBLIC_RUM_API_URL`                                     |
 | `fosforo-portal`                         | `RESEND_API_KEY`, `FEEDBACK_EMAIL_TO`, `LOGS_API_URL`, `LOGS_API_KEY`                                                      |
 | `fosforo-usuario`                        | `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `LOGS_API_URL`, `LOGS_API_KEY`                                                        |
-| `fosforo-administracion` (cuando exista) | `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `ADMIN_SESSION_COOKIE`, `ADMIN_SESSION_MAX_AGE_SECONDS`, `ADMIN_ALLOWED_EMAIL_DOMAIN` |
+| `fosforo-administracion`                 | `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `ADMIN_SESSION_COOKIE`, `ADMIN_SESSION_MAX_AGE_SECONDS`, `ADMIN_ALLOWED_EMAIL_DOMAIN` |
 
 Reglas de higiene en Vercel:
 

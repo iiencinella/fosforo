@@ -8,7 +8,7 @@ type: frd-maestro
 area: ecosistema
 status: draft
 created: 2026-03-07
-updated: 2026-05-06
+updated: 2026-11-19
 related:
   - "[[README|Información General]]"
   - "[[06-PRD-Maestro|PRD Maestro]]"
@@ -69,7 +69,8 @@ Definir las capacidades funcionales transversales que deben comportarse de forma
 
 - CMS y Motor Liturgico como fuentes compartidas para contenido estructurado y resolucion liturgica.
 - Servicios de aplicación como capa de orquestación entre frontend, core systems e infraestructura.
-- Sistema de Logueo como capa de observabilidad y auditoria.
+- App Log (`src/apps/log`) como capa de observabilidad, RUM y auditoria.
+- Sistema de Logueo (`src/apps/logueo`) como capa de identidad y SSO.
 - Fósforo Portal como punto de entrada y descubrimiento del ecosistema.
 - Buscador como capacidad de indexación y recuperación transversal.
 - Newsletter como orquestador de comúnicaciónes multi-canal.
