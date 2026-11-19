@@ -16,6 +16,11 @@ Validar antes de ejecutar:
 pnpm db:scripts:validate
 ```
 
+En CI (`CI=true` o `GITHUB_ACTIONS=true`) el validador comprueba unicamente la
+estructura versionada (`config.toml`, `migrations/`, `seeds/seed.sql`) y no exige
+las credenciales: son de uso local/CLI segun
+`docs/01-Arquitectura/Capacidades Compartidas/Guia-Variables-de-Entorno.md`.
+
 ## Flujo recomendado (migraciones versionadas)
 
 Usar este flujo en staging y producción para mantener historial de cambios.
