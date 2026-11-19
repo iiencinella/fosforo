@@ -6,7 +6,7 @@ tags:
   - transversal
 type: frd-maestro
 area: ecosistema
-status: draft
+status: vigente
 created: 2026-03-07
 updated: 2026-11-19
 related:

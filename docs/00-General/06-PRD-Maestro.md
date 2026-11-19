@@ -6,7 +6,7 @@ tags:
   - ecosistema
 type: prd-maestro
 area: ecosistema
-status: draft
+status: vigente
 created: 2025-12-26
 updated: 2026-11-19
 related:
